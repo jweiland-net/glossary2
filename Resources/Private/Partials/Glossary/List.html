@@ -1,0 +1,20 @@
+<f:if condition="{glossaries}">
+	<f:then>
+		<div class="list gridright scroll-container">
+			<f:widget.paginate objects="{glossaries}" as="paginatedGlossarys" configuration="{itemsPerPage: settings.pageBrowser.itemsPerPage, insertAbove: settings.pageBrowser.insertAbove, insertBelow: settings.pageBrowser.insertBelow, maximumNumberOfLinks: settings.pageBrowser.maximumNumberOfLinks}">
+				<f:for each="{paginatedGlossarys}" as="glossary">
+					<div class="marginbottom scroll-item clearfix">
+						<div class="thumbnail grid_2 floatleft">
+							<h2 class="noborder nomargin">
+								<f:link.action action="show" pageUid="{settings.pidOfDetailPage}" arguments="{glossary: glossary}">{glossary.title}</f:link.action>
+							</h2>
+						</div>
+					</div>
+				</f:for>
+			</f:widget.paginate>
+		</div>
+	</f:then>
+	<f:else>
+		<div class="noResults"><f:translate key="noResults" /></div>
+	</f:else>
+</f:if>

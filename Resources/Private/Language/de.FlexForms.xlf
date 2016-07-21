@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2">
+		<header/>
+		<body>
+			<trans-unit id="sheetGeneral" xml:space="preserve">
+				<source>General</source>
+				<target>Allgemein</target>
+			</trans-unit>
+			<trans-unit id="categories" xml:space="preserve">
+				<source>Show all entries of a choosen category</source>
+				<target>Zeige alle Einträge einer gewählten Kategorie</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

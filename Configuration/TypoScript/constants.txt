@@ -1,0 +1,29 @@
+plugin.tx_glossary2 {
+	view {
+		# cat=plugin.tx_glossary2/file; type=string; label=Path to template root (FE)
+		templateRootPath = EXT:glossary2/Resources/Private/Templates/
+		# cat=plugin.tx_glossary2/file; type=string; label=Path to template partials (FE)
+		partialRootPath = EXT:glossary2/Resources/Private/Partials/
+		# cat=plugin.tx_glossary2/file; type=string; label=Path to template layouts (FE)
+		layoutRootPath = EXT:glossary2/Resources/Private/Layouts/
+	}
+	persistence {
+		# cat=plugin.tx_glossary2//a; type=string; label=Default storage PID
+		storagePid =
+	}
+	settings {
+		# cat=plugin.tx_glossary2//c; type=int+; label=PID of Detail page: Leave empty to show details on current page.
+		pidOfDetailPage =
+
+		pageBrowser {
+			# cat=plugin.tx_glossary2/basic/dims; type=int+; label=Items per page: How many items should be displayed on one page
+			itemsPerPage = 15
+			# cat=plugin.tx_glossary2/basic/enable; type=boolean; label=insert above: Should pagebrowser be displayed on top of the list
+			insertAbove = 1
+			# cat=plugin.tx_glossary2/basic/enable; type=boolean; label=insert below: Should pagebrowser be displayed at bottom of the list
+			insertBelow = 0
+			# cat=plugin.tx_glossary2/basic/dims; type=int+; label=max number of links: Define maximum amount of pages which should be displayed
+			maximumNumberOfLinks = 5
+		}
+	}
+}

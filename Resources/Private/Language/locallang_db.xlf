@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
+		<header/>
+		<body>
+
+			<trans-unit id="plugin.title">
+				<source>Glossary</source>
+			</trans-unit>
+
+			<trans-unit id="tx_glossary2_domain_model_glossary">
+				<source>Glossary</source>
+			</trans-unit>
+			<trans-unit id="tx_glossary2_domain_model_glossary.letter">
+				<source>Letter</source>
+			</trans-unit>
+			<trans-unit id="tx_glossary2_domain_model_glossary.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_glossary2_domain_model_glossary.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_glossary2_domain_model_glossary.images">
+				<source>Images</source>
+			</trans-unit>
+
+		</body>
+	</file>
+</xliff>

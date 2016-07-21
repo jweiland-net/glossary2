@@ -1,0 +1,12 @@
+<div class="glossary">
+	<ul class="az_list clearfix">
+		<f:for each="{glossary}" as="hasLink" key="letter">
+			<li>
+				<f:if condition="{hasLink}">
+					<f:then><f:link.action action="list" arguments="{letter: letter}">{letter}</f:link.action></f:then>
+					<f:else><span>{letter}</span></f:else>
+				</f:if>
+			</li>
+		</f:for>
+	</ul>
+</div>

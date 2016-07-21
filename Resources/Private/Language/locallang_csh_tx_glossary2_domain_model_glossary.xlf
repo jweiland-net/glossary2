@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
+		<header/>
+		<body>
+
+			<trans-unit id="letter.description">
+				<source>Letter</source>
+			</trans-unit>
+			<trans-unit id="title.description">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="description.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="images.description">
+				<source>Images</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
