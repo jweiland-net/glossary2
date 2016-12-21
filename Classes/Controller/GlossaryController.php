@@ -25,12 +25,14 @@ namespace JWeiland\Glossary2\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 /**
  * @package glossary2
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class GlossaryController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
+class GlossaryController extends ActionController {
 
     /**
      * glossaryRepository
@@ -61,7 +63,23 @@ class GlossaryController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $this->settings['pidOfDetailPage'] = NULL;
         }
     }
-
+    
+    /**
+     * Initializes the view before invoking an action method.
+     *
+     * Override this method to solve assign variables common for all actions
+     * or prepare the view in another way before the action is called.
+     *
+     * @param ViewInterface $view The view to be initialized
+     *
+     * @return void
+     * @api
+     */
+    protected function initializeView(ViewInterface $view)
+    {
+        $this->view->assign('data', $this->configurationManager->getContentObject()->data);
+    }
+    
     /**
      * action list
      *
