@@ -1,44 +1,53 @@
 plugin.tx_glossary2 {
-	view {
-		templateRootPath = {$plugin.tx_glossary2.view.templateRootPath}
-		partialRootPath = {$plugin.tx_glossary2.view.partialRootPath}
-		layoutRootPath = {$plugin.tx_glossary2.view.layoutRootPath}
-	}
-	persistence {
-		storagePid = {$plugin.tx_glossary2.persistence.storagePid}
-		classes {
-			JWeiland\Glossary2\Domain\Model\FileReference {
-				mapping {
-					tableName = sys_file_reference
-				}
-			}
-		}
-	}
-	features {
-		# uncomment the following line to enable the new Property Mapper.
-		rewrittenPropertyMapper = 1
-	}
-	settings {
-		pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage}
-		letters = 0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
+  view {
+    templateRootPaths {
+      0 = EXT:tx_glossary2/Resources/Private/Templates/
+      1 = {$plugin.tx_glossary2.view.templateRootPath}
+    }
+    partialRootPaths {
+      0 = EXT:tx_glossary2/Resources/Private/Partials/
+      1 = {$plugin.tx_glossary2.view.partialRootPath}
+    }
+    layoutRootPaths {
+      0 = EXT:tx_glossary2/Resources/Private/Layouts/
+      1 = {$plugin.tx_glossary2.view.layoutRootPath}
+    }
+  }
+  persistence {
+    storagePid = {$plugin.tx_glossary2.persistence.storagePid}
+    classes {
+      JWeiland\Glossary2\Domain\Model\FileReference {
+        mapping {
+          tableName = sys_file_reference
+        }
+      }
+    }
+  }
+  features {
+    # uncomment the following line to enable the new Property Mapper.
+    rewrittenPropertyMapper = 1
+  }
+  settings {
+    pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage}
+    letters = 0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
 
-		pageBrowser {
-			itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
-			insertAbove = {$plugin.tx_glossary2.settings.pageBrowser.insertAbove}
-			insertBelow = {$plugin.tx_glossary2.settings.pageBrowser.insertBelow}
-			maximumNumberOfLinks = {$plugin.tx_glossary2.settings.pageBrowser.maximumNumberOfLinks}
-		}
-	}
+    pageBrowser {
+      itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
+      insertAbove = {$plugin.tx_glossary2.settings.pageBrowser.insertAbove}
+      insertBelow = {$plugin.tx_glossary2.settings.pageBrowser.insertBelow}
+      maximumNumberOfLinks = {$plugin.tx_glossary2.settings.pageBrowser.maximumNumberOfLinks}
+    }
+  }
 }
 
 plugin.tx_glossary2._CSS_DEFAULT_STYLE (
-	textarea.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
-	}
+  textarea.f3-form-error {
+    background-color:#FF9F9F;
+    border: 1px #FF0000 solid;
+  }
 
-	input.f3-form-error {
-		background-color:#FF9F9F;
-		border: 1px #FF0000 solid;
-	}
+  input.f3-form-error {
+    background-color:#FF9F9F;
+    border: 1px #FF0000 solid;
+  }
 )
