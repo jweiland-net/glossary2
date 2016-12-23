@@ -11,30 +11,30 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'Glossary 2',
-	'description' => 'Glossary 2',
-	'category' => 'plugin',
-	'author' => 'Stefan Froemken',
-	'author_email' => 'projects@jweiland.net',
-	'author_company' => 'jweiland.net',
-	'shy' => '',
-	'priority' => '',
-	'module' => '',
-	'state' => 'stable',
-	'internal' => '',
-	'uploadfolder' => '0',
-	'createDirs' => '',
-	'modify_tables' => '',
-	'clearCacheOnLoad' => 0,
-	'lockType' => '',
-	'version' => '0.0.4',
-	'constraints' => array(
-		'depends' => array(
-			'typo3' => '6.2.0-8.99.99',
-		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
-		),
-	),
+    'title' => 'Glossary 2',
+    'description' => 'Glossary 2',
+    'category' => 'plugin',
+    'author' => 'Stefan Froemken',
+    'author_email' => 'projects@jweiland.net',
+    'author_company' => 'jweiland.net',
+    'shy' => '',
+    'priority' => '',
+    'module' => '',
+    'state' => 'stable',
+    'internal' => '',
+    'uploadfolder' => '0',
+    'createDirs' => '',
+    'modify_tables' => '',
+    'clearCacheOnLoad' => 0,
+    'lockType' => '',
+    'version' => '1.0.0',
+    'constraints' => array(
+        'depends' => array(
+            'typo3' => '6.2.0-8.99.99',
+        ),
+        'conflicts' => array(
+        ),
+        'suggests' => array(
+        ),
+    ),
 );
