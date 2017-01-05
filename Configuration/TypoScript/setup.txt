@@ -24,8 +24,7 @@ plugin.tx_glossary2 {
     }
   }
   features {
-    # uncomment the following line to enable the new Property Mapper.
-    rewrittenPropertyMapper = 1
+    skipDefaultArguments = 1
   }
   settings {
     pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage}
