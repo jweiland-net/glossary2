@@ -1,29 +1,18 @@
 <?php
 namespace JWeiland\Glossary2\Controller;
 
-/***************************************************************
- *  Copyright notice
+/*
+ * This file is part of the TYPO3 CMS project.
  *
- *  (c) 2013 Stefan Froemken <projects@jweiland.net>, jweiland.net
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
  *
- *  All rights reserved
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * The TYPO3 project - inspiring people to share!
+ */
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -32,7 +21,8 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
  * @package glossary2
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class GlossaryController extends ActionController {
+class GlossaryController extends ActionController
+{
 
     /**
      * glossaryRepository
@@ -47,7 +37,8 @@ class GlossaryController extends ActionController {
      * @param \JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository
      * @return void
      */
-    public function injectGlossaryRepository(\JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository) {
+    public function injectGlossaryRepository(\JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository)
+    {
         $this->glossaryRepository = $glossaryRepository;
     }
 
@@ -56,11 +47,12 @@ class GlossaryController extends ActionController {
      *
      * @return void
      */
-    public function initializeAction() {
+    public function initializeAction()
+    {
         // if this value was not set, then it will be filled with 0
-        // but that is not good, because UriBuilder accepts 0 as pid, so it's better to set it to NULL
+        // but that is not good, because UriBuilder accepts 0 as pid, so it's better to set it to null
         if (empty($this->settings['pidOfDetailPage'])) {
-            $this->settings['pidOfDetailPage'] = NULL;
+            $this->settings['pidOfDetailPage'] = null;
         }
     }
     
@@ -73,7 +65,6 @@ class GlossaryController extends ActionController {
      * @param ViewInterface $view The view to be initialized
      *
      * @return void
-     * @api
      */
     protected function initializeView(ViewInterface $view)
     {
@@ -85,24 +76,42 @@ class GlossaryController extends ActionController {
      *
      * @param string $letter Show only records starting with this letter
      * @validate $letter String, StringLength(minimum=1,maximum=3)
+     *
      * @return void
      */
-    public function listAction($letter = '') {
+    public function listAction($letter = '')
+    {
         $glossaries = $this->glossaryRepository->findEntries(
-            GeneralUtility::intExplode(',', $this->settings['categories'], TRUE),
+            GeneralUtility::intExplode(',', $this->settings['categories'], true),
             $letter
         );
         $this->view->assign('glossaries', $glossaries);
         $this->view->assign('glossary', $this->getGlossary());
     }
-
+    
+    /**
+     * action list without glossar
+     *
+     * @return void
+     */
+    public function listWithoutGlossarAction()
+    {
+        $glossaries = $this->glossaryRepository->findEntries(
+            GeneralUtility::intExplode(',', $this->settings['categories'], true),
+            ''
+        );
+        $this->view->assign('glossaries', $glossaries);
+    }
+    
     /**
      * action show
      *
      * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
-     * @return array
+     *
+     * @return void
      */
-    public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary) {
+    public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary)
+    {
         $this->view->assign('glossary', $glossary);
     }
 
@@ -111,12 +120,13 @@ class GlossaryController extends ActionController {
      *
      * @return array Array with starting letters as keys
      */
-    public function getGlossary() {
-        $possibleLetters = GeneralUtility::trimExplode(',', $this->settings['letters']);
+    public function getGlossary()
+    {
+        $possibleLetters = GeneralUtility::trimExplode(',', $this->settings['letters'], true);
 
         // get available first letters from database
         $availableLetters = $this->glossaryRepository->getStartingLetters(
-            GeneralUtility::intExplode(',', $this->settings['categories'], TRUE)
+            GeneralUtility::intExplode(',', $this->settings['categories'], true)
         );
         // remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
         $availableLetters = str_split(preg_replace('~([[:^alnum:]])~', '', $availableLetters['letters']));
@@ -128,13 +138,12 @@ class GlossaryController extends ActionController {
             $availableLetters = preg_replace('~(^[[:digit:]]+)~', '0-9', $availableLetters);
         }
 
-        // mark letter as link (TRUE) or not-linked (FALSE)
+        // mark letter as link (true) or not-linked (false)
         $glossary = array();
         foreach ($possibleLetters as $possibleLetter) {
-            $glossary[$possibleLetter] = (strpos($availableLetters, $possibleLetter) !== FALSE) ? TRUE : FALSE;
+            $glossary[$possibleLetter] = (strpos($availableLetters, $possibleLetter) !== false) ? true : false;
         }
 
         return $glossary;
     }
-
 }

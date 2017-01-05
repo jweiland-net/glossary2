@@ -10,6 +10,24 @@
 				</TCEforms>
 				<type>array</type>
 				<el>
+					<switchableControllerActions>
+						<TCEforms>
+							<label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:chooseAction</label>
+							<config>
+								<type>select</type>
+								<items>
+									<numIndex index="0">
+										<numIndex index="0">LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:listWithGlossar</numIndex>
+										<numIndex index="1" />
+									</numIndex>
+									<numIndex index="1">
+										<numIndex index="0">LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:listWithoutGlossar</numIndex>
+										<numIndex index="1"><![CDATA[Glossary->listWithoutGlossar;Glossary->show]]></numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</switchableControllerActions>
 					<settings.categories>
 						<TCEforms>
 							<label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:categories</label>

@@ -1,12 +1,12 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-	die ('Access denied.');
+    die('Access denied.');
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-	'JWeiland.' . $_EXTKEY,
-	'Glossary',
-	'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.title'
+    'JWeiland.' . $_EXTKEY,
+    'Glossary',
+    'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.title'
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Glossary 2');

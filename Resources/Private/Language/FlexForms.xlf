@@ -6,6 +6,15 @@
 			<trans-unit id="sheetGeneral" xml:space="preserve">
 				<source>General</source>
 			</trans-unit>
+			<trans-unit id="chooseAction" xml:space="preserve">
+				<source>Choose view</source>
+			</trans-unit>
+			<trans-unit id="listWithGlossar" xml:space="preserve">
+				<source>List with glossar</source>
+			</trans-unit>
+			<trans-unit id="listWithoutGlossar" xml:space="preserve">
+				<source>List without glossar</source>
+			</trans-unit>
 			<trans-unit id="categories" xml:space="preserve">
 				<source>Show all entries of a choosen category</source>
 			</trans-unit>

@@ -7,6 +7,18 @@
 				<source>General</source>
 				<target>Allgemein</target>
 			</trans-unit>
+			<trans-unit id="chooseAction" xml:space="preserve">
+				<source>Choose view</source>
+				<target>Ansicht wählen</target>
+			</trans-unit>
+			<trans-unit id="listWithGlossar" xml:space="preserve">
+				<source>List with glossar</source>
+				<target>Listenansicht mit Glossar</target>
+			</trans-unit>
+			<trans-unit id="listWithoutGlossar" xml:space="preserve">
+				<source>List without glossar</source>
+				<target>Listenansicht ohne Glossar</target>
+			</trans-unit>
 			<trans-unit id="categories" xml:space="preserve">
 				<source>Show all entries of a choosen category</source>
 				<target>Zeige alle Einträge einer gewählten Kategorie</target>
