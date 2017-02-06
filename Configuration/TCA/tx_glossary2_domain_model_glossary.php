@@ -145,11 +145,14 @@ return array(
             'exclude' => 1,
             'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.images',
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                    'images', array(
-                        'minitems' => 0,
-                        'maxitems' => 5
-                    )
+                'images',
+                array(
+                    'foreign_types' => $GLOBALS['TCA']['tt_content']['columns']['image']['config']['foreign_types'],
+                    'minitems' => 0,
+                    'maxitems' => 5
                 ),
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['mediafile_ext']
+            ),
         ),
     ),
     'types' => array(
