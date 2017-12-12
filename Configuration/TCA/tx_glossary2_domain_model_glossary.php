@@ -1,4 +1,16 @@
 <?php
+// in TYPO3 7.6 and 8.5 some old located language files has been moved into Resources/Private/Language
+if (version_compare(TYPO3_version, '8.5', '>=')) {
+    $locallang_general = 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:';
+} else {
+    $locallang_general = 'LLL:EXT:lang/locallang_general.xlf:';
+}
+if (version_compare(TYPO3_version, '7.6', '>=')) {
+    $locallang_ttc = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:';
+} else {
+    $locallang_ttc = 'LLL:EXT:cms/locallang_ttc.xlf:';
+}
+
 return array(
     'ctrl' => array(
         'title'	=> 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary',
@@ -20,8 +32,7 @@ return array(
             'endtime' => 'endtime',
         ),
         'searchFields' => 'title,description',
-        'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('glossary2') . 'Configuration/TCA/Glossary.php',
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('glossary2') . 'Resources/Public/Icons/tx_glossary2_domain_model_glossary.gif'
+        'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.gif'
     ),
     'interface' => array(
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, images',
@@ -29,14 +40,14 @@ return array(
     'columns' => array(
         'sys_language_uid' => array(
             'exclude' => true,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
+            'label' => $locallang_general . 'LGL.language',
             'config' => array(
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'special' => 'languages',
                 'items' => array(
                     array(
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',
+                        $locallang_general . 'LGL.allLanguages',
                         -1,
                         'flags-multiple'
                     ),
@@ -47,7 +58,7 @@ return array(
         'l10n_parent' => array(
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
+            'label' => $locallang_general . 'LGL.l18n_parent',
             'config' => array(
                 'type' => 'select',
                 'items' => array(
@@ -63,7 +74,7 @@ return array(
             ),
         ),
         't3ver_label' => array(
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.versionLabel',
+            'label' => $locallang_general . 'LGL.versionLabel',
             'config' => array(
                 'type' => 'input',
                 'size' => 30,
@@ -72,7 +83,7 @@ return array(
         ),
         'hidden' => array(
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
+            'label' => $locallang_general . 'LGL.hidden',
             'config' => array(
                 'type' => 'check',
             ),
@@ -80,7 +91,7 @@ return array(
         'starttime' => array(
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
+            'label' => $locallang_general . 'LGL.starttime',
             'config' => array(
                 'type' => 'input',
                 'size' => 13,
@@ -96,7 +107,7 @@ return array(
         'endtime' => array(
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
+            'label' => $locallang_general . 'LGL.endtime',
             'config' => array(
                 'type' => 'input',
                 'size' => 13,
@@ -131,7 +142,7 @@ return array(
                         'notNewRecords' => 1,
                         'RTEonly' => 1,
                         'type' => 'script',
-                        'title' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:bodytext.W.RTE',
+                        'title' => $locallang_ttc . 'bodytext.W.RTE',
                         'icon' => 'EXT:backend/Resources/Public/Images/FormFieldWizard/wizard_rte.gif',
                         'module' => array(
                             'name' => 'wizard_rte'
@@ -156,7 +167,7 @@ return array(
         ),
     ),
     'types' => array(
-        '1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title, description, images,--div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access,starttime, endtime'),
+        '1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title, description, images,--div--;' . $locallang_ttc .'tabs.access,starttime, endtime'),
     ),
     'palettes' => array(
         '1' => array('showitem' => ''),
