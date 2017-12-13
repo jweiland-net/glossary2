@@ -10,7 +10,7 @@
 # "version" and "dependencies" must not be touched!
 ########################################################################
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
     'title' => 'Glossary 2',
     'description' => 'Glossary 2',
     'category' => 'plugin',
@@ -28,13 +28,13 @@ $EM_CONF[$_EXTKEY] = array(
     'clearCacheOnLoad' => 0,
     'lockType' => '',
     'version' => '1.1.0',
-    'constraints' => array(
-        'depends' => array(
-            'typo3' => '6.2.0-8.99.99',
-        ),
-        'conflicts' => array(
-        ),
-        'suggests' => array(
-        ),
-    ),
-);
+    'constraints' => [
+        'depends' => [
+            'typo3' => '7.6.0-8.7.99',
+        ],
+        'conflicts' => [
+        ],
+        'suggests' => [
+        ],
+    ],
+];

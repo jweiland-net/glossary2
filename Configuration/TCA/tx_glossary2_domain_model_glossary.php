@@ -1,18 +1,14 @@
 <?php
-// in TYPO3 7.6 and 8.5 some old located language files has been moved into Resources/Private/Language
+// in 8.5 some locallang_general.xlf has been moved into Resources/Private/Language
 if (version_compare(TYPO3_version, '8.5', '>=')) {
-    $locallang_general = 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:';
+    $locallangGeneral = 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:';
 } else {
-    $locallang_general = 'LLL:EXT:lang/locallang_general.xlf:';
+    $locallangGeneral = 'LLL:EXT:lang/locallang_general.xlf:';
 }
-if (version_compare(TYPO3_version, '7.6', '>=')) {
-    $locallang_ttc = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:';
-} else {
-    $locallang_ttc = 'LLL:EXT:cms/locallang_ttc.xlf:';
-}
+$locallangTtc = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:';
 
-return array(
-    'ctrl' => array(
+return [
+    'ctrl' => [
         'title'	=> 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary',
         'label' => 'title',
         'tstamp' => 'tstamp',
@@ -26,150 +22,150 @@ return array(
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
         'delete' => 'deleted',
-        'enablecolumns' => array(
+        'enablecolumns' => [
             'disabled' => 'hidden',
             'starttime' => 'starttime',
             'endtime' => 'endtime',
-        ),
+        ],
         'searchFields' => 'title,description',
         'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.gif'
-    ),
-    'interface' => array(
+    ],
+    'interface' => [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, images',
-    ),
-    'columns' => array(
-        'sys_language_uid' => array(
+    ],
+    'columns' => [
+        'sys_language_uid' => [
             'exclude' => true,
-            'label' => $locallang_general . 'LGL.language',
-            'config' => array(
+            'label' => $locallangGeneral . 'LGL.language',
+            'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'special' => 'languages',
-                'items' => array(
-                    array(
-                        $locallang_general . 'LGL.allLanguages',
+                'items' => [
+                    [
+                        $locallangGeneral . 'LGL.allLanguages',
                         -1,
                         'flags-multiple'
-                    ),
-                ),
+                    ],
+                ],
                 'default' => 0,
-            )
-        ),
-        'l10n_parent' => array(
+            ]
+        ],
+        'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'exclude' => 1,
-            'label' => $locallang_general . 'LGL.l18n_parent',
-            'config' => array(
+            'label' => $locallangGeneral . 'LGL.l18n_parent',
+            'config' => [
                 'type' => 'select',
-                'items' => array(
-                    array('', 0),
-                ),
+                'items' => [
+                    ['', 0],
+                ],
                 'foreign_table' => 'tx_glossary2_domain_model_glossary',
                 'foreign_table_where' => 'AND tx_glossary2_domain_model_glossary.pid=###CURRENT_PID### AND tx_glossary2_domain_model_glossary.sys_language_uid IN (-1,0)',
-            ),
-        ),
-        'l10n_diffsource' => array(
-            'config' => array(
+            ],
+        ],
+        'l10n_diffsource' => [
+            'config' => [
                 'type' => 'passthrough',
-            ),
-        ),
-        't3ver_label' => array(
-            'label' => $locallang_general . 'LGL.versionLabel',
-            'config' => array(
+            ],
+        ],
+        't3ver_label' => [
+            'label' => $locallangGeneral . 'LGL.versionLabel',
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'max' => 255,
-            )
-        ),
-        'hidden' => array(
+            ]
+        ],
+        'hidden' => [
             'exclude' => 1,
-            'label' => $locallang_general . 'LGL.hidden',
-            'config' => array(
+            'label' => $locallangGeneral . 'LGL.hidden',
+            'config' => [
                 'type' => 'check',
-            ),
-        ),
-        'starttime' => array(
+            ],
+        ],
+        'starttime' => [
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => $locallang_general . 'LGL.starttime',
-            'config' => array(
+            'label' => $locallangGeneral . 'LGL.starttime',
+            'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
                 'checkbox' => 0,
                 'default' => 0,
-                'range' => array(
+                'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ),
-            ),
-        ),
-        'endtime' => array(
+                ],
+            ],
+        ],
+        'endtime' => [
             'exclude' => 1,
             'l10n_mode' => 'mergeIfNotBlank',
-            'label' => $locallang_general . 'LGL.endtime',
-            'config' => array(
+            'label' => $locallangGeneral . 'LGL.endtime',
+            'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
                 'checkbox' => 0,
                 'default' => 0,
-                'range' => array(
+                'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ),
-            ),
-        ),
-        'title' => array(
+                ],
+            ],
+        ],
+        'title' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.title',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim'
-            ),
-        ),
-        'description' => array(
+            ],
+        ],
+        'description' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.description',
-            'config' => array(
+            'config' => [
                 'type' => 'text',
                 'cols' => 40,
                 'rows' => 15,
                 'eval' => 'trim',
-                'wizards' => array(
-                    'RTE' => array(
+                'wizards' => [
+                    'RTE' => [
                         'notNewRecords' => 1,
                         'RTEonly' => 1,
                         'type' => 'script',
-                        'title' => $locallang_ttc . 'bodytext.W.RTE',
+                        'title' => $locallangTtc . 'bodytext.W.RTE',
                         'icon' => 'EXT:backend/Resources/Public/Images/FormFieldWizard/wizard_rte.gif',
-                        'module' => array(
+                        'module' => [
                             'name' => 'wizard_rte'
-                        ),
-                    ),
-                ),
-            ),
+                        ],
+                    ],
+                ],
+            ],
             'defaultExtras' => 'richtext:rte_transform',
-        ),
-        'images' => array(
+        ],
+        'images' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.images',
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
                 'images',
-                array(
+                [
                     'foreign_types' => $GLOBALS['TCA']['tt_content']['columns']['image']['config']['foreign_types'],
                     'minitems' => 0,
                     'maxitems' => 5
-                ),
+                ],
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['mediafile_ext']
             ),
-        ),
-    ),
-    'types' => array(
-        '1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title, description, images,--div--;' . $locallang_ttc .'tabs.access,starttime, endtime'),
-    ),
-    'palettes' => array(
-        '1' => array('showitem' => ''),
-    ),
-);
+        ],
+    ],
+    'types' => [
+        '1' => ['showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title, description, images,--div--;' . $locallangTtc .'tabs.access,starttime, endtime'],
+    ],
+    'palettes' => [
+        '1' => ['showitem' => ''],
+    ],
+];
