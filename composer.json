@@ -2,7 +2,7 @@
     "name": "jweiland/glossary2",
     "type": "typo3-cms-extension",
     "description": "Creates a glossary with A-Z links",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "license": "GPL-2.0+",
     "keywords": ["typo3", "TYPO3 CMS", "glossar", "glossary2"],
     "homepage": "http://www.jweiland.net",
