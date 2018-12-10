@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 namespace JWeiland\Glossary2\Domain\Repository;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the glossary2 project.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,29 +17,29 @@ namespace JWeiland\Glossary2\Domain\Repository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
- * @package glossary2
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ * This class contains all queries to get needed glossary entries from DB
  */
 class GlossaryRepository extends Repository
 {
     /**
      * @var array
      */
-    protected $defaultOrderings = array(
+    protected $defaultOrderings = [
         'title' => QueryInterface::ORDER_ASCENDING
-    );
+    ];
 
     /**
      * find entries
      *
      * @param array $categories
      * @param string $letter
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return QueryResultInterface
      */
-    public function findEntries(array $categories = array(), $letter = '')
+    public function findEntries(array $categories = [], $letter = '')
     {
         // return full list, if arguments are not valid
         if (!$this->checkArgumentsForFindEntries($categories, $letter)) {
@@ -46,11 +47,11 @@ class GlossaryRepository extends Repository
         }
 
         $query = $this->createQuery();
-        $constraint = array();
+        $constraint = [];
 
         // add category to constraint
         if (count($categories)) {
-            $categoryConstraints = array();
+            $categoryConstraints = [];
             foreach ($categories as $category) {
                 $categoryConstraints[] = $query->contains('categories', $category);
             }
@@ -59,7 +60,7 @@ class GlossaryRepository extends Repository
 
         // add letter to constraint
         if (!empty($letter)) {
-            $letterConstraints = array();
+            $letterConstraints = [];
             if ($letter == '0-9') {
                 for ($i = 0; $i < 10; $i++) {
                     $letterConstraints[] = $query->like('title', $i . '%');

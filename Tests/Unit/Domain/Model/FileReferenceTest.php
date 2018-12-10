@@ -2,7 +2,7 @@
 namespace JWeiland\Glossary2\Tests\Unit\Domain\Model;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the glossary2 project.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -14,13 +14,10 @@ namespace JWeiland\Glossary2\Tests\Unit\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 use JWeiland\Glossary2\Domain\Model\FileReference;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /**
  * Test case.
- *
- * @subpackage Events
- * @author Stefan Froemken <projects@jweiland.net>
  */
 class FileReferenceTest extends UnitTestCase
 {

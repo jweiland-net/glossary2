@@ -2,7 +2,7 @@
 namespace JWeiland\Glossary2\Tests\Unit\Controller;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the glossary2 project.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -14,20 +14,11 @@ namespace JWeiland\Glossary2\Tests\Unit\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 use JWeiland\Glossary2\Domain\Model\Glossary;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Test case for class Tx_Glossary2_Controller_GlossaryController.
- *
- * @version $Id$
- * @copyright Copyright belongs to the respective authors
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
- * @package TYPO3
- * @subpackage Glossary 2
- *
- * @author Stefan Froemken <projects@jweiland.net>
+ * Test case
  */
 class GlossaryControllerTest extends UnitTestCase
 {

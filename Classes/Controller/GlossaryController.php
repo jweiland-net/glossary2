@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 namespace JWeiland\Glossary2\Controller;
 
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is part of the glossary2 project.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -18,12 +19,10 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 /**
- * @package glossary2
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ * Main controller of glossary2
  */
 class GlossaryController extends ActionController
 {
-
     /**
      * glossaryRepository
      *
@@ -63,7 +62,6 @@ class GlossaryController extends ActionController
      * or prepare the view in another way before the action is called.
      *
      * @param ViewInterface $view The view to be initialized
-     *
      * @return void
      */
     protected function initializeView(ViewInterface $view)
@@ -76,7 +74,6 @@ class GlossaryController extends ActionController
      *
      * @param string $letter Show only records starting with this letter
      * @validate $letter String, StringLength(minimum=1,maximum=3)
-     *
      * @return void
      */
     public function listAction($letter = '')
@@ -107,7 +104,6 @@ class GlossaryController extends ActionController
      * action show
      *
      * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
-     *
      * @return void
      */
     public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary)
@@ -120,7 +116,7 @@ class GlossaryController extends ActionController
      *
      * @return array Array with starting letters as keys
      */
-    public function getGlossary()
+    public function getGlossary(): array
     {
         $possibleLetters = GeneralUtility::trimExplode(',', $this->settings['letters'], true);
 
