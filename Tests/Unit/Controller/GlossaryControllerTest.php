@@ -30,6 +30,7 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Reflection\ClassSchema;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Validation\ValidatorResolver;
@@ -166,13 +167,19 @@ class GlossaryControllerTest extends UnitTestCase
             ->shouldBeCalled()
             ->willReturn('html');
 
+        if (version_compare(TYPO3_version, '9.0.0') >= 0) {
+            $this->argumentsProphecy
+                ->count()
+                ->willReturn(0);
+            $this->argumentsProphecy
+                ->validate()
+                ->willReturn(new Result());
+        }
         $this->argumentsProphecy
             ->getIterator()
-            ->shouldBeCalled()
             ->willReturn(new ObjectStorage());
         $this->argumentsProphecy
             ->getValidationResults()
-            ->shouldBeCalled()
             ->willReturn(new Result());
 
         $this->configurationManagerProphecy
@@ -184,32 +191,37 @@ class GlossaryControllerTest extends UnitTestCase
 
         $this->objectManagerProphecy
             ->get(Arguments::class)
-            ->shouldBeCalled()
             ->willReturn($this->argumentsProphecy->reveal());
         $this->objectManagerProphecy
             ->get(UriBuilder::class)
-            ->shouldBeCalled()
             ->willReturn($this->uriBuilderProphecy->reveal());
         $this->objectManagerProphecy
             ->get(ReflectionService::class)
-            ->shouldBeCalled()
             ->willReturn($this->reflectionServiceProphecy->reveal());
         $this->objectManagerProphecy
             ->get(ControllerContext::class)
-            ->shouldBeCalled()
             ->willReturn($this->controllerContextProphecy->reveal());
         $this->objectManagerProphecy
             ->get(TemplateView::class)
-            ->shouldBeCalled()
             ->willReturn($this->templateViewProphecy->reveal());
         $this->objectManagerProphecy
             ->get(PageRenderer::class)
-            ->shouldBeCalled()
             ->willReturn($this->pageRendererProphecy->reveal());
 
         $this->uriBuilderProphecy
             ->setRequest($this->requestProphecy->reveal())
             ->shouldBeCalled();
+
+        if (version_compare(TYPO3_version, '9.0.0') >= 0) {
+            /** @var ClassSchema|ObjectProphecy $classSchemaProphecy */
+            $classSchemaProphecy = $this->prophesize(ClassSchema::class);
+            $classSchemaProphecy
+                ->getMethod(Argument::cetera())
+                ->willReturn([]);
+            $this->reflectionServiceProphecy
+                ->getClassSchema(Argument::cetera())
+                ->willReturn($classSchemaProphecy->reveal());
+        }
 
         $this->reflectionServiceProphecy
             ->getMethodParameters(Argument::cetera())
