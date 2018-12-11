@@ -54,7 +54,7 @@ class GlossaryController extends ActionController
             $this->settings['pidOfDetailPage'] = null;
         }
     }
-    
+
     /**
      * Initializes the view before invoking an action method.
      *
@@ -68,7 +68,7 @@ class GlossaryController extends ActionController
     {
         $this->view->assign('data', $this->configurationManager->getContentObject()->data);
     }
-    
+
     /**
      * action list
      *
@@ -85,7 +85,7 @@ class GlossaryController extends ActionController
         $this->view->assign('glossaries', $glossaries);
         $this->view->assign('glossary', $this->getGlossary());
     }
-    
+
     /**
      * action list without glossar
      *
@@ -99,7 +99,7 @@ class GlossaryController extends ActionController
         );
         $this->view->assign('glossaries', $glossaries);
     }
-    
+
     /**
      * action show
      *
