@@ -15,13 +15,6 @@ plugin.tx_glossary2 {
   }
   persistence {
     storagePid = {$plugin.tx_glossary2.persistence.storagePid}
-    classes {
-      JWeiland\Glossary2\Domain\Model\FileReference {
-        mapping {
-          tableName = sys_file_reference
-        }
-      }
-    }
   }
   features {
     skipDefaultArguments = 1
