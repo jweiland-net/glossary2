@@ -13,9 +13,28 @@ namespace JWeiland\Glossary2\Tests\Unit\Controller;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use JWeiland\Glossary2\Domain\Model\Glossary;
+use JWeiland\Glossary2\Controller\GlossaryController;
+use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Error\Result;
+use TYPO3\CMS\Extbase\Mvc\Controller\Arguments;
+use TYPO3\CMS\Extbase\Mvc\Controller\ControllerContext;
+use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfigurationService;
+use TYPO3\CMS\Extbase\Mvc\Web\Request;
+use TYPO3\CMS\Extbase\Mvc\Web\Response;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Reflection\ReflectionService;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Extbase\Validation\ValidatorResolver;
+use TYPO3\CMS\Fluid\View\TemplateView;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
  * Test case
@@ -23,9 +42,84 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class GlossaryControllerTest extends UnitTestCase
 {
     /**
-     * @var \JWeiland\Glossary2\Controller\GlossaryController|\PHPUnit_Framework_MockObject_MockObject|\TYPO3\CMS\Core\Tests\AccessibleObjectInterface
+     * @var GlossaryController
      */
     protected $subject;
+
+    /**
+     * @var Request|ObjectProphecy
+     */
+    protected $requestProphecy;
+
+    /**
+     * @var Response|ObjectProphecy
+     */
+    protected $responseProphecy;
+
+    /**
+     * @var ObjectManager|ObjectProphecy
+     */
+    protected $objectManagerProphecy;
+
+    /**
+     * @var Arguments|ObjectProphecy
+     */
+    protected $argumentsProphecy;
+
+    /**
+     * @var UriBuilder|ObjectProphecy
+     */
+    protected $uriBuilderProphecy;
+
+    /**
+     * @var ConfigurationManager|ObjectProphecy
+     */
+    protected $configurationManagerProphecy;
+
+    /**
+     * @var ReflectionService|ObjectProphecy
+     */
+    protected $reflectionServiceProphecy;
+
+    /**
+     * @var ValidatorResolver|ObjectProphecy
+     */
+    protected $validatorResolverProphecy;
+
+    /**
+     * @var MvcPropertyMappingConfigurationService|ObjectProphecy
+     */
+    protected $mvcPropertyMapperConfigurationServiceProphecy;
+
+    /**
+     * @var ControllerContext|ObjectProphecy
+     */
+    protected $controllerContextProphecy;
+
+    /**
+     * @var TemplateView|ObjectProphecy
+     */
+    protected $templateViewProphecy;
+
+    /**
+     * @var ContentObjectRenderer|ObjectProphecy
+     */
+    protected $contentObjectRendererProphecy;
+
+    /**
+     * @var Dispatcher|ObjectProphecy
+     */
+    protected $signalSlotDispatcherProphecy;
+
+    /**
+     * @var GlossaryRepository|ObjectProphecy
+     */
+    protected $glossaryRepositoryProphecy;
+
+    /**
+     * @var PageRenderer|ObjectProphecy
+     */
+    protected $pageRendererProphecy;
 
     /**
      * set up fixure
@@ -34,7 +128,132 @@ class GlossaryControllerTest extends UnitTestCase
      */
     public function setUp()
     {
-        $this->subject = $this->getAccessibleMock('JWeiland\\Glossary2\\Controller\\GlossaryController', array('dummy'));
+        $this->subject = new GlossaryController();
+
+        $this->requestProphecy = $this->prophesize(Request::class);
+        $this->responseProphecy = $this->prophesize(Response::class);
+        $this->objectManagerProphecy = $this->prophesize(ObjectManager::class);
+        $this->argumentsProphecy = $this->prophesize(Arguments::class);
+        $this->uriBuilderProphecy = $this->prophesize(UriBuilder::class);
+        $this->configurationManagerProphecy = $this->prophesize(ConfigurationManager::class);
+        $this->reflectionServiceProphecy = $this->prophesize(ReflectionService::class);
+        $this->validatorResolverProphecy = $this->prophesize(ValidatorResolver::class);
+        $this->mvcPropertyMapperConfigurationServiceProphecy = $this->prophesize(MvcPropertyMappingConfigurationService::class);
+        $this->controllerContextProphecy = $this->prophesize(ControllerContext::class);
+        $this->templateViewProphecy = $this->prophesize(TemplateView::class);
+        $this->contentObjectRendererProphecy = $this->prophesize(ContentObjectRenderer::class);
+        $this->signalSlotDispatcherProphecy = $this->prophesize(Dispatcher::class);
+        $this->glossaryRepositoryProphecy = $this->prophesize(GlossaryRepository::class);
+        $this->pageRendererProphecy = $this->prophesize(PageRenderer::class);
+
+        $this->requestProphecy
+            ->setDispatched(true)
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->getControllerVendorName()
+            ->shouldBeCalled()
+            ->willReturn('JWeiland');
+        $this->requestProphecy
+            ->getControllerExtensionName()
+            ->shouldBeCalled()
+            ->willReturn('Gallery2');
+        $this->requestProphecy
+            ->getControllerName()
+            ->shouldBeCalled()
+            ->willReturn('Gallery');
+        $this->requestProphecy
+            ->getFormat()
+            ->shouldBeCalled()
+            ->willReturn('html');
+
+        $this->argumentsProphecy
+            ->getIterator()
+            ->shouldBeCalled()
+            ->willReturn(new ObjectStorage());
+        $this->argumentsProphecy
+            ->getValidationResults()
+            ->shouldBeCalled()
+            ->willReturn(new Result());
+
+        $this->configurationManagerProphecy
+            ->getConfiguration(Argument::cetera())
+            ->willReturn([]);
+        $this->configurationManagerProphecy
+            ->getContentObject()
+            ->willReturn($this->contentObjectRendererProphecy->reveal());
+
+        $this->objectManagerProphecy
+            ->get(Arguments::class)
+            ->shouldBeCalled()
+            ->willReturn($this->argumentsProphecy->reveal());
+        $this->objectManagerProphecy
+            ->get(UriBuilder::class)
+            ->shouldBeCalled()
+            ->willReturn($this->uriBuilderProphecy->reveal());
+        $this->objectManagerProphecy
+            ->get(ReflectionService::class)
+            ->shouldBeCalled()
+            ->willReturn($this->reflectionServiceProphecy->reveal());
+        $this->objectManagerProphecy
+            ->get(ControllerContext::class)
+            ->shouldBeCalled()
+            ->willReturn($this->controllerContextProphecy->reveal());
+        $this->objectManagerProphecy
+            ->get(TemplateView::class)
+            ->shouldBeCalled()
+            ->willReturn($this->templateViewProphecy->reveal());
+        $this->objectManagerProphecy
+            ->get(PageRenderer::class)
+            ->shouldBeCalled()
+            ->willReturn($this->pageRendererProphecy->reveal());
+
+        $this->uriBuilderProphecy
+            ->setRequest($this->requestProphecy->reveal())
+            ->shouldBeCalled();
+
+        $this->reflectionServiceProphecy
+            ->getMethodParameters(Argument::cetera())
+            ->willReturn([]);
+
+        $this->validatorResolverProphecy
+            ->buildMethodArgumentsValidatorConjunctions(Argument::cetera())
+            ->willReturn([]);
+
+        $this->mvcPropertyMapperConfigurationServiceProphecy
+            ->initializePropertyMappingConfigurationFromRequest($this->requestProphecy->reveal(), Argument::any())
+            ->shouldBeCalled();
+
+        $this->signalSlotDispatcherProphecy
+            ->dispatch(Argument::cetera())
+            ->shouldBeCalled();
+
+        $this->templateViewProphecy
+            ->canRender(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn(true);
+        $this->templateViewProphecy
+            ->setControllerContext($this->controllerContextProphecy->reveal())
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->initializeView()
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('data', Argument::any())
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->render(Argument::cetera())
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->renderSection(Argument::cetera())
+            ->shouldBeCalled();
+
+        $this->subject->injectConfigurationManager($this->configurationManagerProphecy->reveal());
+        $this->subject->injectReflectionService($this->reflectionServiceProphecy->reveal());
+        $this->subject->injectObjectManager($this->objectManagerProphecy->reveal());
+        $this->subject->injectValidatorResolver($this->validatorResolverProphecy->reveal());
+        $this->subject->injectMvcPropertyMappingConfigurationService($this->mvcPropertyMapperConfigurationServiceProphecy->reveal());
+        $this->subject->injectSignalSlotDispatcher($this->signalSlotDispatcherProphecy->reveal());
+        $this->subject->injectGlossaryRepository($this->glossaryRepositoryProphecy->reveal());
     }
 
     /**
@@ -45,151 +264,145 @@ class GlossaryControllerTest extends UnitTestCase
     public function tearDown()
     {
         unset($this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function injectRepositorySetsRepositoryAsClassAvailable()
-    {
-        /** @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository */
-        $glossaryRepository = $this->getMock('JWeiland\\Glossary2\\Domain\\Repository\\GlossaryRepository', array(), array(), '', false);
-        $this->inject($this->subject, 'glossaryRepository', $glossaryRepository);
-        $this->assertSame(
-            $glossaryRepository,
-            $this->subject->_get('glossaryRepository')
+        unset(
+            $this->requestProphecy,
+            $this->responseProphecy,
+            $this->objectManagerProphecy,
+            $this->argumentsProphecy,
+            $this->uriBuilderProphecy,
+            $this->configurationManagerProphecy,
+            $this->reflectionServiceProphecy,
+            $this->validatorResolverProphecy,
+            $this->mvcPropertyMapperConfigurationServiceProphecy,
+            $this->controllerContextProphecy,
+            $this->templateViewProphecy,
+            $this->contentObjectRendererProphecy,
+            $this->signalSlotDispatcherProphecy,
+            $this->glossaryRepositoryProphecy,
+            $this->pageRendererProphecy
         );
     }
 
     /**
      * @test
      */
-    public function initializeActionConvertsPidOfDetailPageToZeroIfEmpty()
+    public function processRequestConvertsEmptyPidOfDetailPageToNull()
     {
-        $arrayWithEmptyValues = array(0, '0', null, '');
-        foreach ($arrayWithEmptyValues as $emptyValue) {
-            $this->subject->_set('settings', array(
-                'pidOfDetailPage' => $emptyValue
-            ));
-            $this->subject->initializeAction();
-            $this->assertSame(
-                array('pidOfDetailPage' => null),
-                $this->subject->_get('settings')
-            );
-        }
+        $queryResultProphecy = $this->prophesize(QueryResult::class);
+        $this->glossaryRepositoryProphecy
+            ->findEntries(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn($queryResultProphecy->reveal());
+        $this->glossaryRepositoryProphecy
+            ->getStartingLetters(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn('A,B,C');
+
+        $this->requestProphecy
+            ->getControllerActionName()
+            ->shouldBeCalled()
+            ->willReturn('list');
+        $this->configurationManagerProphecy
+            ->getConfiguration('Settings')
+            ->shouldBeCalled()
+            ->willReturn([
+                'letters' => '',
+                'pidOfDetailPage' => 0
+            ]);
+
+        $this->templateViewProphecy
+            ->assign('settings', [
+                'letters' => '',
+                'pidOfDetailPage' => null
+            ])
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('glossaries', Argument::any())
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('glossary', Argument::any())
+            ->shouldBeCalled();
+
+        $this->subject->injectConfigurationManager($this->configurationManagerProphecy->reveal());
+        $this->subject->processRequest($this->requestProphecy->reveal(), $this->responseProphecy->reveal());
     }
 
     /**
      * @test
      */
-    public function listActionWithLetterResultsInInitializedView()
+    public function processRequestCallsFindEntriesInListActionWithoutCategories()
     {
-        $letter = '0-9';
-        $glossary = array('a', 'b', 'c');
-        $glossaries = array('d', 'e', 'f');
-        /** @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository|\PHPUnit_Framework_MockObject_MockObject $glossaryRepository */
-        $glossaryRepository = $this->getMock('JWeiland\\Glossary2\\Domain\\Repository\\GlossaryRepository', array(), array(), '', false);
-        $glossaryRepository->expects($this->once())->method('findEntries')->with(array(1, 3, 12), $letter)->will($this->returnValue($glossaries));
-        /** @var \TYPO3\CMS\Fluid\View\TemplateView|\PHPUnit_Framework_MockObject_MockObject $view */
-        $view = $this->getMock('TYPO3\\CMS\\Fluid\\View\\TemplateView', array(), array(), '', false);
-        $view->expects($this->at(0))->method('assign')->with('glossaries')->will($this->returnValue($glossaries));
-        $view->expects($this->at(1))->method('assign')->with('glossary')->will($this->returnValue($glossary));
-        /** @var \JWeiland\Glossary2\Controller\GlossaryController|\PHPUnit_Framework_MockObject_MockObject|\TYPO3\CMS\Core\Tests\AccessibleObjectInterface $glossaryController */
-        $glossaryController = $this->getAccessibleMock('JWeiland\\Glossary2\\Controller\\GlossaryController', array('getGlossary'));
-        $glossaryController->injectGlossaryRepository($glossaryRepository);
-        $glossaryController->_set('settings', array('categories' => '1, 3, 12'));
-        $glossaryController->_set('view', $view);
-        $glossaryController->expects($this->once())->method('getGlossary')->will($this->returnValue($glossary));
-        $glossaryController->listAction($letter);
+        $queryResultProphecy = $this->prophesize(QueryResult::class);
+        $this->glossaryRepositoryProphecy
+            ->findEntries([], '')
+            ->shouldBeCalled()
+            ->willReturn($queryResultProphecy->reveal());
+        $this->glossaryRepositoryProphecy
+            ->getStartingLetters(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn('A,B,C');
+
+        $this->requestProphecy
+            ->getControllerActionName()
+            ->shouldBeCalled()
+            ->willReturn('list');
+
+        $this->templateViewProphecy
+            ->assign(Argument::cetera())
+            ->shouldBeCalled();
+
+        $this->subject->processRequest($this->requestProphecy->reveal(), $this->responseProphecy->reveal());
     }
 
     /**
      * @test
      */
-    public function showActionWithGlossaryResultsInInitializedView()
+    public function processRequestGeneratesGlossaryInListAction()
     {
-        $glossary = new Glossary();
-        /** @var \TYPO3\CMS\Fluid\View\TemplateView|\PHPUnit_Framework_MockObject_MockObject $view */
-        $view = $this->getMock('TYPO3\\CMS\\Fluid\\View\\TemplateView', array(), array(), '', false);
-        $view->expects($this->at(0))->method('assign')->with('glossary')->will($this->returnValue($glossary));
-        /** @var \JWeiland\Glossary2\Controller\GlossaryController|\PHPUnit_Framework_MockObject_MockObject|\TYPO3\CMS\Core\Tests\AccessibleObjectInterface $glossaryController */
-        $glossaryController = $this->getAccessibleMock('JWeiland\\Glossary2\\Controller\\GlossaryController', array('getGlossary'));
-        $glossaryController->_set('view', $view);
-        $glossaryController->showAction($glossary);
-    }
+        $queryResultProphecy = $this->prophesize(QueryResult::class);
+        $this->glossaryRepositoryProphecy
+            ->findEntries(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn($queryResultProphecy->reveal());
+        $this->glossaryRepositoryProphecy
+            ->getStartingLetters(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn('A,B,C');
 
-    /**
-     * @test
-     */
-    public function creatingGlossaryResultsInGlossaryWithAllValues()
-    {
-        // this is the value which might come from database
-        $returnValueForGetStartingLetters['letters'] = implode(',', str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+?=)(/&%$§"!'));
-        $expectedResult = array('0-9' => true);
-        foreach (str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ') as $value) {
-            $expectedResult[$value] = true;
-        }
+        $this->requestProphecy
+            ->getControllerActionName()
+            ->shouldBeCalled()
+            ->willReturn('list');
+        $this->configurationManagerProphecy
+            ->getConfiguration('Settings')
+            ->shouldBeCalled()
+            ->willReturn([
+                'categories' => '',
+                'letters' => '0-9,A,B,C,D',
+                'pidOfDetailPage' => 0
+            ]);
 
-        /** @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository|\PHPUnit_Framework_MockObject_MockObject $glossaryRepository */
-        $glossaryRepository = $this->getMock('JWeiland\\Glossary2\\Domain\\Repository\\GlossaryRepository', array(), array(), '', false);
-        $glossaryRepository
-            ->expects($this->once())
-            ->method('getStartingLetters')
-            ->willReturn($returnValueForGetStartingLetters);
-        $this->inject($this->subject, 'glossaryRepository', $glossaryRepository);
-        $this->subject->_set('settings', array('letters' => '0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'));
+        $this->templateViewProphecy
+            ->assign('settings', [
+                'categories' => '',
+                'letters' => '0-9,A,B,C,D',
+                'pidOfDetailPage' => null
+            ])
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('glossaries', Argument::any())
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('glossary', [
+                '0-9' => false,
+                'A' => true,
+                'B' => true,
+                'C' => true,
+                'D' => false,
+            ])
+            ->shouldBeCalled();
 
-        $this->assertSame(
-            $expectedResult,
-            $this->subject->getGlossary()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function creatingGlossaryResultsInGlossaryWhereHalfTheValuesAreLinked()
-    {
-        // this is the value which might come from database
-        // each second value was removed (b, d, f, ...) and letters are unsorted
-        $returnValueForGetStartingLetters['letters'] = implode(',', str_split('CEIK2MGOQSUAWY0468#+?=)(/&%$§"!'));
-        $expectedResult = array('0-9' => true);
-        foreach (str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ') as $key => $value) {
-            // define that each second letter was not in database. So set them to false
-            $expectedResult[$value] = $key % 2 ? false : true;
-        }
-
-        /** @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository|\PHPUnit_Framework_MockObject_MockObject $glossaryRepository */
-        $glossaryRepository = $this->getMock('JWeiland\\Glossary2\\Domain\\Repository\\GlossaryRepository', array(), array(), '', false);
-        $glossaryRepository
-            ->expects($this->once())
-            ->method('getStartingLetters')
-            ->willReturn($returnValueForGetStartingLetters);
-        $this->inject($this->subject, 'glossaryRepository', $glossaryRepository);
-        $this->subject->_set('settings', array('letters' => '0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'));
-
-        $this->assertSame(
-            $expectedResult,
-            $this->subject->getGlossary()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getGlossaryWithCategoriesResultsInGlossary()
-    {
-        /** @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository|\PHPUnit_Framework_MockObject_MockObject $glossaryRepository */
-        $glossaryRepository = $this->getAccessibleMock('JWeiland\\Glossary2\\Domain\\Repository\\GlossaryRepository', array('getStartingLetters'), array(), '', false);
-        $glossaryRepository->expects($this->once())->method('getStartingLetters')->with(
-            $this->callback(function($subject) {
-                return $subject === GeneralUtility::intExplode(',', implode(',', $subject), true);
-            })
-        );
-        /** @var \JWeiland\Glossary2\Controller\GlossaryController|\PHPUnit_Framework_MockObject_MockObject|\TYPO3\CMS\Core\Tests\AccessibleObjectInterface $glossaryController */
-        $glossaryController = $this->getAccessibleMock('JWeiland\\Glossary2\\Controller\\GlossaryController', array('dummy'));
-        $glossaryController->_set('settings', array('categories' => '1,2,3,4,5'));
-        $glossaryController->injectGlossaryRepository($glossaryRepository);
-        $glossaryController->getGlossary();
+        $this->subject->injectConfigurationManager($this->configurationManagerProphecy->reveal());
+        $this->subject->processRequest($this->requestProphecy->reveal(), $this->responseProphecy->reveal());
     }
 }
