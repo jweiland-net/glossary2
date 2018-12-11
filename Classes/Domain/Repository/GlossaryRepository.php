@@ -14,7 +14,7 @@ namespace JWeiland\Glossary2\Domain\Repository;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use JWeiland\Glossary2\Service\DatabaseService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -39,7 +39,7 @@ class GlossaryRepository extends Repository
      * @param string $letter
      * @return QueryResultInterface
      */
-    public function findEntries(array $categories = [], $letter = '')
+    public function findEntries(array $categories = [], string $letter = ''): QueryResultInterface
     {
         // return full list, if arguments are not valid
         if (!$this->checkArgumentsForFindEntries($categories, $letter)) {
@@ -81,24 +81,27 @@ class GlossaryRepository extends Repository
     }
 
     /**
-     * check arguments of method findEntries
+     * Check arguments of method findEntries
      *
      * @param array $categories
      * @param string $letter
      * @return bool
      */
-    public function checkArgumentsForFindEntries(array $categories, $letter)
+    protected function checkArgumentsForFindEntries(array $categories, string $letter): bool
     {
-        // check categories
-        if (is_array($categories)) {
-            $intCategories = GeneralUtility::intExplode(',', implode(',', $categories), true);
-            if ($intCategories !== $categories) {
-                return false;
-            }
-            if (in_array(0, $intCategories)) {
-                return false;
-            }
-        } else {
+        // check categories as they can also be set by TypoScript
+        $intCategories = GeneralUtility::intExplode(
+            ',',
+            implode(
+                ',',
+                $categories
+            ),
+            true
+        );
+        if ($intCategories !== $categories) {
+            return false;
+        }
+        if (in_array(0, $intCategories)) {
             return false;
         }
 
@@ -111,41 +114,30 @@ class GlossaryRepository extends Repository
     }
 
     /**
-     * get an array with available starting letters
+     * Get an array with available starting letters
      *
      * @param array $categories
-     * @return array
+     * @return string
      */
-    public function getStartingLetters(array $categories = array())
+    public function getStartingLetters(array $categories = []): string
     {
         // return empty array, if argument is not valid
         if (!$this->checkArgumentsForFindEntries($categories, '')) {
-            return array();
+            return '';
         }
-        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-        $query = $this->createQuery();
-        if ($categories === array()) {
-            list($availableLetters) = $query->statement('
-                SELECT GROUP_CONCAT(DISTINCT REPLACE(REPLACE(REPLACE(LEFT(UPPER(title), 1), \'Ä\', \'A\'), \'Ö\', \'O\'), \'Ü\', \'U\')) as letters
-                FROM tx_glossary2_domain_model_glossary
-                WHERE FIND_IN_SET(tx_glossary2_domain_model_glossary.pid, "' . implode(',', $query->getQuerySettings()->getStoragePageIds()) . '")' .
-                BackendUtility::BEenableFields('tx_glossary2_domain_model_glossary')	.
-                BackendUtility::deleteClause('tx_glossary2_domain_model_glossary')
-            )->execute(true);
-        } else {
-            list($availableLetters) = $query->statement('
-                SELECT GROUP_CONCAT(DISTINCT REPLACE(REPLACE(REPLACE(LEFT(UPPER(title), 1), \'Ä\', \'A\'), \'Ö\', \'O\'), \'Ü\', \'U\')) as letters
-                FROM tx_glossary2_domain_model_glossary
-                LEFT JOIN sys_category_record_mm
-                ON sys_category_record_mm.uid_foreign=tx_glossary2_domain_model_glossary.uid
-                WHERE FIND_IN_SET(tx_glossary2_domain_model_glossary.pid, "' . implode(',', $query->getQuerySettings()->getStoragePageIds()) . '")
-                AND sys_category_record_mm.tablenames="tx_glossary2_domain_model_glossary"
-                AND sys_category_record_mm.fieldname="categories"
-                AND FIND_IN_SET(sys_category_record_mm.uid_local, "' . implode(',', $categories) . '")' .
-                BackendUtility::BEenableFields('tx_glossary2_domain_model_glossary') .
-                BackendUtility::deleteClause('tx_glossary2_domain_model_glossary')
-            )->execute(true);
+
+        $databaseService = GeneralUtility::makeInstance(DatabaseService::class);
+        $rows = $databaseService->getGroupedFirstLetters($this->createQuery(), $categories);
+
+        $letters = [];
+        foreach ($rows as $row) {
+            $letters[] = strtr($row['Letter'], [
+                'Ä' => 'A',
+                'Ö' => 'O',
+                'Ü' => 'U',
+            ]);
         }
-        return $availableLetters;
+
+        return implode(',', array_unique($letters));
     }
 }
