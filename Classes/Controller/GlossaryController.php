@@ -125,7 +125,7 @@ class GlossaryController extends ActionController
             GeneralUtility::intExplode(',', $this->settings['categories'], true)
         );
         // remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
-        $availableLetters = str_split(preg_replace('~([[:^alnum:]])~', '', $availableLetters['letters']));
+        $availableLetters = str_split(preg_replace('~([[:^alnum:]])~', '', $availableLetters));
         sort($availableLetters);
         $availableLetters = implode('', $availableLetters);
 
@@ -135,7 +135,7 @@ class GlossaryController extends ActionController
         }
 
         // mark letter as link (true) or not-linked (false)
-        $glossary = array();
+        $glossary = [];
         foreach ($possibleLetters as $possibleLetter) {
             $glossary[$possibleLetter] = (strpos($availableLetters, $possibleLetter) !== false) ? true : false;
         }

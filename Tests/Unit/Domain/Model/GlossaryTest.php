@@ -15,6 +15,9 @@ namespace JWeiland\Glossary2\Tests\Unit\Domain\Model;
  */
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Extbase\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Test case.
@@ -22,7 +25,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 class GlossaryTest extends UnitTestCase
 {
     /**
-     * @var \JWeiland\Glossary2\Domain\Model\Glossary
+     * @var Glossary
      */
     protected $subject;
 
@@ -133,21 +136,9 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getImagesInitiallyReturnsNull()
-    {
-        $this->assertNull($this->subject->getImages());
-    }
-
-    /**
-     * @test
-     */
-    public function setImagesSetsImages()
-    {
-        $instance = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->subject->setImages($instance);
-
-        $this->assertSame(
-            $instance,
+    public function getImagesInitiallyReturnsObjectStorage() {
+        $this->assertEquals(
+            new ObjectStorage(),
             $this->subject->getImages()
         );
     }
@@ -155,21 +146,111 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getCategoriesInitiallyReturnsNull()
-    {
-        $this->assertNull($this->subject->getCategories());
+    public function setImagesSetsImages() {
+        $object = new FileReference();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($object);
+        $this->subject->setImages($objectStorage);
+
+        $this->assertSame(
+            $objectStorage,
+            $this->subject->getImages()
+        );
     }
 
     /**
      * @test
      */
-    public function setCategoriesSetsCategories()
-    {
-        $instance = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->subject->setCategories($instance);
+    public function addImageAddsOneImage() {
+        $objectStorage = new ObjectStorage();
+        $this->subject->setImages($objectStorage);
+
+        $object = new FileReference();
+        $this->subject->addImage($object);
+
+        $objectStorage->attach($object);
 
         $this->assertSame(
-            $instance,
+            $objectStorage,
+            $this->subject->getImages()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeImageRemovesOneImage() {
+        $object = new FileReference();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($object);
+        $this->subject->setImages($objectStorage);
+
+        $this->subject->removeImage($object);
+        $objectStorage->detach($object);
+
+        $this->assertSame(
+            $objectStorage,
+            $this->subject->getImages()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getCategoriesInitiallyReturnsObjectStorage() {
+        $this->assertEquals(
+            new ObjectStorage(),
+            $this->subject->getCategories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setCategoriesSetsCategories() {
+        $object = new Category();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($object);
+        $this->subject->setCategories($objectStorage);
+
+        $this->assertSame(
+            $objectStorage,
+            $this->subject->getCategories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addCategoryAddsOneCategory() {
+        $objectStorage = new ObjectStorage();
+        $this->subject->setCategories($objectStorage);
+
+        $object = new Category();
+        $this->subject->addCategory($object);
+
+        $objectStorage->attach($object);
+
+        $this->assertSame(
+            $objectStorage,
+            $this->subject->getCategories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeCategoryRemovesOneCategory() {
+        $object = new Category();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($object);
+        $this->subject->setCategories($objectStorage);
+
+        $this->subject->removeCategory($object);
+        $objectStorage->detach($object);
+
+        $this->assertSame(
+            $objectStorage,
             $this->subject->getCategories()
         );
     }
