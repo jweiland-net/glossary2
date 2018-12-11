@@ -14,7 +14,11 @@ namespace JWeiland\Glossary2\Domain\Model;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use TYPO3\CMS\Extbase\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * This class contains all getters and setters for a glossary entry
@@ -38,7 +42,7 @@ class Glossary extends AbstractEntity
     /**
      * Images
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\JWeiland\Glossary2\Domain\Model\FileReference>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
      * @lazy
      */
     protected $images;
@@ -52,11 +56,28 @@ class Glossary extends AbstractEntity
     protected $categories;
 
     /**
+     * Constructor of this class.
+     */
+    public function __construct()
+    {
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Initializes all ObjectStorage properties.
+     */
+    protected function initStorageObjects()
+    {
+        $this->images = new ObjectStorage();
+        $this->categories = new ObjectStorage();
+    }
+
+    /**
      * Returns the title
      *
      * @return string $title
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -65,11 +86,10 @@ class Glossary extends AbstractEntity
      * Sets the title
      *
      * @param string $title
-     * @return void
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
-        $this->title = (string)$title;
+        $this->title = $title;
     }
 
     /**
@@ -77,7 +97,7 @@ class Glossary extends AbstractEntity
      *
      * @return string $description
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -86,19 +106,18 @@ class Glossary extends AbstractEntity
      * Sets the description
      *
      * @param string $description
-     * @return void
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
-        $this->description = (string)$description;
+        $this->description = $description;
     }
 
     /**
      * Returns the images
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage $images
+     * @return ObjectStorage
      */
-    public function getImages()
+    public function getImages(): ObjectStorage
     {
         return $this->images;
     }
@@ -106,20 +125,39 @@ class Glossary extends AbstractEntity
     /**
      * Sets the images
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $images
-     * @return void
+     * @param ObjectStorage $images
      */
-    public function setImages(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $images)
+    public function setImages(ObjectStorage $images)
     {
         $this->images = $images;
     }
 
     /**
+     * Add an image
+     *
+     * @param FileReference $image
+     */
+    public function addImage(FileReference $image)
+    {
+        $this->images->attach($image);
+    }
+
+    /**
+     * Remove an image
+     *
+     * @param FileReference $image
+     */
+    public function removeImage(FileReference $image)
+    {
+        $this->images->detach($image);
+    }
+
+    /**
      * Returns the categories
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
+     * @return ObjectStorage
      */
-    public function getCategories()
+    public function getCategories(): ObjectStorage
     {
         return $this->categories;
     }
@@ -127,11 +165,30 @@ class Glossary extends AbstractEntity
     /**
      * Sets the categories
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories
-     * @return void
+     * @param ObjectStorage $categories
      */
-    public function setCategories(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories)
+    public function setCategories(ObjectStorage $categories)
     {
         $this->categories = $categories;
+    }
+
+    /**
+     * Add a category
+     *
+     * @param Category $category
+     */
+    public function addCategory(Category $category)
+    {
+        $this->categories->attach($category);
+    }
+
+    /**
+     * Remove a category
+     *
+     * @param Category $category
+     */
+    public function removeCategory(Category $category)
+    {
+        $this->categories->detach($category);
     }
 }
