@@ -1,57 +1,62 @@
-..  Editor configuration
-	...................................................
-	* utf-8 with BOM as encoding
-	* tab indent with 4 characters for code snippet.
-	* optional: soft carriage return preferred.
+.. include:: Includes.txt
 
-.. Includes roles, substitutions, ...
-.. include:: _IncludedDirectives.rst
 
-=================
+.. Every manual should have a start label for cross-referencing to
+.. start page. Do not remove this!
+
+.. _start:
+
+=============================================================
 Extension Name
-=================
+=============================================================
 
-:Extension name: Glossary 2
-:Extension key: glossary2
-:Version: 0.0.1
-:Description: manuals covering TYPO3 extension "Glossary 2"
-:Language: en
-:Author: Stefan Froemken
-:Creation: 2013-07-31
-:Generation: 11:14
-:Licence: Open Content License available from `www.opencontent.org/opl.shtml <http://www.opencontent.org/opl.shtml>`_
+.. only:: html
 
-The content of this document is related to TYPO3, a GNU/GPL CMS/Framework available from `www.typo3.org
-<http://www.typo3.org/>`_
+   :Classification:
+      glossary2
 
-**Table of Contents**
+   :Version:
+      |release|
+
+   :Language:
+      en
+
+   :Description:
+      Manual covering TYPO3 extension glossary2
+
+   :Keywords:
+      glossary, a-z, navigation
+
+   :Copyright:
+      2013-2019
+
+   :Author:
+      Stefan Froemken
+
+   :Email:
+      projects@jweiland.net
+
+   :License:
+      This document is published under the Open Publication License
+      available from http://www.opencontent.org/openpub/
+
+   :Rendered:
+      |today|
+
+   The content of this document is related to TYPO3,
+   a GNU/GPL CMS/Framework available from `www.typo3.org <https://typo3.org/>`__.
+
+
+   **Table of Contents**
 
 .. toctree::
-	:maxdepth: 2
+   :maxdepth: 3
 
-	ProjectInformation
-	UserManual
-	AdministratorManual
-	TyposcriptReference
-	DeveloperCorner
-	RestructuredtextHelp
 
-.. STILL TO ADD IN THIS DOCUMENT
-	@todo: add section about how screenshots can be automated. Pointer to PhantomJS could be added.
-	@todo: explain how documentation can be rendered locally and remotely.
-	@todo: explain what files should be versionned and what not (_build, Makefile, conf.py, ...)
-
-.. include:: ../Readme.rst
-
-What does it do?
-=================
-
-In this chapter should be given a brief overview of the extension. What does it do? What problem does it solve? Who is interested in this? Basically, this section includes everything people need to know to decide whether they should go on with this extension.
-
-.. figure:: Images/IntroductionPackage.png
-		:width: 500px
-		:alt: Introduction Package
-
-		Introduction Package just after installation (caption of the image)
-
-		How the Frontend of the Introduction Package looks like just after installation (legend of the image)
+   Introduction/Index
+   User/Index
+   Installation/Index
+   Configuration/Index
+   KnownProblems/Index
+   ChangeLog/Index
+   Links
