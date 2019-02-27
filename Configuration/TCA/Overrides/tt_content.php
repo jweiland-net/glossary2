@@ -13,5 +13,5 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['glossary2_gl
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'JWeiland.glossary2',
     'Glossary',
-    'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.title'
+    'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.title'
 );
