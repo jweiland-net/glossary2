@@ -82,6 +82,7 @@ class GlossaryController extends ActionController
             GeneralUtility::intExplode(',', $this->settings['categories'], true),
             $letter
         );
+        $this->view->assign('letter', $letter);
         $this->view->assign('glossaries', $glossaries);
         $this->view->assign('glossary', $this->getGlossary());
     }
