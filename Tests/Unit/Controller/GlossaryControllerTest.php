@@ -329,6 +329,9 @@ class GlossaryControllerTest extends UnitTestCase
             ])
             ->shouldBeCalled();
         $this->templateViewProphecy
+            ->assign('letter', Argument::exact(''))
+            ->shouldBeCalled();
+        $this->templateViewProphecy
             ->assign('glossaries', Argument::any())
             ->shouldBeCalled();
         $this->templateViewProphecy
@@ -400,6 +403,9 @@ class GlossaryControllerTest extends UnitTestCase
                 'letters' => '0-9,A,B,C,D',
                 'pidOfDetailPage' => null
             ])
+            ->shouldBeCalled();
+        $this->templateViewProphecy
+            ->assign('letter', Argument::exact(''))
             ->shouldBeCalled();
         $this->templateViewProphecy
             ->assign('glossaries', Argument::any())
