@@ -30,6 +30,6 @@ call_user_func(function ($extKey) {
         );
     }
 
-    // add maps2 plugin to new element wizard
+    // add glossary2 plugin to new element wizard
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:glossary2/Configuration/TSconfig/ContentElementWizard.txt">');
 }, $_EXTKEY);
