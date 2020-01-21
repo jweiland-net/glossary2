@@ -19,7 +19,7 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'title,description',
-        'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.gif'
+        'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg'
     ],
     'interface' => [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, images',
