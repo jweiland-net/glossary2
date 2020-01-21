@@ -1,7 +1,7 @@
 {
 	"name": "jweiland/glossary2",
 	"type": "typo3-cms-extension",
-	"description": "Creates a glossary with A-Z links",
+	"description": "This TYPO3 extension creates a glossary with A-Z links for you",
 	"license": "GPL-2.0-or-later",
 	"keywords": ["typo3", "TYPO3 CMS", "glossar", "glossary2"],
 	"homepage": "http://www.jweiland.net",
@@ -41,6 +41,7 @@
 	"extra": {
 		"typo3/cms": {
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"extension-key": "glossary2",
 			"web-dir": ".Build/public"
 		}
 	}

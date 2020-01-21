@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Glossary 2',
-    'description' => 'Glossary 2',
+    'description' => 'This TYPO3 extension creates a glossary with A-Z links for you',
     'category' => 'plugin',
     'author' => 'Stefan Froemken',
     'author_email' => 'projects@jweiland.net',
@@ -27,7 +27,7 @@ $EM_CONF[$_EXTKEY] = [
     'modify_tables' => '',
     'clearCacheOnLoad' => 0,
     'lockType' => '',
-    'version' => '2.2.0',
+    'version' => '3.0.0',
     'constraints' => [
         'depends' => [
             'typo3' => '8.7.0-9.5.99',
