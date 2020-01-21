@@ -34,7 +34,6 @@ class GlossaryController extends ActionController
      * inject method for glossary repository
      *
      * @param \JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository
-     * @return void
      */
     public function injectGlossaryRepository(\JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository)
     {
@@ -43,8 +42,6 @@ class GlossaryController extends ActionController
 
     /**
      * preprocessing of all actions
-     *
-     * @return void
      */
     public function initializeAction()
     {
@@ -62,7 +59,6 @@ class GlossaryController extends ActionController
      * or prepare the view in another way before the action is called.
      *
      * @param ViewInterface $view The view to be initialized
-     * @return void
      */
     protected function initializeView(ViewInterface $view)
     {
@@ -74,7 +70,6 @@ class GlossaryController extends ActionController
      *
      * @param string $letter Show only records starting with this letter
      * @validate $letter String, StringLength(minimum=1,maximum=3)
-     * @return void
      */
     public function listAction($letter = '')
     {
@@ -92,7 +87,6 @@ class GlossaryController extends ActionController
      *
      * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
      * @param string $letter
-     * @return void
      */
     public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary, string $letter = '')
     {

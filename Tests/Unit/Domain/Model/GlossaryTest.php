@@ -31,8 +31,6 @@ class GlossaryTest extends UnitTestCase
 
     /**
      * set up
-     *
-     * @return void
      */
     public function setUp()
     {
@@ -41,8 +39,6 @@ class GlossaryTest extends UnitTestCase
 
     /**
      * tear down
-     *
-     * @return void
      */
     public function tearDown()
     {
