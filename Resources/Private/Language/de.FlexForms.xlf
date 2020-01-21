@@ -7,20 +7,16 @@
 				<source>General</source>
 				<target>Allgemein</target>
 			</trans-unit>
-			<trans-unit id="chooseAction" xml:space="preserve">
-				<source>Choose view</source>
-				<target>Ansicht wählen</target>
+			<trans-unit id="showGlossar" xml:space="preserve">
+				<source>Show A-Z links</source>
+				<target>Zeige A-Z Links</target>
 			</trans-unit>
-			<trans-unit id="listWithGlossar" xml:space="preserve">
-				<source>List with glossar</source>
-				<target>Listenansicht mit Glossar</target>
-			</trans-unit>
-			<trans-unit id="listWithoutGlossar" xml:space="preserve">
-				<source>List without glossar</source>
-				<target>Listenansicht ohne Glossar</target>
+			<trans-unit id="showAllLink" xml:space="preserve">
+				<source>Add ALL Link</source>
+				<target>Füge ALL Link ein</target>
 			</trans-unit>
 			<trans-unit id="categories" xml:space="preserve">
-				<source>Show all entries of a choosen category</source>
+				<source>Show all entries of a chosen category</source>
 				<target>Zeige alle Einträge einer gewählten Kategorie</target>
 			</trans-unit>
 		</body>

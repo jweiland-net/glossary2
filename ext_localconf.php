@@ -32,4 +32,11 @@ call_user_func(function ($extKey) {
 
     // add glossary2 plugin to new element wizard
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:glossary2/Configuration/TSconfig/ContentElementWizard.txt">');
+
+    // Update old flex form settings
+    if (version_compare(TYPO3_branch, '9.4', '>=')) {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['glossary2UpdateOldFlexFormFields'] = \JWeiland\Glossary2\Updater\MoveOldFlexFormSettings94Updater::class;
+    } else {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['glossary2UpdateOldFlexFormFields'] = \JWeiland\Glossary2\Updater\MoveOldFlexFormSettings87Updater::class;
+    }
 }, $_EXTKEY);

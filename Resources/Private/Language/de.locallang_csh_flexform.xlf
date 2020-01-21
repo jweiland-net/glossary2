@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2020-01-20T15:03:04Z" product-name="glossary2">
+		<header/>
+		<body>
+			<trans-unit id="settings.showGlossar.description" xml:space="preserve">
+				<source>Activate this option to show A-Z links on top of the glossary list.</source>
+				<target>Aktiviere diese Option, um A-Z Links oberhalb der Listenausgabe anzeigen zu lassen.</target>
+			</trans-unit>
+			<trans-unit id="settings.showAllLink.description" xml:space="preserve">
+				<source>Add an ALL link to A-Z links.</source>
+				<target>Füge einen ALL Link den A-Z Links hinzu.</target>
+			</trans-unit>
+			<trans-unit id="settings.showAllLink.details" xml:space="preserve">
+				<source>Activate this option to add an ALL link to the A-Z links. This helps to show all glossary entries again. Of cause this option is only useful, if you also activate the show A-Z links option, too.</source>
+				<target>Aktiviere diese Option, um den A-Z Links einen ALL Link anzufügen. Damit können wieder alle Glossareinträge angezeigt werden. Natürlich macht die Aktivierung dieser Option nur Sinn, wenn auch die Option "Zeige A-Z Links" aktiviert wurde.</target>
+			</trans-unit>
+			<trans-unit id="settings.categories" xml:space="preserve">
+				<source>Show all entries of a chosen category</source>
+				<target>Zeige alle Einträge einer gewählten Kategorie</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -3,7 +3,6 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
 		<header/>
 		<body>
-
 			<trans-unit id="letter.description">
 				<source>Letter</source>
 			</trans-unit>
