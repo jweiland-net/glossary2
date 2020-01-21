@@ -33,8 +33,6 @@ class GlossaryRepository extends Repository
     ];
 
     /**
-     * find entries
-     *
      * @param array $categories
      * @param string $letter
      * @return QueryResultInterface

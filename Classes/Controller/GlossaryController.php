@@ -14,6 +14,8 @@ namespace JWeiland\Glossary2\Controller;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -24,25 +26,18 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 class GlossaryController extends ActionController
 {
     /**
-     * glossaryRepository
-     *
-     * @var \JWeiland\Glossary2\Domain\Repository\GlossaryRepository
+     * @var GlossaryRepository
      */
     protected $glossaryRepository;
 
     /**
-     * inject method for glossary repository
-     *
-     * @param \JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository
+     * @param GlossaryRepository $glossaryRepository
      */
-    public function injectGlossaryRepository(\JWeiland\Glossary2\Domain\Repository\GlossaryRepository $glossaryRepository)
+    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository)
     {
         $this->glossaryRepository = $glossaryRepository;
     }
 
-    /**
-     * preprocessing of all actions
-     */
     public function initializeAction()
     {
         // if this value was not set, then it will be filled with 0
@@ -55,19 +50,14 @@ class GlossaryController extends ActionController
     /**
      * Initializes the view before invoking an action method.
      *
-     * Override this method to solve assign variables common for all actions
-     * or prepare the view in another way before the action is called.
-     *
      * @param ViewInterface $view The view to be initialized
      */
     protected function initializeView(ViewInterface $view)
     {
-        $this->view->assign('data', $this->configurationManager->getContentObject()->data);
+        $view->assign('data', $this->configurationManager->getContentObject()->data);
     }
 
     /**
-     * action list
-     *
      * @param string $letter Show only records starting with this letter
      * @validate $letter String, StringLength(minimum=1,maximum=3)
      */
@@ -83,8 +73,6 @@ class GlossaryController extends ActionController
     }
 
     /**
-     * action show
-     *
      * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
      * @param string $letter
      */
@@ -95,7 +83,7 @@ class GlossaryController extends ActionController
     }
 
     /**
-     * get an array with letters as keys for the glossary
+     * Get an array with letters as keys for the glossary
      *
      * @return array Array with starting letters as keys
      */
