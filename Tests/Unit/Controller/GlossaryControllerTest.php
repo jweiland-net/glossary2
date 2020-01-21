@@ -124,8 +124,6 @@ class GlossaryControllerTest extends UnitTestCase
 
     /**
      * set up fixure
-     *
-     * @return void
      */
     public function setUp()
     {
@@ -270,8 +268,6 @@ class GlossaryControllerTest extends UnitTestCase
 
     /**
      * tear down fixure
-     *
-     * @return void
      */
     public function tearDown()
     {
