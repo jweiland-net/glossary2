@@ -23,6 +23,20 @@ plugin.tx_glossary2 {
     pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage}
     letters = 0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
 
+    list {
+      image {
+        width = 60c
+        height = 60c
+      }
+    }
+
+    show {
+      image {
+        width = 200c
+        height = 200c
+      }
+    }
+
     pageBrowser {
       itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
       insertAbove = {$plugin.tx_glossary2.settings.pageBrowser.insertAbove}

@@ -88,28 +88,16 @@ class GlossaryController extends ActionController
     }
 
     /**
-     * action list without glossar
-     *
-     * @return void
-     */
-    public function listWithoutGlossarAction()
-    {
-        $glossaries = $this->glossaryRepository->findEntries(
-            GeneralUtility::intExplode(',', $this->settings['categories'], true),
-            ''
-        );
-        $this->view->assign('glossaries', $glossaries);
-    }
-
-    /**
      * action show
      *
      * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
+     * @param string $letter
      * @return void
      */
-    public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary)
+    public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary, string $letter = '')
     {
         $this->view->assign('glossary', $glossary);
+        $this->view->assign('letter', $letter);
     }
 
     /**
