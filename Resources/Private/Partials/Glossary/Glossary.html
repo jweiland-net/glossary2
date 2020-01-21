@@ -1,16 +1,42 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
 			data-namespace-typo3-fluid="true"
 >
-<div class="glossary">
-	<ul class="az_list clearfix">
-		<f:for each="{glossary}" as="hasLink" key="letter">
-			<li>
-				<f:if condition="{hasLink}">
-					<f:then><f:link.action action="list" arguments="{letter: letter}">{letter}</f:link.action></f:then>
-					<f:else><span>{letter}</span></f:else>
-				</f:if>
-			</li>
-		</f:for>
-	</ul>
-</div>
+<nav class="nav">
+	<f:if condition="{settings.showAllLink}">
+		<f:render section="renderListEntry" arguments="{cssClass: 'nav-link', ariaDisabled: false}" />
+	</f:if>
+	<f:for each="{glossary}" as="hasLink" key="letter">
+		<f:if condition="{hasLink}">
+			<f:then>
+				<f:variable name="cssClass" value="nav-link" />
+				<f:variable name="ariaDisabled" value="false" />
+			</f:then>
+			<f:else>
+				<f:variable name="cssClass" value="nav-link disabled" />
+				<f:variable name="ariaDisabled" value="true" />
+			</f:else>
+		</f:if>
+		<f:render section="renderListEntry" arguments="{letter: letter, cssClass: cssClass, ariaDisabled: ariaDisabled}" />
+	</f:for>
+</nav>
+
+<f:section name="renderListEntry">
+	<f:if condition="{letter}">
+		<f:then>
+			<f:link.action
+							action="list"
+							class="{cssClass}"
+							arguments="{letter: letter}"
+							additionalAttributes="{aria-disabled: ariaDisabled}"
+			>{letter}</f:link.action>
+		</f:then>
+		<f:else>
+			<f:link.action
+							action="list"
+							class="{cssClass}"
+							additionalAttributes="{aria-disabled: ariaDisabled}"
+			>{f:translate(key: 'all')}</f:link.action>
+		</f:else>
+	</f:if>
+</f:section>
 </html>

@@ -3,7 +3,14 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
 		<header/>
 		<body>
-
+			<trans-unit id="all">
+				<source>All</source>
+				<target>Alle</target>
+			</trans-unit>
+			<trans-unit id="backToList">
+				<source>Back to list</source>
+				<target>Zurück zur Liste</target>
+			</trans-unit>
 			<trans-unit id="tx_glossary2_domain_model_glossary">
 				<source>Glossary</source>
 				<target>Glossar</target>
@@ -24,7 +31,6 @@
 				<source>Images</source>
 				<target>Bilder</target>
 			</trans-unit>
-
 		</body>
 	</file>
 </xliff>

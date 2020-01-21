@@ -3,7 +3,7 @@
 		<langDisable>1</langDisable>
 	</meta>
 	<sheets>
-		<sDEFAULT>
+		<sDEF>
 			<ROOT>
 				<TCEforms>
 					<sheetTitle>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:sheetGeneral</sheetTitle>
@@ -51,6 +51,6 @@
 					</settings.categories>
 				</el>
 			</ROOT>
-		</sDEFAULT>
+		</sDEF>
 	</sheets>
 </T3DataStructure>

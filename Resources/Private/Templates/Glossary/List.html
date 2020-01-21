@@ -6,9 +6,9 @@
 <f:section name="main">
 	<f:flashMessages />
 
-	<div class="grid_8 floatleft">
+	<f:if condition="{settings.showGlossar}">
 		<f:render partial="Glossary/Glossary" arguments="{glossary: glossary}" />
-		<f:render partial="Glossary/List" arguments="{glossaries: glossaries}" />
-	</div>
+	</f:if>
+	<f:render partial="Glossary/List" arguments="{glossaries: glossaries, letter: letter}" />
 </f:section>
 </html>
