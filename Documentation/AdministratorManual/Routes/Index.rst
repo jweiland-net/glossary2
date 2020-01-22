@@ -16,6 +16,14 @@ Example Configuration
        plugin: Glossary
        routes:
          -
+           routePath: '/first-glossary-page'
+           _controller: 'Glossary::list'
+         -
+           routePath: '/glossary-page-{page}'
+           _controller: 'Glossary::list'
+           _arguments:
+             page: '@widget_0/currentPage'
+         -
            routePath: '/glossary-by-letter/{letter}'
            _controller: 'Glossary::list'
          -
