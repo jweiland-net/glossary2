@@ -22,9 +22,13 @@ Target group: **Editors**
 Plugin Options
 --------------
 
-**Choose view**
+**Show Glossary**
 
-You can decide to show A-Z glossary navigation above or not.
+You can decide to show A-Z links above or not.
+
+**Show All link**
+
+You can decide to prepend an All-link to A-Z links or not.
 
 **Show entries of category**
 
