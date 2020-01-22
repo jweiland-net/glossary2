@@ -192,7 +192,7 @@ class GlossaryRepositoryTest extends UnitTestCase
         GeneralUtility::addInstance(DatabaseService::class, $databaseServiceProphecy->reveal());
 
         $this->assertSame(
-            'A,O,U',
+            'a,o,u',
             $this->subject->getStartingLetters()
         );
     }
