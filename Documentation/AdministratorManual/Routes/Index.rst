@@ -9,6 +9,7 @@ Example Configuration
 ---------------------
 
 .. code-block:: none
+
    routeEnhancers:
      Glossary2Plugin:
        type: Extbase
