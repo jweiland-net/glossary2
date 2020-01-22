@@ -37,7 +37,7 @@ class DatabaseService
         $table = 'tx_glossary2_domain_model_glossary';
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
         $queryBuilder = $queryBuilder
-            ->selectLiteral('UPPER(SUBSTRING(title, 1, 1)) as Letter')
+            ->selectLiteral('LOWER(SUBSTRING(title, 1, 1)) as Letter')
             ->from($table, 'glossary');
 
         $constraint = [

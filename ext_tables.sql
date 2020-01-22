@@ -7,6 +7,7 @@ CREATE TABLE tx_glossary2_domain_model_glossary (
 	pid int(11) DEFAULT '0' NOT NULL,
 
 	title varchar(255) DEFAULT '' NOT NULL,
+	path_segment varchar(2048) DEFAULT '' NOT NULL,
 	description text NOT NULL,
 	images varchar(255) DEFAULT '' NOT NULL,
 

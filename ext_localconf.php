@@ -36,6 +36,7 @@ call_user_func(function ($extKey) {
     // Update old flex form settings
     if (version_compare(TYPO3_branch, '9.4', '>=')) {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['glossary2UpdateOldFlexFormFields'] = \JWeiland\Glossary2\Updater\MoveOldFlexFormSettings94Updater::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['glossary2UpdateSlug'] = \JWeiland\Glossary2\Updater\GlossarySlugUpdater::class;
     } else {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update']['glossary2UpdateOldFlexFormFields'] = \JWeiland\Glossary2\Updater\MoveOldFlexFormSettings87Updater::class;
     }

@@ -15,6 +15,7 @@ namespace JWeiland\Glossary2\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -73,11 +74,11 @@ class GlossaryController extends ActionController
     }
 
     /**
-     * @param \JWeiland\Glossary2\Domain\Model\Glossary $glossary
-     * @param string $letter
+     * @param Glossary $glossary
      */
-    public function showAction(\JWeiland\Glossary2\Domain\Model\Glossary $glossary, string $letter = '')
+    public function showAction(Glossary $glossary)
     {
+        $letter = strtr(mb_strtolower($glossary->getTitle(){0}), "äöü", "aou");
         $this->view->assign('glossary', $glossary);
         $this->view->assign('letter', $letter);
     }
