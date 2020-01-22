@@ -16,9 +16,11 @@ namespace JWeiland\Glossary2\Domain\Repository;
  */
 use JWeiland\Glossary2\Service\DatabaseService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * This class contains all queries to get needed glossary entries from DB
@@ -39,43 +41,61 @@ class GlossaryRepository extends Repository
      */
     public function findEntries(array $categories = [], string $letter = ''): QueryResultInterface
     {
-        // return full list, if arguments are not valid
-        if (!$this->checkArgumentsForFindEntries($categories, $letter)) {
-            return $this->findAll();
-        }
-
         $query = $this->createQuery();
-        $constraint = [];
+        if ($this->checkArgumentsForFindEntries($categories, $letter)) {
+            $query = $this->createQuery();
+            $constraint = [];
 
-        // add category to constraint
-        if (count($categories)) {
-            $categoryConstraints = [];
-            foreach ($categories as $category) {
-                $categoryConstraints[] = $query->contains('categories', $category);
-            }
-            $constraint[] = $query->logicalOr($categoryConstraints);
-        }
-
-        // add letter to constraint
-        if (!empty($letter)) {
-            $letterConstraints = [];
-            if ($letter == '0-9') {
-                for ($i = 0; $i < 10; $i++) {
-                    $letterConstraints[] = $query->like('title', $i . '%');
+            // Add category to constraint
+            if (!empty($categories)) {
+                $categoryConstraints = [];
+                foreach ($categories as $category) {
+                    $categoryConstraints[] = $query->contains('categories', $category);
                 }
-            } else {
-                $letterConstraints[] = $query->like('title', $letter . '%');
+                $constraint[] = $query->logicalOr($categoryConstraints);
             }
-            $constraint[] = $query->logicalOr($letterConstraints);
-        }
 
-        if (count($constraint)) {
-            return $query->matching(
-                $query->logicalAnd($constraint)
-            )->execute();
-        } else {
-            return $this->findAll();
+            // Add letter to constraint
+            if (!empty($letter)) {
+                $letterConstraints = [];
+                if ($letter == '0-9') {
+                    for ($i = 0; $i < 10; $i++) {
+                        $letterConstraints[] = $query->like('title', $i . '%');
+                    }
+                } else {
+                    $letterConstraints[] = $query->like('title', $letter . '%');
+                }
+                $constraint[] = $query->logicalOr($letterConstraints);
+            }
+
+            if (count($constraint)) {
+                $query->matching($query->logicalAnd($constraint));
+            }
         }
+        $this->emitModifyQueryOfFindEntries($query, $categories, $letter);
+        return $query->execute();
+    }
+
+    /**
+     * Allow modification of query created in findEntities()
+     * That way you can add further fields to ORDER BY f.e.
+     *
+     * @param QueryInterface $query
+     * @param array $categories
+     * @param string $letter
+     */
+    protected function emitModifyQueryOfFindEntries(
+        QueryInterface $query,
+        array $categories,
+        string $letter
+    ) {
+        $signalSlotDispatcher = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(Dispatcher::class);
+        $signalSlotDispatcher->dispatch(
+            self::class,
+            'modifyQueryOfFindEntries',
+            [$query, $categories, $letter]
+        );
     }
 
     /**
