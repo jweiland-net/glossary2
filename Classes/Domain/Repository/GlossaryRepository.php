@@ -124,7 +124,7 @@ class GlossaryRepository extends Repository
         }
 
         // check letter
-        if (!is_string($letter) || ($letter !== '' && !preg_match('@^0-9$|^[A-Z]$@', $letter))) {
+        if (!is_string($letter) || ($letter !== '' && !preg_match('@^0-9$|^[a-z]$@', $letter))) {
             return false;
         }
 
@@ -150,9 +150,9 @@ class GlossaryRepository extends Repository
         $letters = [];
         foreach ($rows as $row) {
             $letters[] = strtr($row['Letter'], [
-                'Ä' => 'A',
-                'Ö' => 'O',
-                'Ü' => 'U',
+                'Ä' => 'a',
+                'Ö' => 'o',
+                'Ü' => 'u',
             ]);
         }
 

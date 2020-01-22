@@ -20,6 +20,9 @@
 			<trans-unit id="tx_glossary2_domain_model_glossary.title">
 				<source>Title</source>
 			</trans-unit>
+			<trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
+				<source>Segment for URL</source>
+			</trans-unit>
 			<trans-unit id="tx_glossary2_domain_model_glossary.description">
 				<source>Description</source>
 			</trans-unit>
