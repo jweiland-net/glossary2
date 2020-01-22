@@ -39,6 +39,8 @@ TypoScript Setup Reference
    =========================== ===================================== ======================= ====================
    pidOfDetailPage_            Comma separated list of page UIDs     no
    letters_                    Comma separated list of letters       no                      0-9, A-Z
+   show_                       Array
+   list_                       Array
    pageBrowser_                Array
    =========================== ===================================== ======================= ====================
 
@@ -75,6 +77,32 @@ Example: plugin.tx_glossary2.settings.letters = 0-9,A,E,I,O,U
 
 This is a list of allowed entries within the A-Z navigation above the glossary list in frontend.
 0-9 is a special entry which can not be divided into single representations.
+
+
+.. _list:
+
+list
+----
+
+Default: 200c for width and height
+
+Example: plugin.tx_glossary2.settings.list.image.width = 150c
+
+Currently not implemented in Template, but if you want, you can use this
+setting to show one or more images with a defined width and height.
+
+
+.. _show:
+
+show
+----
+
+Default: 80c for width and height
+
+Example: plugin.tx_glossary2.settings.show.image.width = 120c
+
+If you want, you can use this setting to show one or more images
+with a defined width and height.
 
 
 .. _pageBrowser:
