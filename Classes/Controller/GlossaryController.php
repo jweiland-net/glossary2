@@ -34,12 +34,12 @@ class GlossaryController extends ActionController
     /**
      * @param GlossaryRepository $glossaryRepository
      */
-    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository)
+    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
     {
         $this->glossaryRepository = $glossaryRepository;
     }
 
-    public function initializeAction()
+    public function initializeAction(): void
     {
         // if this value was not set, then it will be filled with 0
         // but that is not good, because UriBuilder accepts 0 as pid, so it's better to set it to null
@@ -53,16 +53,16 @@ class GlossaryController extends ActionController
      *
      * @param ViewInterface $view The view to be initialized
      */
-    protected function initializeView(ViewInterface $view)
+    protected function initializeView(ViewInterface $view): void
     {
         $view->assign('data', $this->configurationManager->getContentObject()->data);
     }
 
     /**
      * @param string $letter Show only records starting with this letter
-     * @validate $letter String, StringLength(minimum=1,maximum=3)
+     * @TYPO3\CMS\Extbase\Annotation\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
-    public function listAction($letter = '')
+    public function listAction(string $letter = ''): void
     {
         $glossaries = $this->glossaryRepository->findEntries(
             GeneralUtility::intExplode(',', $this->settings['categories'], true),
@@ -76,7 +76,7 @@ class GlossaryController extends ActionController
     /**
      * @param Glossary $glossary
      */
-    public function showAction(Glossary $glossary)
+    public function showAction(Glossary $glossary): void
     {
         $letter = strtr(mb_strtolower($glossary->getTitle(){0}), 'äöü', 'aou');
         $this->view->assign('glossary', $glossary);

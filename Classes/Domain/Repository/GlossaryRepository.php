@@ -83,6 +83,7 @@ class GlossaryRepository extends Repository
      * @param QueryInterface $query
      * @param array $categories
      * @param string $letter
+     * @deprecated will be removed with dropping TYPO3 9 support
      */
     protected function emitModifyQueryOfFindEntries(
         QueryInterface $query,

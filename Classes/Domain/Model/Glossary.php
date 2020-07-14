@@ -37,13 +37,13 @@ class Glossary extends AbstractEntity
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $images;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\Category>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $categories;
 
@@ -61,6 +61,7 @@ class Glossary extends AbstractEntity
     public function setTitle(string $title)
     {
         $this->title = $title;
+        return $this;
     }
 
     public function getDescription(): string
@@ -71,6 +72,7 @@ class Glossary extends AbstractEntity
     public function setDescription(string $description)
     {
         $this->description = $description;
+        return $this;
     }
 
     public function getImages(): ObjectStorage
@@ -81,16 +83,19 @@ class Glossary extends AbstractEntity
     public function setImages(ObjectStorage $images)
     {
         $this->images = $images;
+        return $this;
     }
 
     public function addImage(FileReference $image)
     {
         $this->images->attach($image);
+        return $this;
     }
 
     public function removeImage(FileReference $image)
     {
         $this->images->detach($image);
+        return $this;
     }
 
     public function getCategories(): ObjectStorage
@@ -101,15 +106,18 @@ class Glossary extends AbstractEntity
     public function setCategories(ObjectStorage $categories)
     {
         $this->categories = $categories;
+        return $this;
     }
 
     public function addCategory(Category $category)
     {
         $this->categories->attach($category);
+        return $this;
     }
 
     public function removeCategory(Category $category)
     {
         $this->categories->detach($category);
+        return $this;
     }
 }
