@@ -1,19 +1,15 @@
 <?php
-declare(strict_types = 1);
-namespace JWeiland\Glossary2\Domain\Repository;
+
+declare(strict_types=1);
 
 /*
- * This file is part of the glossary2 project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
+ * This file is part of the package jweiland/glossary2.
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
+
+namespace JWeiland\Glossary2\Domain\Repository;
+
 use JWeiland\Glossary2\Service\DatabaseService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -89,7 +85,7 @@ class GlossaryRepository extends Repository
         QueryInterface $query,
         array $categories,
         string $letter
-    ) {
+    ): void {
         $signalSlotDispatcher = GeneralUtility::makeInstance(ObjectManager::class)
             ->get(Dispatcher::class);
         $signalSlotDispatcher->dispatch(
@@ -120,7 +116,7 @@ class GlossaryRepository extends Repository
         if ($intCategories !== $categories) {
             return false;
         }
-        if (in_array(0, $intCategories)) {
+        if (in_array(0, $intCategories, true)) {
             return false;
         }
 

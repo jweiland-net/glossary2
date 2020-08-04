@@ -1,18 +1,13 @@
 <?php
-namespace JWeiland\Glossary2\Tests\Unit\Domain\Repository;
 
 /*
- * This file is part of the glossary2 project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
+ * This file is part of the package jweiland/glossary2.
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
+
+namespace JWeiland\Glossary2\Tests\Unit\Domain\Repository;
+
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Service\DatabaseService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -21,11 +16,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\Qom\Comparison;
-use TYPO3\CMS\Extbase\Persistence\Generic\Qom\PropertyValue;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
-use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
  * Test case.
@@ -98,18 +89,20 @@ class GlossaryRepositoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getStartingLettersWithInvalidCategoryUidsReturnsEmptyString() {
-        $this->assertSame(
+    public function getStartingLettersWithInvalidCategoryUidsReturnsEmptyString()
+    {
+        self::assertSame(
             '',
-            $this->subject->getStartingLetters([1,'b','c'])
+            $this->subject->getStartingLetters([1, 'b', 'c'])
         );
     }
 
     /**
      * @test
      */
-    public function getStartingLettersWithInvalidCategoriesReturnsEmptyString() {
-        $this->assertSame(
+    public function getStartingLettersWithInvalidCategoriesReturnsEmptyString()
+    {
+        self::assertSame(
             '',
             $this->subject->getStartingLetters([0])
         );
@@ -118,8 +111,9 @@ class GlossaryRepositoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getStartingLettersWithEmptyCategoriesReturnsEmptyString() {
-        $this->assertSame(
+    public function getStartingLettersWithEmptyCategoriesReturnsEmptyString()
+    {
+        self::assertSame(
             '',
             $this->subject->getStartingLetters([1, '', 3])
         );
@@ -128,7 +122,8 @@ class GlossaryRepositoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getStartingLettersWithoutCategoriesReturnsGlossary() {
+    public function getStartingLettersWithoutCategoriesReturnsGlossary()
+    {
         $this->persistenceManagerProphecy
             ->createQueryForType(Argument::any())
             ->shouldBeCalled()
@@ -155,7 +150,7 @@ class GlossaryRepositoryTest extends UnitTestCase
 
         GeneralUtility::addInstance(DatabaseService::class, $databaseServiceProphecy->reveal());
 
-        $this->assertSame(
+        self::assertSame(
             'A,B,C',
             $this->subject->getStartingLetters()
         );
@@ -164,7 +159,8 @@ class GlossaryRepositoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getStartingLettersWithoutCategoriesReturnsConvertsGermanUmlauts() {
+    public function getStartingLettersWithoutCategoriesReturnsConvertsGermanUmlauts()
+    {
         $this->persistenceManagerProphecy
             ->createQueryForType(Argument::any())
             ->shouldBeCalled()
@@ -191,7 +187,7 @@ class GlossaryRepositoryTest extends UnitTestCase
 
         GeneralUtility::addInstance(DatabaseService::class, $databaseServiceProphecy->reveal());
 
-        $this->assertSame(
+        self::assertSame(
             'a,o,u',
             $this->subject->getStartingLetters()
         );

@@ -1,19 +1,14 @@
 <?php
-declare(strict_types = 1);
-namespace JWeiland\Glossary2\Controller;
+
+declare(strict_types=1);
 
 /*
- * This file is part of the glossary2 project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
+ * This file is part of the package jweiland/glossary2.
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
+
+namespace JWeiland\Glossary2\Controller;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
@@ -109,7 +104,7 @@ class GlossaryController extends ActionController
         // mark letter as link (true) or not-linked (false)
         $glossary = [];
         foreach ($possibleLetters as $possibleLetter) {
-            $glossary[$possibleLetter] = (strpos($availableLetters, $possibleLetter) !== false) ? true : false;
+            $glossary[$possibleLetter] = strpos($availableLetters, $possibleLetter) !== false;
         }
 
         return $glossary;

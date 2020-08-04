@@ -14,4 +14,6 @@
 *.swp
 .project
 .webprj
-
+.php_cs.cache
+composer.lock
+.build

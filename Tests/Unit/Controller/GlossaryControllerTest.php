@@ -1,18 +1,13 @@
 <?php
-namespace JWeiland\Glossary2\Tests\Unit\Controller;
 
 /*
- * This file is part of the glossary2 project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
+ * This file is part of the package jweiland/glossary2.
  * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
+ * LICENSE file that was distributed with this source code.
  */
+
+namespace JWeiland\Glossary2\Tests\Unit\Controller;
+
 use JWeiland\Glossary2\Controller\GlossaryController;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
