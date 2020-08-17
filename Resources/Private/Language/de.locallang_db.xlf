@@ -3,7 +3,6 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
 		<header/>
 		<body>
-
 			<trans-unit id="plugin.glossary.title">
 				<source>Glossary</source>
 				<target>Wörterverzeichnis</target>
@@ -37,7 +36,10 @@
 				<source>Images</source>
 				<target>Bilder</target>
 			</trans-unit>
-
+			<trans-unit id="tx_glossary2_domain_model_glossary.images.add">
+				<source>Add image</source>
+				<target>Bild hinzufügen</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
