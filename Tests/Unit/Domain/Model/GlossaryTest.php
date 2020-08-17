@@ -2,6 +2,7 @@
 
 /*
  * This file is part of the package jweiland/glossary2.
+ *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
  */
@@ -24,17 +25,11 @@ class GlossaryTest extends UnitTestCase
      */
     protected $subject;
 
-    /**
-     * set up
-     */
     public function setUp()
     {
         $this->subject = new Glossary();
     }
 
-    /**
-     * tear down
-     */
     public function tearDown()
     {
         unset($this->subject);

@@ -2,6 +2,7 @@
 
 /*
  * This file is part of the package jweiland/glossary2.
+ *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
  */
@@ -41,6 +42,11 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected $viewProphecy;
 
     /**
+     * @var Request|ObjectProphecy
+     */
+    protected $requestProphecy;
+
+    /**
      * @var string[]
      */
     protected $testExtensionsToLoad = [
@@ -53,7 +59,7 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
 
-        $requestProphecy = $this->prophesize(Request::class);
+        $this->requestProphecy = $this->prophesize(Request::class);
         $this->viewProphecy = $this->prophesize(StandaloneView::class);
         $this->viewProphecy
             ->setTemplatePathAndFilename(Argument::any())
@@ -61,7 +67,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->viewProphecy
             ->getRequest()
             ->shouldBeCalled()
-            ->willReturn($requestProphecy->reveal());
+            ->willReturn($this->requestProphecy->reveal());
         $this->viewProphecy->assign(Argument::cetera())->shouldBeCalled();
         $this->viewProphecy->render()->shouldBeCalled()->willReturn('');
         GeneralUtility::addInstance(StandaloneView::class, $this->viewProphecy->reveal());
@@ -73,7 +79,8 @@ class GlossaryServiceTest extends FunctionalTestCase
     {
         unset(
             $this->subject,
-            $this->extConf
+            $this->extConf,
+            $this->viewProphecy
         );
         parent::tearDown();
     }
@@ -305,6 +312,66 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'mergeNumbers' => false,
                 'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z'
+            ]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function buildGlossaryWillUseGlossaryRequestForLinkGeneration()
+    {
+        $this->requestProphecy
+            ->setControllerExtensionName('Glossary2')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setPluginName('glossary')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setControllerName('Glossary')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setControllerActionName('list')
+            ->shouldBeCalled();
+
+        $queryBuilder = $this
+            ->getConnectionPool()
+            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject->buildGlossary($queryBuilder);
+    }
+
+    /**
+     * @test
+     */
+    public function buildGlossaryWillUseForeignRequestForLinkGeneration()
+    {
+        $this->requestProphecy
+            ->setControllerExtensionName('SyncCropAreas')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setPluginName('crop')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setControllerName('Cropping')
+            ->shouldBeCalled();
+        $this->requestProphecy
+            ->setControllerActionName('view')
+            ->shouldBeCalled();
+
+        $queryBuilder = $this
+            ->getConnectionPool()
+            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject->buildGlossary(
+            $queryBuilder,
+            [
+                'extensionName' => 'sync_crop_areas',
+                'pluginName' => 'crop',
+                'controllerName' => 'Cropping',
+                'actionName' => 'view'
             ]
         );
     }
