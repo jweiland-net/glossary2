@@ -31,7 +31,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"JWeiland\\Events2\\Tests\\": "Tests"
+			"JWeiland\\Glossary2\\Tests\\": "Tests"
 		}
 	},
 	"config": {
