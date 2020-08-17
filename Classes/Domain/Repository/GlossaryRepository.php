@@ -169,11 +169,11 @@ class GlossaryRepository extends Repository
                     ),
                     $queryBuilder->expr()->eq(
                         'sc_mm.fieldname',
-                        $queryBuilder->createNamedParameter('categories',\PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('categories', \PDO::PARAM_STR)
                     ),
                     $queryBuilder->expr()->eq(
                         'sc_mm.uid_local',
-                        $queryBuilder->createNamedParameter($categories,Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
                     )
                 );
         }

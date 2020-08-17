@@ -54,7 +54,6 @@ class ExtConfTest extends FunctionalTestCase
         );
     }
 
-
     /**
      * @test
      */
