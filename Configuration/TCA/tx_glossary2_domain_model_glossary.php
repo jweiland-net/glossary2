@@ -179,7 +179,7 @@ return [
                         'allowLanguageSynchronization' => true,
                     ],
                     'appearance' => [
-                        'createNewRelationLinkTitle' => 'LLL:EXT:events2/Resources/Private/Language/locallang_db.xlf:tx_events2_domain_model_event.image.add',
+                        'createNewRelationLinkTitle' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.images.add',
                         'showPossibleLocalizationRecords' => true,
                         'showRemovedLocalizationRecords' => true,
                         'showAllLocalizationLink' => true,

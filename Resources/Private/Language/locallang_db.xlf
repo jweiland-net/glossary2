@@ -29,7 +29,9 @@
 			<trans-unit id="tx_glossary2_domain_model_glossary.images">
 				<source>Images</source>
 			</trans-unit>
-
+			<trans-unit id="tx_glossary2_domain_model_glossary.images.add">
+				<source>Add image</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
