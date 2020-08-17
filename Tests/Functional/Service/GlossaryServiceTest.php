@@ -309,7 +309,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         );
     }
 
-    protected function getGlossary(): array{
+    protected function getGlossary(): array
+    {
         return [
             '0-9' => true,
             'a' => true,
