@@ -9,7 +9,6 @@
 namespace JWeiland\Glossary2\Tests\Unit\Domain\Repository;
 
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
-use JWeiland\Glossary2\Service\DatabaseService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;

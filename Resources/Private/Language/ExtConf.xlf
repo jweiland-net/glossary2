@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2020-08-13T15:50:04Z" product-name="glossary2">
+		<body>
+			<trans-unit id="possibleLetters">
+				<source>Possible Letters: Type in each single letter lower cased and comma separated. Only for numbers you can use 0-9 as special keyword, but something like 2-7 is not possible.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

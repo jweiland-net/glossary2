@@ -10,7 +10,10 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
-use JWeiland\Glossary2\Service\DatabaseService;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -128,31 +131,59 @@ class GlossaryRepository extends Repository
         return true;
     }
 
-    /**
-     * Get an array with available starting letters
-     *
-     * @param array $categories
-     * @return string
-     */
-    public function getStartingLetters(array $categories = []): string
+    public function getQueryBuilderForGlossary(array $categories = []): QueryBuilder
     {
-        // return empty array, if argument is not valid
-        if (!$this->checkArgumentsForFindEntries($categories, '')) {
-            return '';
+        $table = 'tx_glossary2_domain_model_glossary';
+        $query = $this->createQuery();
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+
+        // Do not set any SELECT statement. It will be set by glossary2 API
+        $queryBuilder
+            ->from($table, 'glossary')
+            ->where(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter(
+                        $query->getQuerySettings()->getStoragePageIds(),
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
+
+        // Add additional JOIN to sys_category_record_mm if needed
+        if (!empty($categories)) {
+            $queryBuilder
+                ->leftJoin(
+                    'glossary',
+                    'sys_category_record_mm',
+                    'sc_mm',
+                    $queryBuilder->expr()->eq(
+                        'glossary.uid',
+                        $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
+                    )
+                )
+                ->andWhere(
+                    $queryBuilder->expr()->eq(
+                        'sc_mm.tablenames',
+                        $queryBuilder->createNamedParameter($table, \PDO::PARAM_STR)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'sc_mm.fieldname',
+                        $queryBuilder->createNamedParameter('categories',\PDO::PARAM_STR)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'sc_mm.uid_local',
+                        $queryBuilder->createNamedParameter($categories,Connection::PARAM_INT_ARRAY)
+                    )
+                );
         }
 
-        $databaseService = GeneralUtility::makeInstance(DatabaseService::class);
-        $rows = $databaseService->getGroupedFirstLetters($this->createQuery(), $categories);
+        return $queryBuilder;
+    }
 
-        $letters = [];
-        foreach ($rows as $row) {
-            $letters[] = strtr($row['Letter'], [
-                'Ä' => 'a',
-                'Ö' => 'o',
-                'Ü' => 'u',
-            ]);
-        }
-
-        return implode(',', array_unique($letters));
+    protected function getConnectionPool(): ConnectionPool
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

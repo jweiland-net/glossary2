@@ -15,6 +15,7 @@
 							<label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showGlossar</label>
 							<config>
 								<type>check</type>
+								<renderType>checkboxToggle</renderType>
 								<default>1</default>
 							</config>
 						</TCEforms>
@@ -24,6 +25,7 @@
 							<label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showAllLink</label>
 							<config>
 								<type>check</type>
+								<renderType>checkboxToggle</renderType>
 								<default>1</default>
 							</config>
 						</TCEforms>
@@ -33,7 +35,7 @@
 							<label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:categories</label>
 							<config>
 								<type>select</type>
-								<renderType>selectSingle</renderType>
+								<renderType>selectTree</renderType>
 								<foreign_table>sys_category</foreign_table>
 								<renderMode>tree</renderMode>
 								<treeConfig>
