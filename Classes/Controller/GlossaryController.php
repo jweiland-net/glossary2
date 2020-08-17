@@ -12,6 +12,7 @@ namespace JWeiland\Glossary2\Controller;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
+use JWeiland\Glossary2\Service\GlossaryService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -27,11 +28,18 @@ class GlossaryController extends ActionController
     protected $glossaryRepository;
 
     /**
-     * @param GlossaryRepository $glossaryRepository
+     * @var GlossaryService
      */
+    protected $glossaryService;
+
     public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
     {
         $this->glossaryRepository = $glossaryRepository;
+    }
+
+    public function injectGlossaryService(GlossaryService $glossaryService): void
+    {
+        $this->glossaryService = $glossaryService;
     }
 
     public function initializeAction(): void
@@ -43,11 +51,6 @@ class GlossaryController extends ActionController
         }
     }
 
-    /**
-     * Initializes the view before invoking an action method.
-     *
-     * @param ViewInterface $view The view to be initialized
-     */
     protected function initializeView(ViewInterface $view): void
     {
         $view->assign('data', $this->configurationManager->getContentObject()->data);
@@ -59,13 +62,18 @@ class GlossaryController extends ActionController
      */
     public function listAction(string $letter = ''): void
     {
-        $glossaries = $this->glossaryRepository->findEntries(
-            GeneralUtility::intExplode(',', $this->settings['categories'], true),
-            $letter
-        );
+        $categories = GeneralUtility::intExplode(',', $this->settings['categories'], true);
+        $glossaries = $this->glossaryRepository->findEntries($categories, $letter);
+
         $this->view->assign('letter', $letter);
         $this->view->assign('glossaries', $glossaries);
-        $this->view->assign('glossary', $this->getGlossary());
+        $this->view->assign(
+            'glossary',
+            $this->glossaryService->buildGlossary(
+                $this->glossaryRepository->getQueryBuilderForGlossary($categories),
+                ['settings' => $this->settings]
+            )
+        );
     }
 
     /**
@@ -76,37 +84,5 @@ class GlossaryController extends ActionController
         $letter = strtr(mb_strtolower($glossary->getTitle(){0}), 'äöü', 'aou');
         $this->view->assign('glossary', $glossary);
         $this->view->assign('letter', $letter);
-    }
-
-    /**
-     * Get an array with letters as keys for the glossary
-     *
-     * @return array Array with starting letters as keys
-     */
-    public function getGlossary(): array
-    {
-        $possibleLetters = GeneralUtility::trimExplode(',', $this->settings['letters'], true);
-
-        // get available first letters from database
-        $availableLetters = $this->glossaryRepository->getStartingLetters(
-            GeneralUtility::intExplode(',', $this->settings['categories'], true)
-        );
-        // remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
-        $availableLetters = str_split(preg_replace('~([[:^alnum:]])~', '', $availableLetters));
-        sort($availableLetters);
-        $availableLetters = implode('', $availableLetters);
-
-        // if there are numbers inside, replace them with 0-9
-        if (preg_match('~^[[:digit:]]+~', $availableLetters)) {
-            $availableLetters = preg_replace('~(^[[:digit:]]+)~', '0-9', $availableLetters);
-        }
-
-        // mark letter as link (true) or not-linked (false)
-        $glossary = [];
-        foreach ($possibleLetters as $possibleLetter) {
-            $glossary[$possibleLetter] = strpos($availableLetters, $possibleLetter) !== false;
-        }
-
-        return $glossary;
     }
 }
