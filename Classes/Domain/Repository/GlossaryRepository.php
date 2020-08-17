@@ -42,7 +42,6 @@ class GlossaryRepository extends Repository
     {
         $query = $this->createQuery();
         if ($this->checkArgumentsForFindEntries($categories, $letter)) {
-            $query = $this->createQuery();
             $constraint = [];
 
             // Add category to constraint

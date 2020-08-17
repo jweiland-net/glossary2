@@ -72,7 +72,7 @@ class GlossaryService
             $this->getFirstLettersOfGlossaryRecords(
                 $queryBuilder,
                 $options['column'] ?? 'title',
-                $options['columnAs'] ?? 'Letter'
+                $options['columnAlias'] ?? 'Letter'
             )
         );
         if ($mergeNumbers) {
@@ -88,23 +88,24 @@ class GlossaryService
     protected function getFirstLettersOfGlossaryRecords(
         QueryBuilder $queryBuilder,
         string $column,
-        string $columnAs
+        string $columnAlias
     ): array {
         $queryBuilder
-            ->selectLiteral(sprintf('LOWER(SUBSTRING(%s, 1, 1)) as %s', $column, $columnAs))
-            ->groupBy($columnAs)
-            ->orderBy($columnAs);
+            ->selectLiteral(sprintf('LOWER(SUBSTRING(%s, 1, 1)) as %s', $column, $columnAlias))
+            ->add('groupBy', $columnAlias)
+            ->add('orderBy', $columnAlias);
 
         $statement = $queryBuilder->execute();
 
         $firstLetters = [];
         while ($firstLetter = $statement->fetch()) {
-            $firstLetters[] = $firstLetter[$columnAs];
+            $firstLetters[] = $firstLetter[$columnAlias];
         }
 
+        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
         $this->emitPostProcessFirstLettersSignal($firstLetters, $queryBuilder);
 
-        return array_unique($this->cleanUpFirstLetters($firstLetters));
+        return $firstLetters;
     }
 
     protected function cleanUpFirstLetters(array $firstLetters): array
