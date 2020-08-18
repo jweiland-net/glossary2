@@ -13,5 +13,5 @@ Administrator manual
    :maxdepth: 2
    :titlesonly:
 
-  Routes/Index
-  Update/Index
+   Routes/Index
+   Update/Index
