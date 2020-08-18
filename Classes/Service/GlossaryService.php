@@ -170,7 +170,7 @@ class GlossaryService
     {
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
         $templatePath = GeneralUtility::getFileAbsFileName(
-            $options['templatePath'] ?? 'EXT:glossary2/Resources/Private/Templates/Glossary.html'
+            $options['templatePath'] ?? $this->extConf->getTemplatePath()
         );
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename($templatePath);

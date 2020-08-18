@@ -104,6 +104,9 @@ linking of the A-Z list. It will be used within the Plugin namespace
 in URI: `tx_extensionname_pluginname`. Underscores will automatically be converted to
 UpperCamelCase.
 
+It's your part to check the GET parameters (letter) and adapt your queries to show
+filtered records.
+
 pluginName
 ----------
 
@@ -111,6 +114,9 @@ Default: glossar
 
 Please change default value to plugin name of your extension. This is needed for correct linking of the A-Z list. It will be used within the Plugin namespace
 in URI: `tx_extensionname_pluginname`.
+
+It's your part to check the GET parameters (letter) and adapt your queries to show
+filtered records.
 
 controllerName
 --------------
@@ -121,6 +127,9 @@ Please change default value to controller name which should be used for links.
 It will be used as controller part
 in URI: `tx_extensionname_pluginname[controllerName]`.
 
+It's your part to check the GET parameters (letter) and adapt your queries to show
+filtered records.
+
 actionName
 ----------
 
@@ -129,6 +138,9 @@ Default: list
 Please change default value to action name of given controller name above,which should be
 used for links. It will be used as action part
 in URI: `tx_extensionname_pluginname[actionName]`.
+
+It's your part to check the GET parameters (letter) and adapt your queries to show
+filtered records.
 
 mergeNumbers
 ------------
