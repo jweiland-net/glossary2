@@ -26,7 +26,7 @@ return [
     ],
     'types' => [
         '1' => [
-            'showitem' => '--palette--;;languageHiddenTop,
+            'showitem' => '--palette--;;languageHidden,
             title, path_segment, description, images,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access, 
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access'
