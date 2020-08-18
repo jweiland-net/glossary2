@@ -58,6 +58,7 @@ Extension Name
    Installation/Index
    Configuration/Index
    AdministratorManual/Index
+   Developer/Index
    KnownProblems/Index
    ChangeLog/Index
    Links

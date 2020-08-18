@@ -5,6 +5,12 @@ Updating
 
 If you update EXT:glossary2 to a newer version, please read this section carefully!
 
+Update to Version 4.0.0
+-----------------------
+
+As we have only removed TYPO3 8 and added TYPO3 10 compatibility there should be
+no problem to upgrade to this version.
+
 Update to Version 3.0.0
 -----------------------
 

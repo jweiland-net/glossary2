@@ -7,6 +7,26 @@
 ChangeLog
 =========
 
+**Version 4.0.0**
+
+- Remove TYPO3 8 compatibility
+- Add TYPO3 10 compatibility
+- Add Service.yaml for DI
+- BUGFIX: Use DEV-Autoloader of glossary2 instead of events2
+- Repair UnitTests and FunctionalTests.
+- Add many more FunctionalTests
+- Add API to build a Glossary for foreign extensions
+- Add documentation for Glossary API
+- Update DocHeader. Add LICENSE file
+
+**Version 3.0.2**
+
+- Add link to our new Routes documentation in our documentation
+
+**Version 3.0.1**
+
+- Add documentation for Route configuration
+
 **Version 3.0.0**
 
 - Changed all templates. They are using bootstrap classes now by default
