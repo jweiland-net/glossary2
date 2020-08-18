@@ -22,17 +22,18 @@ return [
         'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description, images',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, title, description, images',
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden,
-            title, description, images,
+            'showitem' => '--palette--;;languageHiddenTop,
+            title, path_segment, description, images,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access, 
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access'
         ],
     ],
     'palettes' => [
+        'languageHidden' => ['showitem' => 'sys_language_uid, l10n_parent, hidden'],
         'access' => [
             'showitem' => 'starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
         ]
@@ -57,36 +58,39 @@ return [
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
-            'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['', 0],
+                    [
+                        '',
+                        0
+                    ]
                 ],
                 'foreign_table' => 'tx_glossary2_domain_model_glossary',
                 'foreign_table_where' => 'AND tx_glossary2_domain_model_glossary.pid=###CURRENT_PID### AND tx_glossary2_domain_model_glossary.sys_language_uid IN (-1,0)',
-                'fieldWizard' => [
-                    'selectIcons' => [
-                        'disabled' => true,
-                    ],
-                ],
-                'default' => 0,
+                'default' => 0
             ]
         ],
-        'l10n_diffsource' => [
+        'l10n_source' => [
             'config' => [
-                'type' => 'passthrough',
-                'default' => ''
+                'type' => 'passthrough'
             ]
         ],
         'hidden' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
             'config' => [
                 'type' => 'check',
-                'default' => 0
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
             ]
         ],
         'cruser_id' => [
@@ -115,31 +119,30 @@ return [
         ],
         'starttime' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'size' => 16,
                 'eval' => 'datetime,int',
-                'default' => 0,
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
+                'default' => 0
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly'
         ],
         'endtime' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'size' => 16,
                 'eval' => 'datetime,int',
                 'default' => 0,
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
+                'range' => [
+                    'upper' => mktime(0, 0, 0, 1, 1, 2038)
+                ]
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly'
         ],
         'title' => [
             'exclude' => true,
@@ -149,6 +152,26 @@ return [
                 'size' => 30,
                 'eval' => 'trim'
             ],
+        ],
+        'path_segment' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:events2/Resources/Private/Language/locallang_db.xlf:tx_events2_domain_model_event.path_segment',
+            'displayCond' => 'VERSION:IS:false',
+            'config' => [
+                'type' => 'slug',
+                'size' => 50,
+                'generatorOptions' => [
+                    'fields' => ['title'],
+                    // As pageSlug may contain slashes, we have to remove page slug
+                    'prefixParentPageSlug' => false,
+                    'replacements' => [
+                        '/' => '-'
+                    ],
+                ],
+                'fallbackCharacter' => '-',
+                'eval' => 'uniqueInSite',
+                'default' => ''
+            ]
         ],
         'description' => [
             'exclude' => true,
