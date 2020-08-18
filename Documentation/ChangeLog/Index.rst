@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 4.0.1**
+
+- Make templatePath configurable with Extension Settings
+
 **Version 4.0.0**
 
 - Remove TYPO3 8 compatibility

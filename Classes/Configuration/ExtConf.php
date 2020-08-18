@@ -25,6 +25,11 @@ class ExtConf implements SingletonInterface
      */
     protected $possibleLetters = '';
 
+    /**
+     * @var string
+     */
+    protected $templatePath = '';
+
     public function __construct()
     {
         // get global configuration
@@ -51,5 +56,18 @@ class ExtConf implements SingletonInterface
     public function setPossibleLetters(string $possibleLetters): void
     {
         $this->possibleLetters = $possibleLetters;
+    }
+
+    public function getTemplatePath(): string
+    {
+        if (empty($this->templatePath)) {
+            return 'EXT:glossary2/Resources/Private/Templates/Glossary.html';
+        }
+        return $this->templatePath;
+    }
+
+    public function setTemplatePath(string $templatePath): void
+    {
+        $this->templatePath = $templatePath;
     }
 }

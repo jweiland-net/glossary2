@@ -1,2 +1,4 @@
+# cat=basic; type=string; label=LLL:EXT:glossary2/Resources/Private/Language/ExtConf.xlf:templatePath
+templatePath = EXT:glossary2/Resources/Private/Templates/Glossary.html
 # cat=basic; type=string; label=LLL:EXT:glossary2/Resources/Private/Language/ExtConf.xlf:possibleLetters
 possibleLetters = 0-9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z
