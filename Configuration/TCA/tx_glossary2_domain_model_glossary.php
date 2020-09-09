@@ -155,7 +155,7 @@ return [
         ],
         'path_segment' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:events2/Resources/Private/Language/locallang_db.xlf:tx_events2_domain_model_event.path_segment',
+            'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.path_segment',
             'displayCond' => 'VERSION:IS:false',
             'config' => [
                 'type' => 'slug',

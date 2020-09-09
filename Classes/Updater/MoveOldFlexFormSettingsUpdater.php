@@ -72,8 +72,8 @@ class MoveOldFlexFormSettingsUpdater
             }
 
             if (
-                array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEF']['lDEF'])
-                || array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEFAULT']['lDEF'])
+                array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEF']['lDEF'] ?? [])
+                || array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? [])
             ) {
                 return true;
             }
