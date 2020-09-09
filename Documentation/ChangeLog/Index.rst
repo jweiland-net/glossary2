@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 4.0.2**
+
+- Use translation for path_segment from glosssary2 lang files
+
 **Version 4.0.1**
 
 - Make templatePath configurable with Extension Settings
