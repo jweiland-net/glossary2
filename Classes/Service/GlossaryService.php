@@ -38,6 +38,7 @@ class GlossaryService
         $view = $this->getFluidTemplateObject($options);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
+        $view->assign('options', $options);
 
         return $view->render();
     }
