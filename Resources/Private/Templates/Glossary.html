@@ -3,8 +3,10 @@
 >
 <nav class="nav">
 	<f:if condition="{settings.showAllLink}">
-		<f:render section="renderListEntry" arguments="{cssClass: 'nav-link', ariaDisabled: false}" />
+		<f:render section="renderListEntry"
+							arguments="{cssClass: 'nav-link', ariaDisabled: false}" />
 	</f:if>
+
 	<f:for each="{glossary}" as="hasLink" key="letter">
 		<f:if condition="{hasLink}">
 			<f:then>
@@ -16,7 +18,9 @@
 				<f:variable name="ariaDisabled" value="true" />
 			</f:else>
 		</f:if>
-		<f:render section="renderListEntry" arguments="{letter: letter, cssClass: cssClass, ariaDisabled: ariaDisabled}" />
+
+		<f:render section="renderListEntry"
+							arguments="{letter: letter, options: options, cssClass: cssClass, ariaDisabled: ariaDisabled}" />
 	</f:for>
 </nav>
 
@@ -24,7 +28,7 @@
 	<f:if condition="{letter}">
 		<f:then>
 			<f:link.action
-							action="list"
+							action="{options.actionName}"
 							class="{cssClass}"
 							arguments="{letter: letter}"
 							additionalAttributes="{aria-disabled: ariaDisabled}"
@@ -32,7 +36,7 @@
 		</f:then>
 		<f:else>
 			<f:link.action
-							action="list"
+							action="{options.actionName}"
 							class="{cssClass}"
 							additionalAttributes="{aria-disabled: ariaDisabled}"
 			>{f:translate(key: 'all')}</f:link.action>
