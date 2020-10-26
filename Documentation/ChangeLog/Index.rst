@@ -7,6 +7,12 @@
 ChangeLog
 =========
 
+**Version 4.1.0**
+
+- Add 2 new methods to Glossary2 API to simplify your DB queries
+- All all API options to Fluid Template
+- Replace hard-coded action name in links with action name from API options
+
 **Version 4.0.2**
 
 - Use translation for path_segment from glosssary2 lang files

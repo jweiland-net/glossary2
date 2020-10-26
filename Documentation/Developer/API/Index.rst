@@ -6,13 +6,13 @@
 Glossary API
 ============
 
-Since glossary2 we deliver a new Glossary API which you can use to implement a Glossary Index (A-Z list)
+Since glossary2 4.0.0 we deliver a new Glossary API which you can use to implement a Glossary Index (A-Z list)
 into your own extension. All the magic you need you'll find in GlossaryService class.
 
 Build Glossary
 ==============
 
-In class GlossaryService you will find just one public method called `buildGlossary` which you have to use.
+In class GlossaryService you will find public method called `buildGlossary` which you have to use.
 As our API does not know the table to use and does not know further WHERE conditions, it is up to
 you to deliver a QueryBuilder instance as first argument. We prefer to create a new method within your
 Repository like `getQueryBuilderToFindAllEntries`.
@@ -53,11 +53,18 @@ Within your controller you can call our API that way:
 .. code-block:: php
 
    $this->view->assign(
-       'fluidVariable',
+       'glossar',
        $this->glossaryService->buildGlossary(
            $this->myRepository->getQueryBuilderToFindAllEntries()
        )
    );
+
+This will transfer the fully rendered HTML Glossar to View. Use f:format.raw in Fluid Template:
+
+.. code-block:: html
+
+   {glossar -> f:format.raw()}
+
 
 Configure Glossary API
 ======================
@@ -67,7 +74,7 @@ If you want, you can configure our API with second `options` argument:
 .. code-block:: php
 
    $this->view->assign(
-       'fluidVariable',
+       'glossar',
        $this->glossaryService->buildGlossary(
            $this->myRepository->getQueryBuilderToFindAllEntries(),
            [
@@ -181,6 +188,68 @@ using 0-9.
 
 It is not allowed to use a combination of numbers and a range like: 0, 1-3, 4.
 It is not allowed to use ranges other that 0-9 like: 0-3, 4-9.
+
+Extend your controller
+======================
+
+It is up to you to process the letter in your controller. In most cases you may extend your listAction:
+
+.. code-block:: php
+
+   /**
+    * @param string $letter
+    */
+   public function listAction(string $letter = '')
+   {
+       if ($letter) {
+           $myRecords = $this->myRepo->findByLetter($letter);
+       } else {
+           $myRecords = $this->myRepo->findAll();
+       }
+       $this->view->assign('myRecords', $myRecords);
+   }
+
+Extend your Repository
+======================
+
+Above we have used a new method `findByLetter`. With glossary2 4.1.0 you can use our API with
+Extbase Query or Doctrine.
+
+Example for Extbase Query
+-------------------------
+
+.. code-block:: php
+
+   public function findByLetter(string $letter): QueryResultInterface
+   {
+       $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
+       $query = $this->createQuery();
+
+       $constraints = [];
+       $constraints[] = $glossaryService->getLetterConstraintForExtbaseQuery($query, 'myColumnName', $letter);
+
+       return $query->matching($query->logicalAnd($constraints))->execute();
+   }
+
+Example for Doctrine
+--------------------
+
+.. code-block:: php
+
+   public function findByLetter(string $letter): QueryResultInterface
+   {
+       $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
+       $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+           ->getQueryBuilderForTable('my_table');
+       $queryBuilder
+           ->select('*')
+           ->from('my_table')
+           ->where($glossaryService->getLetterConstraintForDoctrineQuery($queryBuilder, 'my_colum_name', $letter));
+
+       $query = $this->createQuery();
+       return $query->statement($queryBuilder)->execute();
+   }
+
 
 Extend Glossary Function
 ========================
