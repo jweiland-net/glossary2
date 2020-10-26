@@ -13,8 +13,13 @@ namespace JWeiland\Glossary2\Service;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -43,7 +48,78 @@ class GlossaryService
         return $view->render();
     }
 
-    protected function getLinkedGlossary(QueryBuilder $queryBuilder, array $options)
+    /**
+     * Creates a constraint which you can use like that:
+     *
+     * $query = $this->createQuery();
+     * $constraints = [];
+     * $constraints[] = $glossary2Service->getLetterConstraintForExtbaseQuery($query, 'title', $letter);
+     * return $query->matching($query->logicalAnd($constraints))->execute();
+     *
+     * @param QueryInterface $extbaseQuery
+     * @param string $column
+     * @param string $letter
+     * @return OrInterface|ComparisonInterface
+     */
+    public function getLetterConstraintForExtbaseQuery(
+        QueryInterface $extbaseQuery,
+        string $column,
+        string $letter
+    ): ConstraintInterface {
+        $letterConstraints = [];
+        if ($letter === '0-9') {
+            for ($i = 0; $i < 10; $i++) {
+                $letterConstraints[] = $extbaseQuery->like($column, $i . '%');
+            }
+        } else {
+            $letterConstraints[] = $extbaseQuery->like(
+                $column,
+                addcslashes($letter, '_%') . '%'
+            );
+        }
+        return $extbaseQuery->logicalOr($letterConstraints);
+    }
+
+    /**
+     * Creates an expression which you can use like that:
+     *
+     * $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('my_table');
+     * $queryBuilder->andWhere($glossary2Service->getLetterConstraintForDoctrineQuery($queryBuilder, 'title', $letter));
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $column
+     * @param string $letter
+     * @return CompositeExpression
+     */
+    public function getLetterConstraintForDoctrineQuery(
+        QueryBuilder $queryBuilder,
+        string $column,
+        string $letter
+    ): CompositeExpression {
+        $letterConstraints = [];
+        if ($letter === '0-9') {
+            for ($i = 0; $i < 10; $i++) {
+                $letterConstraints[] = $queryBuilder->expr()->like(
+                    $column,
+                    $queryBuilder->createNamedParameter(
+                        $i . '%',
+                        \PDO::PARAM_STR
+                    )
+                );
+            }
+        } else {
+            $letterConstraints[] = $queryBuilder->expr()->like(
+                $column,
+                $queryBuilder->createNamedParameter(
+                    $queryBuilder->escapeLikeWildcards($letter) . '%',
+                    \PDO::PARAM_STR
+                )
+            );
+        }
+        return $queryBuilder->expr()->orX(...$letterConstraints);
+    }
+
+    protected function getLinkedGlossary(QueryBuilder $queryBuilder, array $options): array
     {
         // These are the available first letters from Database
         $availableLetters = $this->getAvailableLetters($queryBuilder, $options);
