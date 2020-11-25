@@ -52,14 +52,25 @@ Within your controller you can call our API that way:
 
 .. code-block:: php
 
-   $this->view->assign(
-       'glossar',
-       $this->glossaryService->buildGlossary(
-           $this->myRepository->getQueryBuilderToFindAllEntries()
-       )
-   );
+   /**
+    * @param string $letter Show only records starting with this letter
+    * @Extbase\Validate("String", param="letter")
+    * @Extbase\Validate("StringLength", param="letter", options={"minimum": 0, "maximum": 3})
+    */
+   public function listAction(string $letter = ''): void
+   {
+       $companies = $this->companyRepository->findByStartingLetter($letter, $this->settings);
 
-This will transfer the fully rendered HTML Glossar to View. Use f:format.raw in Fluid Template:
+       $this->view->assign('companies', $companies);
+       $this->view->assign(
+           'glossar',
+           $this->glossaryService->buildGlossary(
+               $this->myRepository->getQueryBuilderToFindAllEntries()
+           )
+       );
+   }
+
+This will transfer the fully rendered HTML Glossar to View. Use `f:format.raw()` in Fluid Template:
 
 .. code-block:: html
 
