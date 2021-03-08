@@ -1,6 +1,7 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-			data-namespace-typo3-fluid="true"
->
+<html lang="en"
+			xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+			data-namespace-typo3-fluid="true">
+
 <f:if condition="{glossaries}">
 	<f:then>
 		<f:widget.paginate objects="{glossaries}" as="paginatedGlossarys" configuration="{itemsPerPage: settings.pageBrowser.itemsPerPage, insertAbove: settings.pageBrowser.insertAbove, insertBelow: settings.pageBrowser.insertBelow, maximumNumberOfLinks: settings.pageBrowser.maximumNumberOfLinks}">
@@ -10,8 +11,9 @@
 									action="show"
 									class="nav-link"
 									pageUid="{settings.pidOfDetailPage}"
-									arguments="{glossary: glossary}"
-					>{glossary.title}</f:link.action>
+									arguments="{glossary: glossary}">
+						{glossary.title}
+					</f:link.action>
 				</f:for>
 			</nav>
 		</f:widget.paginate>
