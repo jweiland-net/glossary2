@@ -6,6 +6,12 @@
 			<trans-unit id="sheetGeneral" xml:space="preserve">
 				<source>General</source>
 			</trans-unit>
+			<trans-unit id="pidOfDetailPage">
+				<source>PID of detail page</source>
+			</trans-unit>
+			<trans-unit id="pidOfListPage">
+				<source>PID of list page</source>
+			</trans-unit>
 			<trans-unit id="showGlossar" xml:space="preserve">
 				<source>Show A-Z links</source>
 			</trans-unit>

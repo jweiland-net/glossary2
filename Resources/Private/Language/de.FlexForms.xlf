@@ -7,6 +7,14 @@
 				<source>General</source>
 				<target>Allgemein</target>
 			</trans-unit>
+			<trans-unit id="pidOfDetailPage">
+				<source>PID of detail page</source>
+				<target>PID der Detailansicht</target>
+			</trans-unit>
+			<trans-unit id="pidOfListPage">
+				<source>PID of list page</source>
+				<target>PID der Listenansicht. Sinnvoll, wenn auch eine Detailansicht definiert wurde</target>
+			</trans-unit>
 			<trans-unit id="showGlossar" xml:space="preserve">
 				<source>Show A-Z links</source>
 				<target>Zeige A-Z Links</target>
