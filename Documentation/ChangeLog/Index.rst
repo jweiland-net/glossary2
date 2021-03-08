@@ -7,6 +7,14 @@
 ChangeLog
 =========
 
+**Version 4.2.0**
+
+Add setting for PID to list/detail view in FlexForm
+
+**Version 4.1.1**
+
+Use unique instead of uniqueInSite for slug
+
 **Version 4.1.0**
 
 - Add 2 new methods to Glossary2 API to simplify your DB queries
