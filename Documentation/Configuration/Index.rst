@@ -32,27 +32,14 @@ We prefer to set a Storage PID with help of TypoScript Constants:
 TypoScript Setup Reference
 ==========================
 
-.. container:: ts-properties
+.. _pidOfListPage:
 
-   =========================== ===================================== ======================= ====================
-   Property                    Data type                             :ref:`t3tsref:stdwrap`  Default
-   =========================== ===================================== ======================= ====================
-   pidOfDetailPage_            Comma separated list of page UIDs     no
-   letters_                    Comma separated list of letters       no                      0-9, A-Z
-   show_                       Array
-   list_                       Array
-   pageBrowser_                Array
-   =========================== ===================================== ======================= ====================
+pidOfListPage
+-------------
 
+Example: plugin.tx_glossary2.settings.pidOfListPage = 23
 
-Property details
-================
-
-.. only:: html
-
-   .. contents::
-      :local:
-      :depth: 1
+If you have configured PID of detail page you may also configure a PID back to the list view.
 
 
 .. _pidOfDetailPage:
@@ -62,8 +49,8 @@ pidOfDetailPage
 
 Example: plugin.tx_glossary2.settings.pidOfDetailPage = 4
 
-Here you can add one or a comma separated list of Storage PIDs where your glossary
-records are located.
+Set this value to a PID to modify all links in list view to another detail view. Helpful,
+if you have another layout on detail view.
 
 
 .. _letters:
