@@ -16,6 +16,8 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
@@ -33,9 +35,31 @@ class GlossaryService
      */
     protected $extConf;
 
-    public function __construct(?ExtConf $extConf = null)
-    {
+    /**
+     * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
+     * and NOT of the calling extension which uses this API!
+     * We need that property to override templatePath on per page basis.
+     *
+     * @var array
+     */
+    protected $glossary2Settings;
+
+    public function __construct(
+        ?ExtConf $extConf = null,
+        ?ConfigurationManagerInterface $configurationManager = null
+    ) {
         $this->extConf = $extConf ?? GeneralUtility::makeInstance(ExtConf::class);
+
+        if ($configurationManager === null) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            $configurationManager = $objectManager->get(ConfigurationManagerInterface::class);
+        }
+
+        $this->glossary2Settings = $configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'Glossary2',
+            'Glossary'
+        ) ?: [];
     }
 
     public function buildGlossary(QueryBuilder $queryBuilder, array $options = []): string
@@ -246,17 +270,65 @@ class GlossaryService
     protected function getFluidTemplateObject(array $options): StandaloneView
     {
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
-        $templatePath = GeneralUtility::getFileAbsFileName(
-            $options['templatePath'] ?? $this->extConf->getTemplatePath()
-        );
         $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename($templatePath);
+        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
         $view->getRequest()->setControllerExtensionName($extensionName);
         $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
         $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
         $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
 
         return $view;
+    }
+
+    protected function getTemplatePath(array $options): string
+    {
+        // Priority 4. Use path from ExtConf of glossary2
+        $templatePath = $this->extConf->getTemplatePath();
+
+        // Priority 3. Use path of foreign extension
+        if (array_key_exists('templatePath', $options) && !empty($options['templatePath'])) {
+            $templatePath = $options['templatePath'];
+        }
+
+        // Priority 2. Use path from TypoScript of glossary2
+        // plugin.tx_glossary2.settings.templatePath = EXT:site_package/.../Glossary2.html
+        if (
+            array_key_exists('templatePath', $this->glossary2Settings)
+            && is_string($this->glossary2Settings['templatePath'])
+            && !empty($this->glossary2Settings['templatePath'])
+        ) {
+            $templatePath = $this->glossary2Settings['templatePath'];
+        }
+
+        // Priority 1. Use extKey individual path from TypoScript of glossary2
+        // plugin.tx_glossary2.settings.templatePath.default = EXT:site_package/.../Glossary2.html
+        // plugin.tx_glossary2.settings.templatePath.yellowpages2 = EXT:site_package/.../GlossaryForYellowpages.html
+        // plugin.tx_glossary2.settings.templatePath.clubdirectory = EXT:site_package/.../GlossaryForClubdirectory.html
+        if (
+            array_key_exists('templatePath', $this->glossary2Settings)
+            && is_array($this->glossary2Settings['templatePath'])
+            && !empty($this->glossary2Settings['templatePath'])
+        ) {
+            $extKey = GeneralUtility::camelCaseToLowerCaseUnderscored($options['extensionName'] ?? 'glossary2');
+
+            // Override with default template path for all extensions
+            if (
+                array_key_exists('default', $this->glossary2Settings['templatePath'])
+                && !empty($this->glossary2Settings['templatePath']['default'])
+            ) {
+                $templatePath = $this->glossary2Settings['templatePath']['default'];
+            }
+
+            // Override with extKey specific template path
+            if (
+                array_key_exists($extKey, $this->glossary2Settings['templatePath'])
+                && !empty($this->glossary2Settings['templatePath'][$extKey])
+            ) {
+                $templatePath = $this->glossary2Settings['templatePath'][$extKey];
+            }
+        }
+
+        return GeneralUtility::getFileAbsFileName($templatePath);
     }
 
     protected function getConnectionPool(): ConnectionPool

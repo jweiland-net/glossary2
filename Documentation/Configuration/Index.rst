@@ -53,6 +53,28 @@ Set this value to a PID to modify all links in list view to another detail view.
 if you have another layout on detail view.
 
 
+templatePath
+------------
+
+Example: plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html
+
+Default by Extension Settings: EXT:glossary2/Resources/Private/Templates/Glossary.html
+Default can be overwritten by foreign Extensions (API usage).
+
+With this setting you can override the default templatePath of glossary2 and defined templatePaths coming from
+foreign extensions. So TypoScript settings have highest priority.
+
+We also have implemented a more complex setting for templatePath:
+
+plugin.tx_glossary2.settings.templatePath {
+  default = EXT:glossary2/Resources/Private/Templates/Glossary2.html
+  events2 = EXT:events2/Resources/Private/Templates/Glossary2.html
+  yellowpages2 = EXT:yellowpages2/Resources/Private/Templates/Glossary2.html
+}
+
+``default`` will be used, if no templatePath for a given ExtensionKey was found.
+
+
 .. _letters:
 
 letters

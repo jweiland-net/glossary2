@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 4.3.0**
+
+Allow overriding templatePath of glossary2 on page basis via TypoScript
+
 **Version 4.2.0**
 
 Add setting for PID to list/detail view in FlexForm
