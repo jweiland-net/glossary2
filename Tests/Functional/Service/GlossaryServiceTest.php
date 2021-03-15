@@ -17,6 +17,8 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -37,14 +39,19 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected $extConf;
 
     /**
-     * @var StandaloneView|ObjectProphecy
+     * @var ConfigurationManagerInterface|ObjectProphecy
      */
-    protected $viewProphecy;
+    protected $configurationManagerProphecy;
 
     /**
      * @var Request|ObjectProphecy
      */
     protected $requestProphecy;
+
+    /**
+     * @var StandaloneView|ObjectProphecy
+     */
+    protected $viewProphecy;
 
     /**
      * @var string[]
@@ -59,7 +66,16 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
 
+        $this->extConf = new ExtConf();
+
+        $this->configurationManagerProphecy = $this->prophesize(ConfigurationManager::class);
+        $this->configurationManagerProphecy
+            ->getConfiguration(Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn([]);
+
         $this->requestProphecy = $this->prophesize(Request::class);
+
         $this->viewProphecy = $this->prophesize(StandaloneView::class);
         $this->viewProphecy
             ->setTemplatePathAndFilename(Argument::any())
@@ -71,8 +87,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->viewProphecy->assign(Argument::cetera())->shouldBeCalled();
         $this->viewProphecy->render()->shouldBeCalled()->willReturn('');
         GeneralUtility::addInstance(StandaloneView::class, $this->viewProphecy->reveal());
-
-        $this->subject = new GlossaryService($this->extConf);
     }
 
     public function tearDown()
@@ -86,7 +100,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @test
+     * @tester
      */
     public function buildGlossaryWillConvertGermanUmlauts()
     {
@@ -99,61 +113,107 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
 
-        $this->subject->buildGlossary($queryBuilder);
-    }
-
-    /**
-     * @test
-     */
-    public function buildGlossaryWillUseDefaultTemplatePath()
-    {
-        $this->viewProphecy
-            ->setTemplatePathAndFilename(
-                GeneralUtility::getFileAbsFileName(
-                    'EXT:glossary2/Resources/Private/Templates/Glossary.html'
-                )
-            )
-            ->shouldBeCalled();
-        $this->viewProphecy
-            ->assign('glossary', $this->getGlossary())
-            ->shouldBeCalled();
-
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject->buildGlossary($queryBuilder);
-    }
-
-    /**
-     * @test
-     */
-    public function buildGlossaryWithOwnTemplatePath()
-    {
-        $this->viewProphecy
-            ->setTemplatePathAndFilename(
-                GeneralUtility::getFileAbsFileName(
-                    'EXT:events2/Resources/Private/Templates/Glossary.html'
-                )
-            )
-            ->shouldBeCalled();
-
-        $this->viewProphecy
-            ->assign('glossary', $this->getGlossary())
-            ->shouldBeCalled();
-
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
-            [
-                'templatePath' => 'EXT:events2/Resources/Private/Templates/Glossary.html'
-            ]
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
         );
+
+        $this->subject->buildGlossary($queryBuilder);
+    }
+
+    /**
+     * As we are working with "EXT:" and getFileAbsFileName() we can only use paths of existing extensions
+     * while testing. In that case just "glossary2"
+     */
+    public function dataProviderForTemplatePath()
+    {
+        return [
+            'Default templatePath from ExtConf of glossary2' => [
+                [],
+                [],
+                'EXT:glossary2/Resources/Private/Templates/Glossary.html'
+            ],
+            'Default templatePath provided by foreign extension' => [
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                ],
+                [],
+                'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+            ],
+            'Default templatePath provided by TypoScript (string)' => [
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                ],
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html'
+                ],
+                'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html'
+            ],
+            'Default templatePath provided by TypoScript (array)' => [
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                ],
+                [
+                    'templatePath' => [
+                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html'
+                    ]
+                ],
+                'EXT:glossary2/Resources/Private/Templates/Default.html'
+            ],
+            'ExtKey individual templatePath provided by TypoScript (array)' => [
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
+                    'extensionName' => 'clubdirectory'
+                ],
+                [
+                    'templatePath' => [
+                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html',
+                        'clubdirectory' => 'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html'
+                    ]
+                ],
+                'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html'
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider dataProviderForTemplatePath
+     */
+    public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath)
+    {
+        $this->configurationManagerProphecy
+            ->getConfiguration(
+                ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+                'Glossary2',
+                'Glossary'
+            )
+            ->shouldBeCalled()
+            ->willReturn($settings);
+
+        $this->viewProphecy
+            ->setTemplatePathAndFilename(
+                GeneralUtility::getFileAbsFileName(
+                    $expectedPath
+                )
+            )
+            ->shouldBeCalled();
+        $this->viewProphecy
+            ->assign('glossary', $this->getGlossary())
+            ->shouldBeCalled();
+
+        $queryBuilder = $this
+            ->getConnectionPool()
+            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
+
+        $this->subject->buildGlossary($queryBuilder, $options);
     }
 
     /**
@@ -180,6 +240,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary($queryBuilder);
     }
@@ -210,6 +275,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
 
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
+
         $this->subject->buildGlossary($queryBuilder);
     }
 
@@ -226,6 +296,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary(
             $queryBuilder,
@@ -249,6 +324,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary(
             $queryBuilder,
@@ -276,6 +356,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary(
             $queryBuilder,
@@ -306,6 +391,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary(
             $queryBuilder,
@@ -339,6 +429,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
 
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
+
         $this->subject->buildGlossary($queryBuilder);
     }
 
@@ -364,6 +459,11 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->configurationManagerProphecy->reveal()
+        );
 
         $this->subject->buildGlossary(
             $queryBuilder,
