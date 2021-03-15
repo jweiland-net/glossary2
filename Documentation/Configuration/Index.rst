@@ -53,6 +53,8 @@ Set this value to a PID to modify all links in list view to another detail view.
 if you have another layout on detail view.
 
 
+.. _templatePath:
+
 templatePath
 ------------
 
