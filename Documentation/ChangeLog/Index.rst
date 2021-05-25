@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 4.3.1**
+
+Move SlugHelper from constructor argument into getSlugHelper()
+
 **Version 4.3.0**
 
 Allow overriding templatePath of glossary2 on page basis via TypoScript

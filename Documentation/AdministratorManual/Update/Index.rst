@@ -5,6 +5,11 @@ Updating
 
 If you update EXT:glossary2 to a newer version, please read this section carefully!
 
+Update to Version 4.3.1
+-----------------------
+
+We have changed some method arguments, please flush cache in InstallTool
+
 Update to Version 4.0.0
 -----------------------
 
