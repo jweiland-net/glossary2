@@ -28,7 +28,7 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
     protected $glossaryRepository;
 
     protected $allowedControllerActions = [
-        'GlossaryCompany' => [
+        'Glossary' => [
             'list'
         ]
     ];
@@ -43,9 +43,9 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
     {
         if ($this->isValidRequest($event)) {
             $event->addFluidVariable(
-                'glossar',
+                'glossary',
                 $this->glossaryService->buildGlossary(
-                    $this->glossaryRepository->getQueryBuilderToFindAllEntries(),
+                    $this->glossaryRepository->getQueryBuilderForGlossary(),
                     [
                         'extensionName' => 'glossary2',
                         'pluginName' => 'glossary',

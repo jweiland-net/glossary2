@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 /**
  * Helper to add where clause for translations and workspaes to QueryBuider
  */
-class TranslationHelper
+class OverlayHelper
 {
     /**
      * @var Context
@@ -30,40 +30,45 @@ class TranslationHelper
         $this->context = $context;
     }
 
-    public function addWhereForOverlay(QueryBuilder $queryBuilder, string $tableName): void
+    public function addWhereForOverlay(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
     {
-        $this->addWhereForWorkspaces($queryBuilder, $tableName);
-        $this->addWhereForTranslation($queryBuilder, $tableName);
+        $this->addWhereForWorkspaces($queryBuilder, $tableName, $tableAlias);
+        $this->addWhereForTranslation($queryBuilder, $tableName, $tableAlias);
     }
 
-    protected function addWhereForWorkspaces(QueryBuilder $queryBuilder): void
+    protected function addWhereForWorkspaces(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
     {
-        $workspaceUid = (int)$this->context->getPropertyFromAspect('workspace', 'id');
+        if ($GLOBALS['TCA'][$tableName]['ctrl']['versioningWS']) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq($tableAlias . '.t3ver_oid', 0)
+            );
+        }
     }
 
-    protected function addWhereForTranslation(QueryBuilder $queryBuilder, string $tableName): void
+    protected function addWhereForTranslation(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
     {
         // Column: sys_language_uid
         $languageField = $GLOBALS['TCA'][$tableName]['ctrl']['languageField'];
         // Column: l10n_parent
         $transOrigPointerField = $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'] ?? '';
 
+
         if ($this->getLanguageAspect()->doOverlays()) {
             // Get default language
             // sys_language_uid = 0
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq($tableName . '.' . $languageField, 0)
+                $queryBuilder->expr()->eq($tableAlias . '.' . $languageField, 0)
             );
         } else {
             // strict mode
             // sys_language_uid = {requestedLanguageUid} AND l10n_parent = 0
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->eq(
-                    $tableName . '.' . $languageField,
+                    $tableAlias . '.' . $languageField,
                     $this->getLanguageAspect()->getContentId()
                 ),
                 $queryBuilder->expr()->eq(
-                    $tableName . '.' . $transOrigPointerField,
+                    $tableAlias . '.' . $transOrigPointerField,
                     0
                 )
             );

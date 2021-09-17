@@ -10,6 +10,7 @@
 	<f:if condition="{settings.showGlossar}">
 		{glossary -> f:format.raw()}
 	</f:if>
-	<f:render partial="Glossary/List" arguments="{glossaries: glossaries, letter: letter}" />
+
+	<f:render partial="Glossary/List" arguments="{_all}" />
 </f:section>
 </html>

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Domain\Repository;
 
 use JWeiland\Glossary2\Event\ModifyQueryOfFindEntriesEvent;
+use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -40,20 +41,27 @@ class GlossaryRepository extends Repository
      */
     protected $eventDispatcher;
 
-    public function __construct(ObjectManagerInterface $objectManager, EventDispatcher $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
+    /**
+     * @var OverlayHelper
+     */
+    protected $overlayHelper;
 
+    public function __construct(
+        ObjectManagerInterface $objectManager,
+        OverlayHelper $overlayHelper,
+        EventDispatcher $eventDispatcher
+    ) {
         parent::__construct($objectManager);
+
+        $this->overlayHelper = $overlayHelper;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function findEntries(array $categories = [], string $letter = ''): QueryResultInterface
     {
         $extbaseQuery = $this->createQuery();
-        $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder
-            ->select('*')
-            ->from('tx_glossary2_domain_model_glossary', 'g');
+        $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary', 'g');
+        $queryBuilder->select('*');
 
         if ($this->checkArgumentsForFindEntries($categories, $letter)) {
             if ($categories !== []) {
@@ -145,11 +153,10 @@ class GlossaryRepository extends Repository
     {
         $table = 'tx_glossary2_domain_model_glossary';
         $query = $this->createQuery();
-        $queryBuilder = $this->getQueryBuilderForTable($table);
+        $queryBuilder = $this->getQueryBuilderForTable($table, 'g');
 
         // Do not set any SELECT statement. It will be set by glossary2 API
         $queryBuilder
-            ->from($table, 'glossary')
             ->where(
                 $queryBuilder->expr()->in(
                     'pid',
@@ -164,11 +171,11 @@ class GlossaryRepository extends Repository
         if (!empty($categories)) {
             $queryBuilder
                 ->leftJoin(
-                    'glossary',
+                    'g',
                     'sys_category_record_mm',
                     'sc_mm',
                     $queryBuilder->expr()->eq(
-                        'glossary.uid',
+                        'g.uid',
                         $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
                     )
                 )
@@ -191,10 +198,13 @@ class GlossaryRepository extends Repository
         return $queryBuilder;
     }
 
-    protected function getQueryBuilderForTable(string $table): QueryBuilder
+    protected function getQueryBuilderForTable(string $table, string $alias): QueryBuilder
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+        $queryBuilder->from($table, $alias);
+
+        $this->overlayHelper->addWhereForOverlay($queryBuilder, $table, $alias);
 
         return $queryBuilder;
     }

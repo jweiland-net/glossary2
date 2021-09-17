@@ -11,6 +11,7 @@ services:
     tags:
       - name: event.listener
         event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
+
   JWeiland\Glossary2\EventListener\AddGlossaryEventListener:
     tags:
       - name: event.listener
