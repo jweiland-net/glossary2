@@ -81,86 +81,86 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findEntriesWillFindAllEntries()
+    public function getGlossariesWillFindAllEntries()
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             7,
-            count($this->subject->findEntries()->toArray())
+            count($this->subject->getGlossaries()->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithInvalidCategoriesWillFindAllEntries()
+    public function searchGlossariesWithInvalidCategoriesWillFindAllEntries()
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             7,
-            count($this->subject->findEntries(['0', 'a'])->toArray())
+            count($this->subject->searchGlossaries(['0', 'a'])->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithGivenCategoryWillFindTwoEntries()
+    public function searchGlossariesWithGivenCategoryWillFindTwoEntries()
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             2,
-            count($this->subject->findEntries([1])->toArray())
+            count($this->subject->searchGlossaries([1])->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithSomeInvalidCategoriesWillFindAllEntries()
+    public function searchGlossariesWithSomeInvalidCategoriesWillFindAllEntries()
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             7,
-            count($this->subject->findEntries(['0', 'a', 1])->toArray())
+            count($this->subject->searchGlossaries(['0', 'a', 1])->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithLetterWillFindTwoEntries()
+    public function searchGlossariesWithLetterWillFindTwoEntries()
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             2,
-            count($this->subject->findEntries([], 'u')->toArray())
+            count($this->subject->searchGlossaries([], 'u')->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithInvalidLetterWillFindAllEntries()
+    public function searchGlossariesWithInvalidLetterWillFindAllEntries()
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             7,
-            count($this->subject->findEntries([], '/')->toArray())
+            count($this->subject->searchGlossaries([], '/')->toArray())
         );
     }
 
     /**
      * @test
      */
-    public function findEntriesWithCategoryAndLetterWillFindOneEntry()
+    public function searchGlossariesWithCategoryAndLetterWillFindOneEntry()
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
             1,
-            count($this->subject->findEntries([2], 'u')->toArray())
+            count($this->subject->searchGlossaries([2], 'u')->toArray())
         );
     }
 }
