@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Event;
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-
 /*
  * Use this event, if you want to modify the query of GlossaryRepository::findEntries.
  */

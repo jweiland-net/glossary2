@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Domain\Model;
 
 use JWeiland\Glossary2\Helper\CharsetHelper;
-use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;

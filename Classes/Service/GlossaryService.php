@@ -13,7 +13,6 @@ namespace JWeiland\Glossary2\Service;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
-use JWeiland\Glossary2\Event\SanitizeValueForCharsetHelperEvent;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Helper\OverlayHelper;

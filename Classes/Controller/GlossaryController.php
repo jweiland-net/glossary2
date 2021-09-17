@@ -13,8 +13,8 @@ namespace JWeiland\Glossary2\Controller;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
-use JWeiland\Glossary2\Service\GlossaryService;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
+use JWeiland\Glossary2\Service\GlossaryService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
