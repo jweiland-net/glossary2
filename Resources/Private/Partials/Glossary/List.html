@@ -4,17 +4,21 @@
 
 <f:if condition="{glossaries}">
 	<f:then>
-		<nav class="nav flex-column">
+		<div class="layout-list scroll-container">
 			<f:for each="{glossaries}" as="glossary">
-				<f:link.action
+				<div class="scroll-item border-top flex-list">
+					<div class="fontsize4">
+						<f:link.action
 								action="show"
 								class="nav-link"
 								pageUid="{settings.pidOfDetailPage}"
 								arguments="{glossary: glossary}">
-					{glossary.title}
-				</f:link.action>
+							{glossary.title}
+						</f:link.action>
+					</div>
+				</div>
 			</f:for>
-		</nav>
+		</div>
 		<f:render partial="Component/Pagination"
 							arguments="{pagination: pagination, paginator: paginator, actionName: actionName}" />
 	</f:then>
