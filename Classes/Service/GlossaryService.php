@@ -13,8 +13,9 @@ namespace JWeiland\Glossary2\Service;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
-use JWeiland\Glossary2\Event\ModifyLetterMappingEvent;
+use JWeiland\Glossary2\Event\SanitizeValueForCharsetHelperEvent;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
+use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
@@ -234,18 +235,24 @@ class GlossaryService
         $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
 
         /** @var PostProcessFirstLettersEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            new PostProcessFirstLettersEvent($queryBuilder, $firstLetters)
-        );
+        $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
 
         return $event->getFirstLetters();
     }
 
+    /**
+     * GROUP BY of DB will group all "a" letters like a, á, â, à to ONE of them. If grouped letter
+     * is "a", everything is fine, but in case of "á" we have to convert this letter to ASCII "a" representation.
+     *
+     * @param array $firstLetters
+     * @return array
+     */
     protected function cleanUpFirstLetters(array $firstLetters): array
     {
         // Map special chars like Ä => a
-        $firstLetters = array_map(function ($firstLetter) {
-            return strtr($firstLetter, $this->getLetterMapping());
+        $firstLetters = array_map(static function ($firstLetter) {
+            $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
+            return $charsetHelper->sanitize($firstLetter);
         }, $firstLetters);
 
         // Remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
@@ -257,22 +264,6 @@ class GlossaryService
         sort($firstLetters);
 
         return array_unique($firstLetters);
-    }
-
-    protected function getLetterMapping(): array
-    {
-        $letterMapping = [
-            'ä' => 'a',
-            'ö' => 'o',
-            'ü' => 'u',
-        ];
-
-        /** @var ModifyLetterMappingEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            new ModifyLetterMappingEvent($letterMapping)
-        );
-
-        return $event->getLetterMapping();
     }
 
     protected function getFluidTemplateObject(array $options): StandaloneView

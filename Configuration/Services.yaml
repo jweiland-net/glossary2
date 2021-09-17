@@ -17,3 +17,6 @@ services:
       - name: event.listener
         event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
         after: JWeiland\Glossary2\EventListener\AddPaginatorEventListener
+
+  JWeiland\Glossary2\Helper\CharsetHelper:
+    public: true
