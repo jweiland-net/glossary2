@@ -19,26 +19,13 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 class PostProcessFirstLettersEvent
 {
     /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
      * @var array
      */
     protected $firstLetters = [];
 
-    public function __construct(
-        QueryBuilder $queryBuilder,
-        array $firstLetters
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->firstLetters = $firstLetters;
-    }
-
-    public function getQueryBuilder(): QueryBuilder
+    public function __construct(array $firstLetters)
     {
-        return $this->queryBuilder;
+        $this->firstLetters = $firstLetters;
     }
 
     public function getFirstLetters(): array

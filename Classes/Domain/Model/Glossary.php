@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Model;
 
+use JWeiland\Glossary2\Helper\CharsetHelper;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
@@ -113,9 +114,8 @@ class Glossary extends AbstractEntity
 
     public function getSanitizedFirstLetterOfTitle(): string
     {
-        $asciiTitle = GeneralUtility::makeInstance(CharsetConverter::class)
-            ->specCharsToASCII('utf-8', mb_strtolower($this->getTitle(), 'utf-8'));
+        $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
 
-        return $asciiTitle[0];
+        return $charsetHelper->sanitize($this->getTitle())[0];
     }
 }
