@@ -11,16 +11,17 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
+use JWeiland\Glossary2\Event\ModifyQueryOfFindEntriesEvent;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * This class contains all queries to get needed glossary entries from DB
@@ -35,67 +36,70 @@ class GlossaryRepository extends Repository
     ];
 
     /**
-     * @param array $categories
-     * @param string $letter
-     * @return QueryResultInterface
+     * @var EventDispatcher
      */
+    protected $eventDispatcher;
+
+    public function __construct(ObjectManagerInterface $objectManager, EventDispatcher $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+
+        parent::__construct($objectManager);
+    }
+
     public function findEntries(array $categories = [], string $letter = ''): QueryResultInterface
     {
-        $query = $this->createQuery();
-        if ($this->checkArgumentsForFindEntries($categories, $letter)) {
-            $constraint = [];
+        $extbaseQuery = $this->createQuery();
+        $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder
+            ->select('*')
+            ->from('tx_glossary2_domain_model_glossary', 'g');
 
-            // Add category to constraint
-            if (!empty($categories)) {
-                $categoryConstraints = [];
-                foreach ($categories as $category) {
-                    $categoryConstraints[] = $query->contains('categories', $category);
-                }
-                $constraint[] = $query->logicalOr($categoryConstraints);
+        if ($this->checkArgumentsForFindEntries($categories, $letter)) {
+            if ($categories !== []) {
+                $queryBuilder->leftJoin(
+                    'g',
+                    'sys_category_record_mm',
+                    'sc_mm',
+                    $queryBuilder->expr()->eq(
+                        'g.uid',
+                        $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
+                    )
+                );
+
+                $queryBuilder->expr()->eq(
+                    'sc_mm.uid_local',
+                    $queryBuilder->createNamedParameter($categories, \PDO::PARAM_INT)
+                );
             }
 
             // Add letter to constraint
-            if (!empty($letter)) {
-                $letterConstraints = [];
-                if ($letter == '0-9') {
+            if ($letter !== '') {
+                if ($letter === '0-9') {
+                    $letterConstraint = [];
                     for ($i = 0; $i < 10; $i++) {
-                        $letterConstraints[] = $query->like('title', $i . '%');
+                        $letterConstraint[] = $queryBuilder->expr()->like(
+                            'title',
+                            $queryBuilder->createNamedParameter($i . '%', \PDO::PARAM_STR)
+                        );
                     }
+                    $queryBuilder->expr()->orX(...$letterConstraint);
                 } else {
-                    $letterConstraints[] = $query->like('title', $letter . '%');
+                    $queryBuilder->expr()->like(
+                        'title',
+                        $queryBuilder->createNamedParameter($letter . '%', \PDO::PARAM_STR)
+                    );
                 }
-                $constraint[] = $query->logicalOr($letterConstraints);
-            }
-
-            if (count($constraint)) {
-                $query->matching($query->logicalAnd($constraint));
             }
         }
-        $this->emitModifyQueryOfFindEntries($query, $categories, $letter);
-        return $query->execute();
-    }
 
-    /**
-     * Allow modification of query created in findEntities()
-     * That way you can add further fields to ORDER BY f.e.
-     *
-     * @param QueryInterface $query
-     * @param array $categories
-     * @param string $letter
-     * @deprecated will be removed with dropping TYPO3 9 support
-     */
-    protected function emitModifyQueryOfFindEntries(
-        QueryInterface $query,
-        array $categories,
-        string $letter
-    ): void {
-        $signalSlotDispatcher = GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(
-            self::class,
-            'modifyQueryOfFindEntries',
-            [$query, $categories, $letter]
+        $this->eventDispatcher->dispatch(
+            new ModifyQueryOfFindEntriesEvent($queryBuilder, $categories, $letter)
         );
+
+        $extbaseQuery->statement($queryBuilder);
+
+        return $extbaseQuery->execute();
     }
 
     /**
@@ -131,12 +135,17 @@ class GlossaryRepository extends Repository
         return true;
     }
 
+    /**
+     * Prepare a QueryBuilder for glossary (A-Z navigation)
+     *
+     * @param array $categories
+     * @return QueryBuilder
+     */
     public function getQueryBuilderForGlossary(array $categories = []): QueryBuilder
     {
         $table = 'tx_glossary2_domain_model_glossary';
         $query = $this->createQuery();
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+        $queryBuilder = $this->getQueryBuilderForTable($table);
 
         // Do not set any SELECT statement. It will be set by glossary2 API
         $queryBuilder
@@ -178,6 +187,14 @@ class GlossaryRepository extends Repository
                     )
                 );
         }
+
+        return $queryBuilder;
+    }
+
+    protected function getQueryBuilderForTable(string $table): QueryBuilder
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
 
         return $queryBuilder;
     }
