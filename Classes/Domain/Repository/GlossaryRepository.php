@@ -64,6 +64,8 @@ class GlossaryRepository extends Repository
         $queryBuilder->select('*');
 
         if ($this->checkArgumentsForFindEntries($categories, $letter)) {
+            $andConstraints = [];
+
             if ($categories !== []) {
                 $queryBuilder->leftJoin(
                     'g',
@@ -75,7 +77,7 @@ class GlossaryRepository extends Repository
                     )
                 );
 
-                $queryBuilder->expr()->eq(
+                $andConstraints[] = $queryBuilder->expr()->eq(
                     'sc_mm.uid_local',
                     $queryBuilder->createNamedParameter($categories, \PDO::PARAM_INT)
                 );
@@ -91,14 +93,16 @@ class GlossaryRepository extends Repository
                             $queryBuilder->createNamedParameter($i . '%', \PDO::PARAM_STR)
                         );
                     }
-                    $queryBuilder->expr()->orX(...$letterConstraint);
+                    $andConstraints[] = $queryBuilder->expr()->orX(...$letterConstraint);
                 } else {
-                    $queryBuilder->expr()->like(
+                    $andConstraints[] = $queryBuilder->expr()->like(
                         'title',
                         $queryBuilder->createNamedParameter($letter . '%', \PDO::PARAM_STR)
                     );
                 }
             }
+
+            $queryBuilder->andWhere(...$andConstraints);
         }
 
         $this->eventDispatcher->dispatch(
