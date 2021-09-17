@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Configuration;
 
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,22 +34,29 @@ class ExtConf implements SingletonInterface
 
     public function __construct()
     {
-        // get global configuration
-        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('glossary2');
-        if (is_array($extConf) && count($extConf)) {
-            // call setter method foreach configuration entry
-            foreach ($extConf as $key => $value) {
-                $methodName = 'set' . ucfirst($key);
-                if (method_exists($this, $methodName)) {
-                    $this->$methodName($value);
+        try {
+            // get global configuration
+            $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('glossary2');
+            if (is_array($extConf)) {
+                // call setter method foreach configuration entry
+                foreach ($extConf as $key => $value) {
+                    $methodName = 'set' . ucfirst($key);
+                    if (method_exists($this, $methodName)) {
+                        $this->$methodName($value);
+                    }
                 }
             }
+        } catch (
+            ExtensionConfigurationExtensionNotConfiguredException
+            | ExtensionConfigurationPathDoesNotExistException $e
+        ) {
+            // Use default values of this class
         }
     }
 
     public function getPossibleLetters(): string
     {
-        if (empty($this->possibleLetters)) {
+        if ($this->possibleLetters === '') {
             return '0-9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z';
         }
         return $this->possibleLetters;
@@ -55,12 +64,12 @@ class ExtConf implements SingletonInterface
 
     public function setPossibleLetters(string $possibleLetters): void
     {
-        $this->possibleLetters = $possibleLetters;
+        $this->possibleLetters = trim($possibleLetters);
     }
 
     public function getTemplatePath(): string
     {
-        if (empty($this->templatePath)) {
+        if ($this->templatePath === '') {
             return 'EXT:glossary2/Resources/Private/Templates/Glossary.html';
         }
         return $this->templatePath;
@@ -68,6 +77,6 @@ class ExtConf implements SingletonInterface
 
     public function setTemplatePath(string $templatePath): void
     {
-        $this->templatePath = $templatePath;
+        $this->templatePath = trim($templatePath);
     }
 }
