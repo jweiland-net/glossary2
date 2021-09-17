@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        typo3: [^10.4, ^11.4]
+        typo3: [^10.4, ~11.3.0]
         php: ['7.4']
         include:
           - typo3: ^10.4
@@ -18,7 +18,7 @@ jobs:
           - typo3: ^10.4
             php: '7.3'
           # nimut/testing-framework is not ready for PHP 8.0
-          #- typo3: ^11.4
+          #- typo3: ~11.4.0
           #  php: '8.0'
 
     services:
