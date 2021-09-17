@@ -7,7 +7,7 @@
 <f:section name="main">
 	<div class="jumbotron">
 		<h2>{glossary.title}</h2>
-		<f:if condition="{glossary.images->f:count()}">
+		<f:if condition="{glossary.images -> f:count()}">
 			<f:render section="renderImages" arguments="{glossary: glossary}" />
 		</f:if>
 		<f:if condition="{glossary.description}">
