@@ -222,7 +222,6 @@ class GlossaryRepository extends Repository
                 )
             );
 
-
         $this->overlayHelper->addWhereForOverlay($queryBuilder, $table, $alias, $useLangStrict);
 
         return $queryBuilder;
