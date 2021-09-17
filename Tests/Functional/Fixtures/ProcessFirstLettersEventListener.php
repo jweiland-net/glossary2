@@ -11,24 +11,20 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Tests\Functional\Fixtures;
 
+use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
+
 /**
- * Test file to map french letters in glossary
+ * Test file to map letter "e" to 0
  */
-class GlossaryServiceSignalSlot
+class ProcessFirstLettersEventListener
 {
-    public function modifyLetterMapping(array $letterMapping): array
+    public function __invoke(PostProcessFirstLettersEvent $event): void
     {
-        $letterMapping['à'] = 'a';
-        $letterMapping['è'] = 'e';
-        $letterMapping['ù'] = 'u';
-
-        return [$letterMapping];
-    }
-
-    public function postProcessFirstLetters(array &$firstLetters, $queryBuilder): void
-    {
+        $firstLetters = $event->getFirstLetters();
         $key = array_search('a', $firstLetters);
         unset($firstLetters[$key]);
         $firstLetters[] = 'k';
+
+        $event->setFirstLetters($firstLetters);
     }
 }

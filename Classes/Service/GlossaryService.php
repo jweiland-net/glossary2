@@ -211,7 +211,7 @@ class GlossaryService
     ): array {
         if ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
             $statement = $queryBuilder
-                ->selectLiteral('uid', $column, sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
+                ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
                 ->execute();
@@ -225,7 +225,7 @@ class GlossaryService
             // This will collect nearly all records and could be an
             // performance issue, if you have a lot of records
             $statement = $queryBuilder
-                ->select('uid', $column . ' AS ' . $columnAlias)
+                ->select($column . ' AS ' . $columnAlias)
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
                 ->execute();
@@ -255,10 +255,10 @@ class GlossaryService
     protected function cleanUpFirstLetters(array $firstLetters): array
     {
         // Map special chars like Ä => a
-        $firstLetters = array_map(static function ($firstLetter) {
-            $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
-            return $charsetHelper->sanitize($firstLetter);
-        }, $firstLetters);
+        $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
+        foreach ($firstLetters as $key => $firstLetter) {
+            $firstLetters[$key] = $charsetHelper->sanitize($firstLetter);
+        }
 
         // Remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
         $firstLetters = str_split(

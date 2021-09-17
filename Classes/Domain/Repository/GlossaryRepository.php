@@ -112,9 +112,9 @@ class GlossaryRepository extends Repository
                         $queryBuilder->createNamedParameter($letter . '%', \PDO::PARAM_STR)
                     );
                 }
-            }
 
-            $queryBuilder->andWhere(...$andConstraints);
+                $queryBuilder->andWhere(...$andConstraints);
+            }
         }
 
         $this->eventDispatcher->dispatch(
