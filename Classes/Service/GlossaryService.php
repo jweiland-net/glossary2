@@ -12,17 +12,18 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Service;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
+use JWeiland\Glossary2\Event\ModifyLetterMappingEvent;
+use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -36,6 +37,11 @@ class GlossaryService
     protected $extConf;
 
     /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    /**
      * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
      * and NOT of the calling extension which uses this API!
      * We need that property to override templatePath on per page basis.
@@ -45,16 +51,12 @@ class GlossaryService
     protected $glossary2Settings;
 
     public function __construct(
-        ?ExtConf $extConf = null,
-        ?ConfigurationManagerInterface $configurationManager = null
+        ExtConf $extConf,
+        EventDispatcher $eventDispatcher,
+        ConfigurationManagerInterface $configurationManager
     ) {
-        $this->extConf = $extConf ?? GeneralUtility::makeInstance(ExtConf::class);
-
-        if ($configurationManager === null) {
-            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-            $configurationManager = $objectManager->get(ConfigurationManagerInterface::class);
-        }
-
+        $this->extConf = $extConf;
+        $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'Glossary2',
@@ -205,9 +207,13 @@ class GlossaryService
         }
 
         $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
-        $this->emitPostProcessFirstLettersSignal($firstLetters, $queryBuilder);
 
-        return $firstLetters;
+        /** @var PostProcessFirstLettersEvent $event */
+        $event = $this->eventDispatcher->dispatch(
+            new PostProcessFirstLettersEvent($queryBuilder, $firstLetters)
+        );
+
+        return $event->getFirstLetters();
     }
 
     protected function cleanUpFirstLetters(array $firstLetters): array
@@ -236,35 +242,12 @@ class GlossaryService
             'ü' => 'u',
         ];
 
-        return $this->emitModifyLetterMappingSignal($letterMapping);
-    }
-
-    /**
-     * Use this signal, if you want to modify the first letters of glossary records.
-     *
-     * @param array $firstLetters
-     * @param QueryBuilder $queryBuilder
-     */
-    protected function emitPostProcessFirstLettersSignal(
-        array &$firstLetters,
-        QueryBuilder $queryBuilder
-    ): void {
-        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(
-            self::class,
-            'postProcessFirstLetters',
-            [&$firstLetters, $queryBuilder]
+        /** @var ModifyLetterMappingEvent $event */
+        $event = $this->eventDispatcher->dispatch(
+            new ModifyLetterMappingEvent($letterMapping)
         );
-    }
 
-    protected function emitModifyLetterMappingSignal(array $letterMapping): array
-    {
-        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        return $signalSlotDispatcher->dispatch(
-            self::class,
-            'modifyLetterMapping',
-            [$letterMapping]
-        )[0];
+        return $event->getLetterMapping();
     }
 
     protected function getFluidTemplateObject(array $options): StandaloneView
