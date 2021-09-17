@@ -23,14 +23,15 @@ return [
     ],
     'types' => [
         '1' => [
-            'showitem' => '--palette--;;languageHidden,
-            title, path_segment, description, images,
+            'showitem' => '--palette--;;language, --palette--;;titleHidden,
+            path_segment, description, images,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access, 
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access'
         ],
     ],
     'palettes' => [
-        'languageHidden' => ['showitem' => 'sys_language_uid, l10n_parent, hidden'],
+        'language' => ['showitem' => 'sys_language_uid, l10n_parent'],
+        'titleHidden' => ['showitem' => 'title, hidden'],
         'access' => [
             'showitem' => 'starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
         ]
@@ -57,17 +58,13 @@ return [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    [
-                        '',
-                        0
-                    ]
-                ],
-                'foreign_table' => 'tx_glossary2_domain_model_glossary',
-                'foreign_table_where' => 'AND tx_glossary2_domain_model_glossary.pid=###CURRENT_PID### AND tx_glossary2_domain_model_glossary.sys_language_uid IN (-1,0)',
-                'default' => 0
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'tx_glossary2_domain_model_glossary',
+                'size' => 1,
+                'maxitems' => 1,
+                'minitems' => 0,
+                'default' => 0,
             ]
         ],
         'l10n_source' => [
