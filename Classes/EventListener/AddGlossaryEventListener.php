@@ -50,7 +50,9 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
                         'extensionName' => 'glossary2',
                         'pluginName' => 'glossary',
                         'controllerName' => 'Glossary',
-                        'column' => 'title'
+                        'column' => 'title',
+                        'settings' => $event->getSettings(),
+                        'variables' => $event->getFluidVariables()
                     ]
                 )
             );
