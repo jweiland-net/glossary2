@@ -7,14 +7,14 @@ call_user_func(static function () {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'JWeiland.glossary2',
         'Glossary',
-        array(
+        [
             'Glossary' => 'list, listWithoutGlossar, show',
 
-        ),
+        ],
         // non-cacheable actions
-        array(
+        [
             'Glossary' => '',
-        )
+        ]
     );
 
     // Register SVG Icon Identifier
