@@ -79,6 +79,7 @@ class GlossaryService
         $view = $this->getFluidTemplateObject($options);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
+        $view->assign('variables', $options['variables'] ?? []);
         $view->assign('options', $options);
 
         return $view->render();
@@ -170,7 +171,11 @@ class GlossaryService
         // Mark letter as link (true) or not-linked (false)
         $glossaryLetterHasEntries = [];
         foreach ($possibleLetters as $possibleLetter) {
-            $glossaryLetterHasEntries[$possibleLetter] = strpos($availableLetters, $possibleLetter) !== false;
+            $glossaryLetterHasEntries[] = [
+                'letter' => $possibleLetter,
+                'hasLink' => strpos($availableLetters, $possibleLetter) !== false,
+                'isRequestedLetter' => $options['variables']['letter'] === $possibleLetter
+            ];
         }
 
         return $glossaryLetterHasEntries;
