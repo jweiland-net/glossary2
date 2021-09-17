@@ -30,10 +30,14 @@ class OverlayHelper
         $this->context = $context;
     }
 
-    public function addWhereForOverlay(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
-    {
+    public function addWhereForOverlay(
+        QueryBuilder $queryBuilder,
+        string $tableName,
+        string $tableAlias,
+        bool $useLangStrict = false
+    ): void {
         $this->addWhereForWorkspaces($queryBuilder, $tableName, $tableAlias);
-        $this->addWhereForTranslation($queryBuilder, $tableName, $tableAlias);
+        $this->addWhereForTranslation($queryBuilder, $tableName, $tableAlias, $useLangStrict);
     }
 
     protected function addWhereForWorkspaces(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
@@ -45,15 +49,26 @@ class OverlayHelper
         }
     }
 
-    protected function addWhereForTranslation(QueryBuilder $queryBuilder, string $tableName, string $tableAlias): void
-    {
+    /**
+     * Add WHERE clause to get records in requested language.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $tableName tablename to read the localization columns from TCA ctrl
+     * @param string $tableAlias the table alias as configured in $queryBuilder->from(table, tableAlias)
+     * @param bool $useLangStrict in case of a search like "letter=b" it does not make sense to search for "b" (bicycle) in default language, do an overlay and show "Fahrrad" in frontend. Activate for search queries. Else false.
+     */
+    protected function addWhereForTranslation(
+        QueryBuilder $queryBuilder,
+        string $tableName,
+        string $tableAlias,
+        bool $useLangStrict = false
+    ): void {
         // Column: sys_language_uid
         $languageField = $GLOBALS['TCA'][$tableName]['ctrl']['languageField'];
         // Column: l10n_parent
         $transOrigPointerField = $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'] ?? '';
 
-
-        if ($this->getLanguageAspect()->doOverlays()) {
+        if ($useLangStrict === false && $this->getLanguageAspect()->doOverlays()) {
             // Get default language
             // sys_language_uid = 0
             $queryBuilder->andWhere(

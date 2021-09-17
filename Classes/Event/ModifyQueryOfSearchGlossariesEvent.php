@@ -14,9 +14,9 @@ namespace JWeiland\Glossary2\Event;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
 /*
- * Use this event, if you want to modify the query of GlossaryRepository::findEntries.
+ * Use this event, if you want to modify the query of GlossaryRepository::searchGlossaries.
  */
-class ModifyQueryOfFindEntriesEvent
+class ModifyQueryOfSearchGlossariesEvent
 {
     /**
      * @var QueryBuilder

@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
-use JWeiland\Glossary2\Event\ModifyQueryOfFindEntriesEvent;
+use JWeiland\Glossary2\Event\ModifyQueryOfGetGlossariesEvent;
+use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
 use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -57,29 +58,37 @@ class GlossaryRepository extends Repository
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function findEntries(array $categories = [], string $letter = ''): QueryResultInterface
+    public function getGlossaries(): QueryResultInterface
     {
         $extbaseQuery = $this->createQuery();
         $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary', 'g');
         $queryBuilder->select('*');
 
-        if ($this->checkArgumentsForFindEntries($categories, $letter)) {
+        $this->eventDispatcher->dispatch(new ModifyQueryOfGetGlossariesEvent($queryBuilder));
+
+        $extbaseQuery->statement($queryBuilder);
+
+        return $extbaseQuery->execute();
+    }
+
+    public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
+    {
+        $extbaseQuery = $this->createQuery();
+        $queryBuilder = $this->getQueryBuilderForTable(
+            'tx_glossary2_domain_model_glossary',
+            'g',
+            true
+        );
+        $queryBuilder->select('*');
+
+        if ($this->checkArgumentsForSearchGlossaries($categories, $letter)) {
             $andConstraints = [];
 
             if ($categories !== []) {
-                $queryBuilder->leftJoin(
-                    'g',
-                    'sys_category_record_mm',
-                    'sc_mm',
-                    $queryBuilder->expr()->eq(
-                        'g.uid',
-                        $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
-                    )
-                );
-
-                $andConstraints[] = $queryBuilder->expr()->eq(
-                    'sc_mm.uid_local',
-                    $queryBuilder->createNamedParameter($categories, \PDO::PARAM_INT)
+                $this->addCategoryConstraintToQueryBuilder(
+                    $queryBuilder,
+                    'tx_glossary2_domain_model_glossary',
+                    $categories
                 );
             }
 
@@ -106,7 +115,7 @@ class GlossaryRepository extends Repository
         }
 
         $this->eventDispatcher->dispatch(
-            new ModifyQueryOfFindEntriesEvent($queryBuilder, $categories, $letter)
+            new ModifyQueryOfSearchGlossariesEvent($queryBuilder, $categories, $letter)
         );
 
         $extbaseQuery->statement($queryBuilder);
@@ -114,14 +123,7 @@ class GlossaryRepository extends Repository
         return $extbaseQuery->execute();
     }
 
-    /**
-     * Check arguments of method findEntries
-     *
-     * @param array $categories
-     * @param string $letter
-     * @return bool
-     */
-    protected function checkArgumentsForFindEntries(array $categories, string $letter): bool
+    protected function checkArgumentsForSearchGlossaries(array $categories, string $letter): bool
     {
         // check categories as they can also be set by TypoScript
         $intCategories = GeneralUtility::intExplode(
@@ -155,60 +157,70 @@ class GlossaryRepository extends Repository
      */
     public function getQueryBuilderForGlossary(array $categories = []): QueryBuilder
     {
-        $table = 'tx_glossary2_domain_model_glossary';
-        $query = $this->createQuery();
-        $queryBuilder = $this->getQueryBuilderForTable($table, 'g');
+        $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary', 'g');
 
-        // Do not set any SELECT statement. It will be set by glossary2 API
-        $queryBuilder
-            ->andWhere(
-                $queryBuilder->expr()->in(
-                    'pid',
-                    $queryBuilder->createNamedParameter(
-                        $query->getQuerySettings()->getStoragePageIds(),
-                        Connection::PARAM_INT_ARRAY
-                    )
-                )
-            );
-
-        // Add additional JOIN to sys_category_record_mm if needed
         if (!empty($categories)) {
-            $queryBuilder
-                ->leftJoin(
-                    'g',
-                    'sys_category_record_mm',
-                    'sc_mm',
-                    $queryBuilder->expr()->eq(
-                        'g.uid',
-                        $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
-                    )
-                )
-                ->andWhere(
-                    $queryBuilder->expr()->eq(
-                        'sc_mm.tablenames',
-                        $queryBuilder->createNamedParameter($table, \PDO::PARAM_STR)
-                    ),
-                    $queryBuilder->expr()->eq(
-                        'sc_mm.fieldname',
-                        $queryBuilder->createNamedParameter('categories', \PDO::PARAM_STR)
-                    ),
-                    $queryBuilder->expr()->eq(
-                        'sc_mm.uid_local',
-                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
-                    )
-                );
+            $this->addCategoryConstraintToQueryBuilder(
+                $queryBuilder,
+                'tx_glossary2_domain_model_glossary',
+                $categories
+            );
         }
 
         return $queryBuilder;
     }
 
-    protected function getQueryBuilderForTable(string $table, string $alias): QueryBuilder
+    protected function addCategoryConstraintToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        string $table,
+        array $categories
+    ): void {
+        $queryBuilder
+            ->leftJoin(
+                'g',
+                'sys_category_record_mm',
+                'sc_mm',
+                $queryBuilder->expr()->eq(
+                    'g.uid',
+                    $queryBuilder->quoteIdentifier('sc_mm.uid_foreign')
+                )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'sc_mm.tablenames',
+                    $queryBuilder->createNamedParameter($table, \PDO::PARAM_STR)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sc_mm.fieldname',
+                    $queryBuilder->createNamedParameter('categories', \PDO::PARAM_STR)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sc_mm.uid_local',
+                    $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
+                )
+            );
+    }
+
+    protected function getQueryBuilderForTable(string $table, string $alias, bool $useLangStrict = false): QueryBuilder
     {
+        $extbaseQuery = $this->createQuery();
+
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
-        $queryBuilder->from($table, $alias);
+        $queryBuilder
+            ->from($table, $alias)
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter(
+                        $extbaseQuery->getQuerySettings()->getStoragePageIds(),
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
 
-        $this->overlayHelper->addWhereForOverlay($queryBuilder, $table, $alias);
+
+        $this->overlayHelper->addWhereForOverlay($queryBuilder, $table, $alias, $useLangStrict);
 
         return $queryBuilder;
     }
