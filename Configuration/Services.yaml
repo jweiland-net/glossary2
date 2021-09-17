@@ -6,3 +6,13 @@ services:
 
   JWeiland\Glossary2\:
     resource: '../Classes/*'
+
+  JWeiland\Glossary2\EventListener\AddPaginatorEventListener:
+    tags:
+      - name: event.listener
+        event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
+  JWeiland\Glossary2\EventListener\AddGlossaryEventListener:
+    tags:
+      - name: event.listener
+        event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
+        after: JWeiland\Glossary2\EventListener\AddPaginatorEventListener

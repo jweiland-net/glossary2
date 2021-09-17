@@ -5,15 +5,15 @@ if (!defined('TYPO3_MODE')) {
 
 call_user_func(static function () {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'JWeiland.glossary2',
+        'glossary2',
         'Glossary',
         [
-            'Glossary' => 'list, listWithoutGlossar, show',
+            \JWeiland\Glossary2\Controller\GlossaryController::class => 'list, listWithoutGlossar, show',
 
         ],
         // non-cacheable actions
         [
-            'Glossary' => '',
+            \JWeiland\Glossary2\Controller\GlossaryController::class => '',
         ]
     );
 

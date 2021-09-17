@@ -14,6 +14,7 @@ namespace JWeiland\Glossary2\Controller;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Service\GlossaryService;
+use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -64,15 +65,10 @@ class GlossaryController extends ActionController
         $categories = GeneralUtility::intExplode(',', $this->settings['categories'], true);
         $glossaries = $this->glossaryRepository->findEntries($categories, $letter);
 
-        $this->view->assign('letter', $letter);
-        $this->view->assign('glossaries', $glossaries);
-        $this->view->assign(
-            'glossary',
-            $this->glossaryService->buildGlossary(
-                $this->glossaryRepository->getQueryBuilderForGlossary($categories),
-                ['settings' => $this->settings]
-            )
-        );
+        $this->postProcessAndAssignFluidVariables([
+            'letter' => $letter,
+            'glossaries' => $glossaries
+        ]);
     }
 
     /**
@@ -82,5 +78,19 @@ class GlossaryController extends ActionController
     {
         $this->view->assign('glossary', $glossary);
         $this->view->assign('letter', $glossary->getSanitizedFirstLetterOfTitle());
+    }
+
+    protected function postProcessAndAssignFluidVariables(array $variables = []): void
+    {
+        /** @var PostProcessFluidVariablesEvent $event */
+        $event = $this->eventDispatcher->dispatch(
+            new PostProcessFluidVariablesEvent(
+                $this->request,
+                $this->settings,
+                $variables
+            )
+        );
+
+        $this->view->assignMultiple($event->getFluidVariables());
     }
 }

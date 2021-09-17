@@ -4,19 +4,19 @@
 
 <f:if condition="{glossaries}">
 	<f:then>
-		<f:widget.paginate objects="{glossaries}" as="paginatedGlossarys" configuration="{itemsPerPage: settings.pageBrowser.itemsPerPage, insertAbove: settings.pageBrowser.insertAbove, insertBelow: settings.pageBrowser.insertBelow, maximumNumberOfLinks: settings.pageBrowser.maximumNumberOfLinks}">
-			<nav class="nav flex-column">
-				<f:for each="{paginatedGlossarys}" as="glossary">
-					<f:link.action
-									action="show"
-									class="nav-link"
-									pageUid="{settings.pidOfDetailPage}"
-									arguments="{glossary: glossary}">
-						{glossary.title}
-					</f:link.action>
-				</f:for>
-			</nav>
-		</f:widget.paginate>
+		<nav class="nav flex-column">
+			<f:for each="{glossaries}" as="glossary">
+				<f:link.action
+								action="show"
+								class="nav-link"
+								pageUid="{settings.pidOfDetailPage}"
+								arguments="{glossary: glossary}">
+					{glossary.title}
+				</f:link.action>
+			</f:for>
+		</nav>
+		<f:render partial="Component/Pagination"
+							arguments="{pagination: pagination, paginator: paginator, actionName: actionName}" />
 	</f:then>
 	<f:else>
 		<div class="noResults">{f:translate(key: "noResults")}</div>

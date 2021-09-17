@@ -39,9 +39,6 @@ plugin.tx_glossary2 {
 
     pageBrowser {
       itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
-      insertAbove = {$plugin.tx_glossary2.settings.pageBrowser.insertAbove}
-      insertBelow = {$plugin.tx_glossary2.settings.pageBrowser.insertBelow}
-      maximumNumberOfLinks = {$plugin.tx_glossary2.settings.pageBrowser.maximumNumberOfLinks}
     }
   }
 }
