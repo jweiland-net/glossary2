@@ -80,8 +80,10 @@ class GlossaryController extends ActionController
      */
     public function showAction(Glossary $glossary): void
     {
-        $this->view->assign('glossary', $glossary);
-        $this->view->assign('letter', $glossary->getSanitizedFirstLetterOfTitle());
+        $this->postProcessAndAssignFluidVariables([
+            'glossary' => $glossary,
+            'letter' => $glossary->getSanitizedFirstLetterOfTitle()
+        ]);
     }
 
     protected function postProcessAndAssignFluidVariables(array $variables = []): void
