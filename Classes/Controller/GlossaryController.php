@@ -80,8 +80,7 @@ class GlossaryController extends ActionController
      */
     public function showAction(Glossary $glossary): void
     {
-        $letter = strtr(mb_strtolower($glossary->getTitle()[0]), 'äöü', 'aou');
         $this->view->assign('glossary', $glossary);
-        $this->view->assign('letter', $letter);
+        $this->view->assign('letter', $glossary->getSanitizedFirstLetterOfTitle());
     }
 }

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Model;
 
+use TYPO3\CMS\Core\Charset\CharsetConverter;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -54,10 +56,9 @@ class Glossary extends AbstractEntity
         return $this->title;
     }
 
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-        return $this;
     }
 
     public function getDescription(): string
@@ -65,10 +66,9 @@ class Glossary extends AbstractEntity
         return $this->description;
     }
 
-    public function setDescription(string $description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
-        return $this;
     }
 
     public function getImages(): ObjectStorage
@@ -76,22 +76,19 @@ class Glossary extends AbstractEntity
         return $this->images;
     }
 
-    public function setImages(ObjectStorage $images)
+    public function setImages(ObjectStorage $images): void
     {
         $this->images = $images;
-        return $this;
     }
 
-    public function addImage(FileReference $image)
+    public function addImage(FileReference $image): void
     {
         $this->images->attach($image);
-        return $this;
     }
 
-    public function removeImage(FileReference $image)
+    public function removeImage(FileReference $image): void
     {
         $this->images->detach($image);
-        return $this;
     }
 
     public function getCategories(): ObjectStorage
@@ -99,21 +96,26 @@ class Glossary extends AbstractEntity
         return $this->categories;
     }
 
-    public function setCategories(ObjectStorage $categories)
+    public function setCategories(ObjectStorage $categories): void
     {
         $this->categories = $categories;
-        return $this;
     }
 
-    public function addCategory(Category $category)
+    public function addCategory(Category $category): void
     {
         $this->categories->attach($category);
-        return $this;
     }
 
-    public function removeCategory(Category $category)
+    public function removeCategory(Category $category): void
     {
         $this->categories->detach($category);
-        return $this;
+    }
+
+    public function getSanitizedFirstLetterOfTitle(): string
+    {
+        $asciiTitle = GeneralUtility::makeInstance(CharsetConverter::class)
+            ->specCharsToASCII('utf-8', mb_strtolower($this->getTitle(), 'utf-8'));
+
+        return $asciiTitle[0];
     }
 }
