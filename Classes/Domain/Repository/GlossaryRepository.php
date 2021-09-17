@@ -73,7 +73,10 @@ class GlossaryRepository extends Repository
 
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
+        // Set respectSysLanguage to false to keep our already translated records
         $extbaseQuery = $this->createQuery();
+        $extbaseQuery->getQuerySettings()->setRespectSysLanguage(false);
+
         $queryBuilder = $this->getQueryBuilderForTable(
             'tx_glossary2_domain_model_glossary',
             'g',

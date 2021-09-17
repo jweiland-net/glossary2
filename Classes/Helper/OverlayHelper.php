@@ -70,21 +70,24 @@ class OverlayHelper
 
         if ($useLangStrict === false && $this->getLanguageAspect()->doOverlays()) {
             // Get default language
-            // sys_language_uid = 0
+            // sys_language_uid IN (0, -1) and l10n_parent = 0
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq($tableAlias . '.' . $languageField, 0)
-            );
-        } else {
-            // strict mode
-            // sys_language_uid = {requestedLanguageUid} AND l10n_parent = 0
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq(
+                $queryBuilder->expr()->in(
                     $tableAlias . '.' . $languageField,
-                    $this->getLanguageAspect()->getContentId()
+                    [0, -1]
                 ),
                 $queryBuilder->expr()->eq(
                     $tableAlias . '.' . $transOrigPointerField,
                     0
+                )
+            );
+        } else {
+            // strict mode
+            // sys_language_uid = {requestedLanguageUid}
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    $tableAlias . '.' . $languageField,
+                    [$this->getLanguageAspect()->getContentId(), -1]
                 )
             );
         }
