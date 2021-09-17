@@ -23,7 +23,7 @@
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-latest",
-		"friendsofphp/php-cs-fixer": "^2.0",
+		"friendsofphp/php-cs-fixer": "^3.0",
 		"nimut/testing-framework": "^5.0"
 	},
 	"autoload": {
