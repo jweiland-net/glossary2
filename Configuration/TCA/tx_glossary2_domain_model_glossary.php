@@ -21,9 +21,6 @@ return [
         'searchFields' => 'title,description',
         'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg'
     ],
-    'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, title, description, images',
-    ],
     'types' => [
         '1' => [
             'showitem' => '--palette--;;languageHidden,
