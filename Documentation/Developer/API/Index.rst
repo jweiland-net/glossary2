@@ -29,7 +29,7 @@ Repository like `getQueryBuilderToFindAllEntries`.
        // Do not set any SELECT, ORDER BY, GROUP BY statement. It will be set by glossary2 API
        $queryBuilder
            ->from($table)
-           ->where(
+           ->andWhere(
                $queryBuilder->expr()->in(
                    'pid',
                    $queryBuilder->createNamedParameter(
@@ -255,7 +255,7 @@ Example for Doctrine
        $queryBuilder
            ->select('*')
            ->from('my_table')
-           ->where($glossaryService->getLetterConstraintForDoctrineQuery($queryBuilder, 'my_colum_name', $letter));
+           ->andWhere($glossaryService->getLetterConstraintForDoctrineQuery($queryBuilder, 'my_colum_name', $letter));
 
        $query = $this->createQuery();
        return $query->statement($queryBuilder)->execute();

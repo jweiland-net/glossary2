@@ -145,7 +145,7 @@ class MoveOldFlexFormSettingsUpdater
         $records = $queryBuilder
             ->select('uid', 'pi_flexform')
             ->from('tt_content')
-            ->where(
+            ->andWhere(
                 $queryBuilder->expr()->eq(
                     'CType',
                     $queryBuilder->createNamedParameter('list', \PDO::PARAM_STR)

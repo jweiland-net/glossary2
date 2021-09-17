@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Service;
 
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Event\ModifyLetterMappingEvent;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
+use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -37,6 +39,11 @@ class GlossaryService
     protected $extConf;
 
     /**
+     * @var OverlayHelper
+     */
+    protected $overlayHelper;
+
+    /**
      * @var EventDispatcher
      */
     protected $eventDispatcher;
@@ -52,10 +59,12 @@ class GlossaryService
 
     public function __construct(
         ExtConf $extConf,
+        OverlayHelper $overlayHelper,
         EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager
     ) {
         $this->extConf = $extConf;
+        $this->overlayHelper = $overlayHelper;
         $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
@@ -194,16 +203,32 @@ class GlossaryService
         string $column,
         string $columnAlias
     ): array {
-        $queryBuilder
-            ->selectLiteral(sprintf('LOWER(SUBSTRING(%s, 1, 1)) as %s', $column, $columnAlias))
-            ->add('groupBy', $columnAlias)
-            ->add('orderBy', $columnAlias);
+        if ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+            $statement = $queryBuilder
+                ->selectLiteral('uid', $column, sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
+                ->add('groupBy', $columnAlias)
+                ->add('orderBy', $columnAlias)
+                ->execute();
 
-        $statement = $queryBuilder->execute();
+            $firstLetters = [];
+            while ($record = $statement->fetch()) {
+                $firstLetter = mb_strtolower($record[$columnAlias]);
+                $firstLetters[] = $firstLetter;
+            }
+        } else {
+            // This will collect nearly all records and could be an
+            // performance issue, if you have a lot of records
+            $statement = $queryBuilder
+                ->select('uid', $column . ' AS ' . $columnAlias)
+                ->add('groupBy', $columnAlias)
+                ->add('orderBy', $columnAlias)
+                ->execute();
 
-        $firstLetters = [];
-        while ($firstLetter = $statement->fetch()) {
-            $firstLetters[] = $firstLetter[$columnAlias];
+            $firstLetters = [];
+            while ($record = $statement->fetch()) {
+                $firstLetter = mb_strtolower($record[$columnAlias][0]);
+                $firstLetters[$firstLetter] = $firstLetter;
+            }
         }
 
         $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));

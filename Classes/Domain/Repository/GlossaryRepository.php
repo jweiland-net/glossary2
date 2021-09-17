@@ -157,7 +157,7 @@ class GlossaryRepository extends Repository
 
         // Do not set any SELECT statement. It will be set by glossary2 API
         $queryBuilder
-            ->where(
+            ->andWhere(
                 $queryBuilder->expr()->in(
                     'pid',
                     $queryBuilder->createNamedParameter(

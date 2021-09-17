@@ -66,7 +66,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $amountOfRecordsWithEmptySlug = $queryBuilder
             ->count('*')
             ->from($this->tableName)
-            ->where(
+            ->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->eq(
                         $this->fieldName,
@@ -94,7 +94,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $recordsToUpdate = $queryBuilder
             ->select('uid', 'title', 'path_segment')
             ->from($this->tableName)
-            ->where(
+            ->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->eq(
                         $this->fieldName,
@@ -167,7 +167,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         return $queryBuilder
             ->count('uid')
             ->from($this->tableName)
-            ->where(
+            ->andWhere(
                 $queryBuilder->expr()->eq(
                     $this->fieldName,
                     $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
