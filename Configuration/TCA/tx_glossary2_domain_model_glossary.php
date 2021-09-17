@@ -118,10 +118,11 @@ return [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
                 'eval' => 'datetime,int',
-                'default' => 0
+                'default' => 0,
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true,
+                ],
             ],
-            'l10n_mode' => 'exclude',
-            'l10n_display' => 'defaultAsReadonly'
         ],
         'endtime' => [
             'exclude' => true,
@@ -131,12 +132,10 @@ return [
                 'renderType' => 'inputDateTime',
                 'eval' => 'datetime,int',
                 'default' => 0,
-                'range' => [
-                    'upper' => mktime(0, 0, 0, 1, 1, 2038)
-                ]
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true,
+                ],
             ],
-            'l10n_mode' => 'exclude',
-            'l10n_display' => 'defaultAsReadonly'
         ],
         'title' => [
             'exclude' => true,
