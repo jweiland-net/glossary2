@@ -115,6 +115,6 @@ class Glossary extends AbstractEntity
     {
         $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
 
-        return $charsetHelper->sanitize($this->getTitle())[0];
+        return $charsetHelper->sanitize(mb_substr($this->getTitle(), 0, 1));
     }
 }

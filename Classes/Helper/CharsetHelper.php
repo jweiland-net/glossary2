@@ -46,7 +46,10 @@ class CharsetHelper
     public function sanitize(string $value): string
     {
         // This should sanitize the most values to ASCII
-        $preSanitizedValue = $this->charsetConverter->specCharsToASCII('utf-8', mb_strtolower($value, 'utf-8'));
+        $preSanitizedValue = $this->charsetConverter->specCharsToASCII(
+            'utf-8',
+            mb_strtolower($value, 'utf-8')
+        );
 
         /** @var SanitizeValueForCharsetHelperEvent $event */
         $event = $this->eventDispatcher->dispatch(
