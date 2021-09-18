@@ -448,7 +448,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'letter' => '3',
                 'hasLink' => false,
                 'isRequestedLetter' => false
-            ],
+            ]
         );
 
         $this->viewProphecy
