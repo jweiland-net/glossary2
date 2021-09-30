@@ -11,6 +11,7 @@
 				<source>Back to list</source>
 				<target>Zurück zur Liste</target>
 			</trans-unit>
+
 			<trans-unit id="tx_glossary2_domain_model_glossary">
 				<source>Glossary</source>
 				<target>Glossar</target>
@@ -30,6 +31,23 @@
 			<trans-unit id="tx_glossary2_domain_model_glossary.images">
 				<source>Images</source>
 				<target>Bilder</target>
+			</trans-unit>
+
+			<trans-unit id="pageBrowser.first">
+				<source>First</source>
+				<target>Erste</target>
+			</trans-unit>
+			<trans-unit id="pageBrowser.previous">
+				<source>Previous</source>
+				<target>Vorherige</target>
+			</trans-unit>
+			<trans-unit id="pageBrowser.next">
+				<source>Next</source>
+				<target>Nächste</target>
+			</trans-unit>
+			<trans-unit id="pageBrowser.last">
+				<source>Last</source>
+				<target>Letzte</target>
 			</trans-unit>
 		</body>
 	</file>
