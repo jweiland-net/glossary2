@@ -8,11 +8,10 @@
 			<f:for each="{glossaries}" as="glossary">
 				<div class="scroll-item border-top flex-list">
 					<div class="fontsize4">
-						<f:link.action
-								action="show"
-								class="nav-link"
-								pageUid="{settings.pidOfDetailPage}"
-								arguments="{glossary: glossary}">
+						<f:link.action action="show"
+													 class="nav-link"
+													 pageUid="{settings.pidOfDetailPage}"
+													 arguments="{glossary: glossary}">
 							{glossary.title}
 						</f:link.action>
 					</div>
