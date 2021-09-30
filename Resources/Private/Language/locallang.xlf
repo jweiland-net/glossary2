@@ -9,6 +9,7 @@
 			<trans-unit id="backToList">
 				<source>Back to list</source>
 			</trans-unit>
+
 			<trans-unit id="tx_glossary2_domain_model_glossary">
 				<source>Glossary</source>
 			</trans-unit>
@@ -23,6 +24,19 @@
 			</trans-unit>
 			<trans-unit id="tx_glossary2_domain_model_glossary.images">
 				<source>Images</source>
+			</trans-unit>
+
+			<trans-unit id="pageBrowser.first">
+				<source>First</source>
+			</trans-unit>
+			<trans-unit id="pageBrowser.previous">
+				<source>Previous</source>
+			</trans-unit>
+			<trans-unit id="pageBrowser.next">
+				<source>Next</source>
+			</trans-unit>
+			<trans-unit id="pageBrowser.last">
+				<source>Last</source>
 			</trans-unit>
 		</body>
 	</file>
