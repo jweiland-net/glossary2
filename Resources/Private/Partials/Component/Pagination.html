@@ -23,7 +23,7 @@
 										arguments="{linkArguments: pagination.nextPageArguments, transKey: 'pageBrowser.next', actionName: actionName}" />
 				</li>
 			</f:if>
-			<f:if condition="{pagination.currentPageNumber} < {pagination.lastPageNumber}">
+			<f:if condition="{paginator.currentPageNumber} < {pagination.lastPageNumber}">
 				<li class="last">
 					<f:render section="renderPageLink"
 										arguments="{linkArguments: pagination.lastPageArguments, transKey: 'pageBrowser.last', actionName: actionName}" />
