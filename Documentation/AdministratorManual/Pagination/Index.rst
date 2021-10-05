@@ -97,10 +97,16 @@ numbered_pagination.
           {
               $currentPage = 1;
               if ($event->getRequest()->hasArgument('currentPage')) {
-                  $currentPage = $event->getRequest()->getArgument('currentPage');
+                  // $currentPage have to be positive and greater than 0
+                  // See: AbstractPaginator::setCurrentPageNumber()
+                  $currentPage = MathUtility::forceIntegerInRange(
+                      (int)$event->getRequest()->getArgument('currentPage'),
+                      1
+                  );
               }
-              return (int)$currentPage;
-          }
+
+              return $currentPage;
+         }
 
           protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
           {

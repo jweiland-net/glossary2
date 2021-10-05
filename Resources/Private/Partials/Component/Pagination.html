@@ -8,25 +8,25 @@
 			<f:if condition="{paginator.currentPageNumber} > 1">
 				<li class="first">
 					<f:render section="renderPageLink"
-										arguments="{linkArguments: pagination.firstPageArguments, transKey: 'pageBrowser.first', actionName: actionName}" />
+										arguments="{linkArguments: {currentPage: 1}, transKey: 'pageBrowser.first', actionName: actionName}" />
 				</li>
 			</f:if>
 			<f:if condition="{pagination.previousPageNumber}">
 				<li class="previous">
 					<f:render section="renderPageLink"
-										arguments="{linkArguments: pagination.previousPageArguments, transKey: 'pageBrowser.previous', actionName: actionName}" />
+										arguments="{linkArguments: {currentPage: pagination.previousPageNumber}, transKey: 'pageBrowser.previous', actionName: actionName}" />
 				</li>
 			</f:if>
 			<f:if condition="{pagination.nextPageNumber}">
 				<li class="next">
 					<f:render section="renderPageLink"
-										arguments="{linkArguments: pagination.nextPageArguments, transKey: 'pageBrowser.next', actionName: actionName}" />
+										arguments="{linkArguments: {currentPage: pagination.nextPageNumber}, transKey: 'pageBrowser.next', actionName: actionName}" />
 				</li>
 			</f:if>
 			<f:if condition="{paginator.currentPageNumber} < {pagination.lastPageNumber}">
 				<li class="last">
 					<f:render section="renderPageLink"
-										arguments="{linkArguments: pagination.lastPageArguments, transKey: 'pageBrowser.last', actionName: actionName}" />
+										arguments="{linkArguments: {currentPage: pagination.lastPageNumber}, transKey: 'pageBrowser.last', actionName: actionName}" />
 				</li>
 			</f:if>
 		</ul>

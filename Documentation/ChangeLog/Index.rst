@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.2**
+
+Use SimplePaginator instead of our own one
+
 **Version 5.0.1**
 
 Add documentation about how to integrate Georg Ringers numbered_pagination

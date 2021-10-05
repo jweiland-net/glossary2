@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\EventListener;
 
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
-use JWeiland\Glossary2\Pagination\GlossaryPagination;
+use TYPO3\CMS\Core\Pagination\SimplePagination;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
 class AddPaginatorEventListener extends AbstractControllerEventListener
@@ -40,7 +41,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $event->addFluidVariable('actionName', $event->getActionName());
             $event->addFluidVariable('paginator', $paginator);
             $event->addFluidVariable('glossaries', $paginator->getPaginatedItems());
-            $event->addFluidVariable('pagination', new GlossaryPagination($paginator));
+            $event->addFluidVariable('pagination', new SimplePagination($paginator));
         }
     }
 
@@ -48,9 +49,15 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
     {
         $currentPage = 1;
         if ($event->getRequest()->hasArgument('currentPage')) {
-            $currentPage = $event->getRequest()->getArgument('currentPage');
+            // $currentPage have to be positive and greater than 0
+            // See: AbstractPaginator::setCurrentPageNumber()
+            $currentPage = MathUtility::forceIntegerInRange(
+                (int)$event->getRequest()->getArgument('currentPage'),
+                1
+            );
         }
-        return (int)$currentPage;
+
+        return $currentPage;
     }
 
     protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
