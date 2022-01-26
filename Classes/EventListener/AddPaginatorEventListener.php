@@ -62,10 +62,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
-        $itemsPerPage = $this->itemsPerPage;
-        if (isset($event->getSettings()['pageBrowser']['itemsPerPage'])) {
-            $itemsPerPage = $event->getSettings()['pageBrowser']['itemsPerPage'];
-        }
+        $itemsPerPage = $event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage;
         return (int)$itemsPerPage;
     }
 }
