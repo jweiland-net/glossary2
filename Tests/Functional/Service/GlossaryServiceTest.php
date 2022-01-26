@@ -82,7 +82,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         'typo3conf/ext/glossary2'
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -124,7 +124,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         GeneralUtility::addInstance(StandaloneView::class, $this->viewProphecy->reveal());
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset(
             $this->subject,
@@ -139,7 +139,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @tester
      */
-    public function buildGlossaryWillConvertGermanUmlauts()
+    public function buildGlossaryWillConvertGermanUmlauts(): void
     {
         $this->viewProphecy
             ->assign('glossary', $this->getGlossary())
@@ -164,7 +164,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      * As we are working with "EXT:" and getFileAbsFileName() we can only use paths of existing extensions
      * while testing. In that case just "glossary2"
      */
-    public function dataProviderForTemplatePath()
+    public function dataProviderForTemplatePath(): array
     {
         return [
             'Default templatePath from ExtConf of glossary2' => [
@@ -220,7 +220,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      *
      * @dataProvider dataProviderForTemplatePath
      */
-    public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath)
+    public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath): void
     {
         $this->configurationManagerProphecy
             ->getConfiguration(
@@ -260,7 +260,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWillConvertSpecialCharToAsciiByEvent()
+    public function buildGlossaryWillConvertSpecialCharToAsciiByEvent(): void
     {
         $this->listenerProviderProphecy
             ->getListenersForEvent(Argument::type(SanitizeValueForCharsetHelperEvent::class))
@@ -294,7 +294,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWithModifiedLettersByEvent()
+    public function buildGlossaryWithModifiedLettersByEvent(): void
     {
         $this->listenerProviderProphecy
             ->getListenersForEvent(Argument::type(PostProcessFirstLettersEvent::class))
@@ -329,7 +329,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar()
+    public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
     {
         $this->viewProphecy
             ->assign('glossary', $this->getGlossary())
@@ -359,7 +359,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWillAddSettingsToView()
+    public function buildGlossaryWillAddSettingsToView(): void
     {
         $this->viewProphecy
             ->assign('settings', ['foo' => 'bar'])
@@ -390,7 +390,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWithDefaultLettersWillNotMergeNumbers()
+    public function buildGlossaryWithDefaultLettersWillNotMergeNumbers(): void
     {
         $expectedGlossary = $this->getGlossary();
         $expectedGlossary[0]['hasLink'] = false;
@@ -422,7 +422,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWithOwnLettersWillNotMergeNumbers()
+    public function buildGlossaryWithOwnLettersWillNotMergeNumbers(): void
     {
         $expectedGlossary = $this->getGlossary();
         // Remove 0-9
@@ -479,7 +479,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWillUseGlossaryRequestForLinkGeneration()
+    public function buildGlossaryWillUseGlossaryRequestForLinkGeneration(): void
     {
         $this->requestProphecy
             ->setControllerExtensionName('Glossary2')
@@ -512,7 +512,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildGlossaryWillUseForeignRequestForLinkGeneration()
+    public function buildGlossaryWillUseForeignRequestForLinkGeneration(): void
     {
         $this->requestProphecy
             ->setControllerExtensionName('SyncCropAreas')

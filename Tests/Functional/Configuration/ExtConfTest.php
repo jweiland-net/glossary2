@@ -29,14 +29,14 @@ class ExtConfTest extends FunctionalTestCase
         'typo3conf/ext/glossary2'
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->subject = new ExtConf();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset(
             $this->subject
@@ -47,7 +47,7 @@ class ExtConfTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getPossibleLettersWillReturnDefaultLetters()
+    public function getPossibleLettersWillReturnDefaultLetters(): void
     {
         self::assertSame(
             '0-9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z',
@@ -58,7 +58,7 @@ class ExtConfTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function setPossibleLettersWillSetPossibleLetters()
+    public function setPossibleLettersWillSetPossibleLetters(): void
     {
         $this->subject->setPossibleLetters('a,b,c');
         self::assertSame(
