@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.3**
+
+Use SQL IN to select one or more categories
+
 **Version 5.0.2**
 
 Use SimplePaginator instead of our own one
