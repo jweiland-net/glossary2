@@ -197,7 +197,7 @@ class GlossaryRepository extends Repository
                     'sc_mm.fieldname',
                     $queryBuilder->createNamedParameter('categories', \PDO::PARAM_STR)
                 ),
-                $queryBuilder->expr()->eq(
+                $queryBuilder->expr()->in(
                     'sc_mm.uid_local',
                     $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
                 )

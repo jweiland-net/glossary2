@@ -62,16 +62,12 @@ class GlossaryController extends ActionController
      */
     public function listAction(string $letter = ''): void
     {
-        $categories = GeneralUtility::intExplode(',', $this->settings['categories'], true);
-        if ($letter) {
-            $glossaries = $this->glossaryRepository->searchGlossaries($categories, $letter);
-        } else {
-            $glossaries = $this->glossaryRepository->getGlossaries();
-        }
-
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,
-            'glossaries' => $glossaries
+            'glossaries' => $this->glossaryRepository->searchGlossaries(
+                GeneralUtility::intExplode(',', $this->settings['categories'], true),
+                $letter
+            )
         ]);
     }
 
