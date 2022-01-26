@@ -25,12 +25,12 @@ class GlossaryTest extends UnitTestCase
      */
     protected $subject;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->subject = new Glossary();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }
@@ -38,7 +38,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getTitleInitiallyReturnsEmptyString()
+    public function getTitleInitiallyReturnsEmptyString(): void
     {
         self::assertSame(
             '',
@@ -49,7 +49,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setTitleSetsTitle()
+    public function setTitleSetsTitle(): void
     {
         $this->subject->setTitle('foo bar');
 
@@ -62,7 +62,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setTitleWithIntegerResultsInString()
+    public function setTitleWithIntegerResultsInString(): void
     {
         $this->subject->setTitle(123);
         self::assertSame('123', $this->subject->getTitle());
@@ -71,7 +71,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setTitleWithBooleanResultsInString()
+    public function setTitleWithBooleanResultsInString(): void
     {
         $this->subject->setTitle(true);
         self::assertSame('1', $this->subject->getTitle());
@@ -80,7 +80,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getDescriptionInitiallyReturnsEmptyString()
+    public function getDescriptionInitiallyReturnsEmptyString(): void
     {
         self::assertSame(
             '',
@@ -91,7 +91,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setDescriptionSetsDescription()
+    public function setDescriptionSetsDescription(): void
     {
         $this->subject->setDescription('foo bar');
 
@@ -104,7 +104,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setDescriptionWithIntegerResultsInString()
+    public function setDescriptionWithIntegerResultsInString(): void
     {
         $this->subject->setDescription(123);
         self::assertSame('123', $this->subject->getDescription());
@@ -113,7 +113,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setDescriptionWithBooleanResultsInString()
+    public function setDescriptionWithBooleanResultsInString(): void
     {
         $this->subject->setDescription(true);
         self::assertSame('1', $this->subject->getDescription());
@@ -122,7 +122,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getImagesInitiallyReturnsObjectStorage()
+    public function getImagesInitiallyReturnsObjectStorage(): void
     {
         self::assertEquals(
             new ObjectStorage(),
@@ -133,7 +133,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setImagesSetsImages()
+    public function setImagesSetsImages(): void
     {
         $object = new FileReference();
         $objectStorage = new ObjectStorage();
@@ -149,7 +149,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function addImageAddsOneImage()
+    public function addImageAddsOneImage(): void
     {
         $objectStorage = new ObjectStorage();
         $this->subject->setImages($objectStorage);
@@ -168,7 +168,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function removeImageRemovesOneImage()
+    public function removeImageRemovesOneImage(): void
     {
         $object = new FileReference();
         $objectStorage = new ObjectStorage();
@@ -187,7 +187,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getCategoriesInitiallyReturnsObjectStorage()
+    public function getCategoriesInitiallyReturnsObjectStorage(): void
     {
         self::assertEquals(
             new ObjectStorage(),
@@ -198,7 +198,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function setCategoriesSetsCategories()
+    public function setCategoriesSetsCategories(): void
     {
         $object = new Category();
         $objectStorage = new ObjectStorage();
@@ -214,7 +214,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function addCategoryAddsOneCategory()
+    public function addCategoryAddsOneCategory(): void
     {
         $objectStorage = new ObjectStorage();
         $this->subject->setCategories($objectStorage);
@@ -233,7 +233,7 @@ class GlossaryTest extends UnitTestCase
     /**
      * @test
      */
-    public function removeCategoryRemovesOneCategory()
+    public function removeCategoryRemovesOneCategory(): void
     {
         $object = new Category();
         $objectStorage = new ObjectStorage();

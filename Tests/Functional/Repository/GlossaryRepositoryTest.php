@@ -38,7 +38,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         'typo3conf/ext/glossary2'
     ];
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +50,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject = $objectManager->get(GlossaryRepository::class);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset(
             $this->subject,
@@ -62,7 +62,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function findAllWillFindGlossariesSorted()
+    public function findAllWillFindGlossariesSorted(): void
     {
         $glossaries = [];
         /** @var Glossary $glossary */
@@ -81,7 +81,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getGlossariesWillFindAllEntries()
+    public function getGlossariesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
@@ -93,7 +93,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithInvalidCategoriesWillFindAllEntries()
+    public function searchGlossariesWithInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
@@ -105,7 +105,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithGivenCategoryWillFindTwoEntries()
+    public function searchGlossariesWithGivenCategoryWillFindTwoEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
@@ -117,7 +117,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithSomeInvalidCategoriesWillFindAllEntries()
+    public function searchGlossariesWithSomeInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
@@ -129,7 +129,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithLetterWillFindTwoEntries()
+    public function searchGlossariesWithLetterWillFindTwoEntries(): void
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
@@ -142,7 +142,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithInvalidLetterWillFindAllEntries()
+    public function searchGlossariesWithInvalidLetterWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertSame(
@@ -154,7 +154,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function searchGlossariesWithCategoryAndLetterWillFindOneEntry()
+    public function searchGlossariesWithCategoryAndLetterWillFindOneEntry(): void
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
