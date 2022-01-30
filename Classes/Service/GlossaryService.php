@@ -173,7 +173,7 @@ class GlossaryService
             $glossaryLetterHasEntries[] = [
                 'letter' => $possibleLetter,
                 'hasLink' => strpos($availableLetters, $possibleLetter) !== false,
-                'isRequestedLetter' => $options['variables']['letter'] === $possibleLetter
+                'isRequestedLetter' => ($options['variables']['letter'] ?? '') === $possibleLetter
             ];
         }
 
