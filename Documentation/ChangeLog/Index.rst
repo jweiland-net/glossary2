@@ -7,6 +7,12 @@
 ChangeLog
 =========
 
+**Version 5.0.4**
+
+Better support for PHP 8
+Use ProphecyTrait in functional tests.
+Reactivate a functional test
+
 **Version 5.0.3**
 
 Use SQL IN to select one or more categories
