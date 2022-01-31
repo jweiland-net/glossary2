@@ -19,6 +19,7 @@ use JWeiland\Glossary2\Tests\Functional\Fixtures\ProcessFirstLettersEventListene
 use JWeiland\Glossary2\Tests\Functional\Fixtures\SanitizeValueEventListener;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -35,6 +36,8 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  */
 class GlossaryServiceTest extends FunctionalTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var GlossaryService
      */
@@ -137,7 +140,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @tester
+     * @test
      */
     public function buildGlossaryWillConvertGermanUmlauts(): void
     {
