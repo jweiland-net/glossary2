@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.5**
+
+Add sortby title for all queries
+
 **Version 5.0.4**
 
 Better support for PHP 8
