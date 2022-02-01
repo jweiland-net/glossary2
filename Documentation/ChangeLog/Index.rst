@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.5**
+
+Use array type for $availableLetters instead of string
+
 **Version 5.0.4**
 
 Better support for PHP 8
