@@ -172,7 +172,7 @@ class GlossaryService
         foreach ($possibleLetters as $possibleLetter) {
             $glossaryLetterHasEntries[] = [
                 'letter' => $possibleLetter,
-                'hasLink' => strpos($availableLetters, $possibleLetter) !== false,
+                'hasLink' => in_array($possibleLetter, $availableLetters, true),
                 'isRequestedLetter' => ($options['variables']['letter'] ?? '') === $possibleLetter
             ];
         }
@@ -180,26 +180,29 @@ class GlossaryService
         return $glossaryLetterHasEntries;
     }
 
-    protected function getAvailableLetters($queryBuilder, array $options): string
+    protected function getAvailableLetters($queryBuilder, array $options): array
     {
         $mergeNumbers = (bool)($options['mergeNumbers'] ?? true);
 
         // These are the available first letters from Database
-        $availableLetters = implode(
-            '',
-            $this->getFirstLettersOfGlossaryRecords(
-                $queryBuilder,
-                $options['column'] ?? 'title',
-                $options['columnAlias'] ?? 'Letter'
-            )
+        $availableChars = $this->getFirstLettersOfGlossaryRecords(
+            $queryBuilder,
+            $options['column'] ?? 'title',
+            $options['columnAlias'] ?? 'Letter'
         );
 
-        // if there are numbers inside, replace them with 0-9
-        if ($mergeNumbers && preg_match('~^\d~', $availableLetters)) {
-            $availableLetters = preg_replace('~(^\d+)~', '0-9', $availableLetters);
+        $availableNumbers = array_filter($availableChars, static function ($letter) {
+            return is_numeric($letter);
+        });
+
+        $availableLetters = array_diff($availableChars, $availableNumbers);
+
+        // If merge is activated, merge all numbers to 0-9
+        if ($mergeNumbers && $availableNumbers !== []) {
+            $availableNumbers = ['0-9'];
         }
 
-        return $availableLetters;
+        return array_merge($availableNumbers, $availableLetters);
     }
 
     protected function getFirstLettersOfGlossaryRecords(
