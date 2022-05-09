@@ -193,11 +193,10 @@ class GlossaryService
                 $options['columnAlias'] ?? 'Letter'
             )
         );
-        if ($mergeNumbers) {
-            // if there are numbers inside, replace them with 0-9
-            if (preg_match('~^[[:digit:]]+~', $availableLetters)) {
-                $availableLetters = preg_replace('~(^[[:digit:]]+)~', '0-9', $availableLetters);
-            }
+
+        // if there are numbers inside, replace them with 0-9
+        if ($mergeNumbers && preg_match('~^\d~', $availableLetters)) {
+            $availableLetters = preg_replace('~(^\d+)~', '0-9', $availableLetters);
         }
 
         return $availableLetters;
