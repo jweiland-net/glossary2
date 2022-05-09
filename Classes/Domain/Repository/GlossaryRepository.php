@@ -20,8 +20,6 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -30,13 +28,6 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class GlossaryRepository extends Repository
 {
-    /**
-     * @var array
-     */
-    protected $defaultOrderings = [
-        'title' => QueryInterface::ORDER_ASCENDING
-    ];
-
     /**
      * @var EventDispatcher
      */
@@ -47,14 +38,13 @@ class GlossaryRepository extends Repository
      */
     protected $overlayHelper;
 
-    public function __construct(
-        ObjectManagerInterface $objectManager,
-        OverlayHelper $overlayHelper,
-        EventDispatcher $eventDispatcher
-    ) {
-        parent::__construct($objectManager);
-
+    public function injectOverlayHelper(OverlayHelper $overlayHelper): void
+    {
         $this->overlayHelper = $overlayHelper;
+    }
+
+    public function injectEventDispatcher(EventDispatcher $eventDispatcher): void
+    {
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -220,7 +210,8 @@ class GlossaryRepository extends Repository
                         Connection::PARAM_INT_ARRAY
                     )
                 )
-            );
+            )
+            ->orderBy('title', 'ASC');
 
         $this->overlayHelper->addWhereForOverlay($queryBuilder, $table, $alias, $useLangStrict);
 

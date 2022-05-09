@@ -7,9 +7,14 @@
 ChangeLog
 =========
 
-**Version 5.0.5**
+**Version 5.0.6**
 
 Use array type for $availableLetters instead of string
+Merge 2 conditions
+
+**Version 5.0.5**
+
+Add sortby title for all queries
 
 **Version 5.0.4**
 
