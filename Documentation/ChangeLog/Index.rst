@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.7**
+
+Register GlossaryService as public in Services.yaml
+
 **Version 5.0.6**
 
 Use array type for $availableLetters instead of string

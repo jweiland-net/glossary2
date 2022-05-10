@@ -20,5 +20,10 @@ services:
 
   JWeiland\Glossary2\Helper\CharsetHelper:
     public: true
+
   JWeiland\Glossary2\Helper\OverlayHelper:
     public: true
+
+  JWeiland\Glossary2\Service\GlossaryService:
+    public: true
+
