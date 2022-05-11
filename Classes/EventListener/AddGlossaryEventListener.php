@@ -14,6 +14,7 @@ namespace JWeiland\Glossary2\EventListener;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 class AddGlossaryEventListener extends AbstractControllerEventListener
 {
@@ -46,16 +47,30 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
                 'glossary',
                 $this->glossaryService->buildGlossary(
                     $this->glossaryRepository->getQueryBuilderForGlossary(),
-                    [
-                        'extensionName' => 'glossary2',
-                        'pluginName' => 'glossary',
-                        'controllerName' => 'Glossary',
-                        'column' => 'title',
-                        'settings' => $event->getSettings(),
-                        'variables' => $event->getFluidVariables()
-                    ]
+                    $this->getOptions($event)
                 )
             );
         }
+    }
+
+    protected function getOptions(PostProcessFluidVariablesEvent $event): array
+    {
+        $options = [
+            'extensionName' => 'glossary2',
+            'pluginName' => 'glossary',
+            'controllerName' => 'Glossary',
+            'column' => 'title',
+            'settings' => $event->getSettings(),
+            'variables' => $event->getFluidVariables()
+        ];
+
+        if (
+            isset($event->getSettings()['glossary'])
+            && is_array($event->getSettings()['glossary'])
+        ) {
+            ArrayUtility::mergeRecursiveWithOverrule($options, $event->getSettings()['glossary']);
+        }
+
+        return $options;
     }
 }
