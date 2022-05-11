@@ -7,6 +7,10 @@
 ChangeLog
 =========
 
+**Version 5.0.8**
+
+Add TS settings for GlossaryService
+
 **Version 5.0.7**
 
 Register GlossaryService as public in Services.yaml

@@ -36,6 +36,11 @@ plugin.tx_glossary2 {
       }
     }
 
+    glossary {
+      mergeNumbers = 1
+      showAllLink = 1
+    }
+
     pageBrowser {
       itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
     }
