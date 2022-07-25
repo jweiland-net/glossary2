@@ -39,7 +39,7 @@ persistence.storagePid
 
 Set this value to a Storage Folder (PID) where you have stored the records.
 
-Example: `plugin.tx_glossary2.settings.pidOfMaps2Plugin = 21,45,3234`
+Example: `plugin.tx_glossary2.persistence.storagePid = 21,45,3234`
 
 
 Settings
