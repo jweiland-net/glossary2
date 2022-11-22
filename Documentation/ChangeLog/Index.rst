@@ -7,6 +7,11 @@
 ChangeLog
 =========
 
+**Version 5.0.9**
+
+[DOCU] Mistake in storagePid configuration
+Add .gitattributes
+
 **Version 5.0.8**
 
 Add TS settings for GlossaryService
