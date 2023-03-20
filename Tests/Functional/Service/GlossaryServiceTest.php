@@ -82,7 +82,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      * @var string[]
      */
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2'
+        'typo3conf/ext/glossary2',
     ];
 
     protected function setUp(): void
@@ -91,7 +91,7 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
 
-        $this->extConf = new ExtConf();
+        $this->extConf = GeneralUtility::makeInstance(ExtConf::class);
         $this->overlayHelper = GeneralUtility::makeInstance(OverlayHelper::class);
         $this->listenerProviderProphecy = $this->prophesize(ListenerProvider::class);
         $this->listenerProviderProphecy
@@ -173,47 +173,47 @@ class GlossaryServiceTest extends FunctionalTestCase
             'Default templatePath from ExtConf of glossary2' => [
                 [],
                 [],
-                'EXT:glossary2/Resources/Private/Templates/Glossary.html'
+                'EXT:glossary2/Resources/Private/Templates/Glossary.html',
             ],
             'Default templatePath provided by foreign extension' => [
                 [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
                 ],
                 [],
-                'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
             ],
             'Default templatePath provided by TypoScript (string)' => [
                 [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
                 ],
                 [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html'
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html',
                 ],
-                'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html'
+                'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html',
             ],
             'Default templatePath provided by TypoScript (array)' => [
                 [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html'
-                ],
-                [
-                    'templatePath' => [
-                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html'
-                    ]
-                ],
-                'EXT:glossary2/Resources/Private/Templates/Default.html'
-            ],
-            'ExtKey individual templatePath provided by TypoScript (array)' => [
-                [
                     'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-                    'extensionName' => 'clubdirectory'
                 ],
                 [
                     'templatePath' => [
                         'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html',
-                        'clubdirectory' => 'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html'
-                    ]
+                    ],
                 ],
-                'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html'
+                'EXT:glossary2/Resources/Private/Templates/Default.html',
+            ],
+            'ExtKey individual templatePath provided by TypoScript (array)' => [
+                [
+                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
+                    'extensionName' => 'clubdirectory',
+                ],
+                [
+                    'templatePath' => [
+                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html',
+                        'clubdirectory' => 'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html',
+                    ],
+                ],
+                'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html',
             ],
         ];
     }
@@ -354,7 +354,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $queryBuilder,
             [
                 'column' => 'title',
-                'columnAlias' => 'Buchstaben'
+                'columnAlias' => 'Buchstaben',
             ]
         );
     }
@@ -384,8 +384,8 @@ class GlossaryServiceTest extends FunctionalTestCase
             $queryBuilder,
             [
                 'settings' => [
-                    'foo' => 'bar'
-                ]
+                    'foo' => 'bar',
+                ],
             ]
         );
     }
@@ -417,7 +417,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject->buildGlossary(
             $queryBuilder,
             [
-                'mergeNumbers' => false
+                'mergeNumbers' => false,
             ]
         );
     }
@@ -440,17 +440,17 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'letter' => '0',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             [
                 'letter' => '1',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             [
                 'letter' => '3',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ]
         );
 
@@ -474,7 +474,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $queryBuilder,
             [
                 'mergeNumbers' => false,
-                'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z'
+                'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
             ]
         );
     }
@@ -548,7 +548,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'extensionName' => 'sync_crop_areas',
                 'pluginName' => 'crop',
                 'controllerName' => 'Cropping',
-                'actionName' => 'view'
+                'actionName' => 'view',
             ]
         );
     }
@@ -559,137 +559,137 @@ class GlossaryServiceTest extends FunctionalTestCase
             0 => [
                 'letter' => '0-9',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             1 => [
                 'letter' => 'a',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             2 => [
                 'letter' => 'b',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             3 => [
                 'letter' => 'c',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             4 => [
                 'letter' => 'd',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             5 => [
                 'letter' => 'e',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             6 => [
                 'letter' => 'f',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             7 => [
                 'letter' => 'g',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             8 => [
                 'letter' => 'h',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             9 => [
                 'letter' => 'i',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             10 => [
                 'letter' => 'j',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             11 => [
                 'letter' => 'k',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             12 => [
                 'letter' => 'l',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             13 => [
                 'letter' => 'm',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             14 => [
                 'letter' => 'n',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             15 => [
                 'letter' => 'o',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             16 => [
                 'letter' => 'p',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             17 => [
                 'letter' => 'q',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             18 => [
                 'letter' => 'r',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             19 => [
                 'letter' => 's',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             20 => [
                 'letter' => 't',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             21 => [
                 'letter' => 'u',
                 'hasLink' => true,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             22 => [
                 'letter' => 'v',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             23 => [
                 'letter' => 'w',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             24 => [
                 'letter' => 'x',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             25 => [
                 'letter' => 'y',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
             26 => [
                 'letter' => 'z',
                 'hasLink' => false,
-                'isRequestedLetter' => false
+                'isRequestedLetter' => false,
             ],
         ];
     }
