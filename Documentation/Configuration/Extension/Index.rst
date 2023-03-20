@@ -1,4 +1,5 @@
-.. include:: ../../Includes.txt
+..  include:: /Includes.rst.txt
+
 
 .. _extensionSettings:
 
@@ -12,7 +13,7 @@ Tab: Basic
 ==========
 
 templatePath
-""""""""""""
+------------
 
 Default: `EXT:glossary2/Resources/Private/Templates/Glossary.html`
 
@@ -20,7 +21,7 @@ Which template should be used to render the A-Z list. `EXT:` as prefix is possib
 This is more a fallback, as you can override this option at various places.
 
 possibleLetters
-"""""""""""""""
+---------------
 
 Default: `0-9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z`
 

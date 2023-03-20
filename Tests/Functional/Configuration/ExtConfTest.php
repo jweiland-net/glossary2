@@ -11,6 +11,7 @@ namespace JWeiland\Glossary2\Tests\Functional\Configuration;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Test case
@@ -26,14 +27,14 @@ class ExtConfTest extends FunctionalTestCase
      * @var string[]
      */
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2'
+        'typo3conf/ext/glossary2',
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->subject = new ExtConf();
+        $this->subject = GeneralUtility::makeInstance(ExtConf::class);
     }
 
     protected function tearDown(): void

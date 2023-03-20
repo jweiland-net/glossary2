@@ -4,7 +4,7 @@
 	"description": "This TYPO3 extension creates a glossary with A-Z links for you",
 	"license": "GPL-2.0-or-later",
 	"keywords": ["typo3", "TYPO3 CMS", "glossar", "glossary2"],
-	"homepage": "http://www.jweiland.net",
+	"homepage": "https://www.jweiland.net",
 	"authors": [
 		{
 			"name": "Stefan Froemken",
@@ -19,11 +19,11 @@
 	},
 	"require": {
 		"ext-pdo": "*",
-		"typo3/cms-core": "^10.4.19 || ^11.5.0"
+		"typo3/cms-core": "^10.4.36 || ^11.5.23"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-latest",
-		"friendsofphp/php-cs-fixer": "^3.0",
+		"friendsofphp/php-cs-fixer": "^3.14",
 		"nimut/testing-framework": "^6.0",
 		"phpspec/prophecy-phpunit": "^2.0"
 	},
@@ -52,9 +52,9 @@
 		}
 	},
 	"scripts": {
-		"php:fix": ".build/vendor/bin/php-cs-fixer --config=Build/.php_cs.php fix Classes Tests",
+		"php:fix": ".build/vendor/bin/php-cs-fixer --config=Build/php-cs-fixer/config.php fix Classes Tests",
 		"ci:php:lint": "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
-		"ci:php:fixer": ".build/vendor/bin/php-cs-fixer --config=Build/.php_cs.php fix --dry-run -v --diff --show-progress=dots Classes Tests",
+		"ci:php:fixer": ".build/vendor/bin/php-cs-fixer --config=Build/php-cs-fixer/config.php fix --dry-run -v --diff --show-progress=dots Classes Tests",
 		"ci:tests:unit": ".build/vendor/bin/phpunit -c .build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit",
 		"ci:tests:functional": "find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo \"Running functional test suite {}\"; php -d date.timezone=Europe/Berlin .build/vendor/bin/phpunit -c .build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';",
 		"link-extension": [

@@ -16,6 +16,7 @@ use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
@@ -34,11 +35,13 @@ class GlossaryController extends ActionController
      */
     protected $glossaryService;
 
-    public function __construct(
-        GlossaryRepository $glossaryRepository,
-        GlossaryService $glossaryService
-    ) {
+    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
+    {
         $this->glossaryRepository = $glossaryRepository;
+    }
+
+    public function injectGlossaryService(GlossaryService $glossaryService): void
+    {
         $this->glossaryService = $glossaryService;
     }
 
@@ -58,7 +61,7 @@ class GlossaryController extends ActionController
 
     /**
      * @param string $letter Show only records starting with this letter
-     * @TYPO3\CMS\Extbase\Annotation\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
+     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
     public function listAction(string $letter = ''): void
     {
@@ -67,7 +70,7 @@ class GlossaryController extends ActionController
             'glossaries' => $this->glossaryRepository->searchGlossaries(
                 GeneralUtility::intExplode(',', $this->settings['categories'], true),
                 $letter
-            )
+            ),
         ]);
     }
 
@@ -78,7 +81,7 @@ class GlossaryController extends ActionController
     {
         $this->postProcessAndAssignFluidVariables([
             'glossary' => $glossary,
-            'letter' => $glossary->getSanitizedFirstLetterOfTitle()
+            'letter' => $glossary->getSanitizedFirstLetterOfTitle(),
         ]);
     }
 

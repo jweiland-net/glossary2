@@ -1,126 +1,160 @@
-.. include:: ../Includes.txt
+..  include:: /Includes.rst.txt
 
 
-.. _changelog:
+..  _changelog:
 
 =========
 ChangeLog
 =========
 
-**Version 5.0.9**
+Version 5.0.10
+==============
 
-[DOCU] Mistake in storagePid configuration
-Add .gitattributes
+*   [BUGFIX] Remove exclude from path_segment in TCA
+*   [DOCU] Set indents to 4 spaces
+*   [DOCU] Streamline the headers
+*   [DOCU] Convert Readme.rst to README.md
+*   Update .gitignore
+*   Update .editorconfig
+*   Implement new php-cs-fixer configuration
 
-**Version 5.0.8**
+Version 5.0.9
+=============
 
-Add TS settings for GlossaryService
+*   [DOCU] Mistake in storagePid configuration
+*   Add .gitattributes
 
-**Version 5.0.7**
+Version 5.0.8
+=============
 
-Register GlossaryService as public in Services.yaml
+*   Add TS settings for GlossaryService
 
-**Version 5.0.6**
+Version 5.0.7
+=============
 
-Use array type for $availableLetters instead of string
-Merge 2 conditions
+*   Register GlossaryService as public in Services.yaml
 
-**Version 5.0.5**
+Version 5.0.6
+=============
 
-Add sortby title for all queries
+*   Use array type for $availableLetters instead of string
+*   Merge 2 conditions
 
-**Version 5.0.4**
+Version 5.0.5
+=============
 
-Better support for PHP 8
-Use ProphecyTrait in functional tests.
-Reactivate a functional test
+*   Add sortby title for all queries
 
-**Version 5.0.3**
+Version 5.0.4
+=============
 
-Use SQL IN to select one or more categories
+*   Better support for PHP 8
+*   Use ProphecyTrait in functional tests.
+*   Reactivate a functional test
 
-**Version 5.0.2**
+Version 5.0.3
+=============
 
-Use SimplePaginator instead of our own one
+*   Use SQL IN to select one or more categories
 
-**Version 5.0.1**
+Version 5.0.2
+=============
 
-Add documentation about how to integrate Georg Ringers numbered_pagination
+*   Use SimplePaginator instead of our own one
 
-**Version 5.0.0**
+Version 5.0.1
+=============
 
-Remove TYPO3 9 compatibility
-Add TYPO3 11 compatibility
-This version is still TYPO3 10 compatible
+*   Add documentation about how to integrate Georg Ringers numbered_pagination
 
-**Version 4.3.1**
+Version 5.0.0
+=============
 
-Move SlugHelper from constructor argument into getSlugHelper()
+*   Remove TYPO3 9 compatibility
+*   Add TYPO3 11 compatibility
+*   This version is still TYPO3 10 compatible
 
-**Version 4.3.0**
+Version 4.3.1
+=============
 
-Allow overriding templatePath of glossary2 on page basis via TypoScript
+*   Move SlugHelper from constructor argument into getSlugHelper()
 
-**Version 4.2.0**
+Version 4.3.0
+=============
 
-Add setting for PID to list/detail view in FlexForm
+*   Allow overriding templatePath of glossary2 on page basis via TypoScript
 
-**Version 4.1.1**
+Version 4.2.0
+=============
 
-Use unique instead of uniqueInSite for slug
+*   Add setting for PID to list/detail view in FlexForm
 
-**Version 4.1.0**
+Version 4.1.1
+=============
 
-- Add 2 new methods to Glossary2 API to simplify your DB queries
-- All all API options to Fluid Template
-- Replace hard-coded action name in links with action name from API options
+*   Use unique instead of uniqueInSite for slug
 
-**Version 4.0.2**
+Version 4.1.0
+=============
 
-- Use translation for path_segment from glosssary2 lang files
+*   Add 2 new methods to Glossary2 API to simplify your DB queries
+*   All all API options to Fluid Template
+*   Replace hard-coded action name in links with action name from API options
 
-**Version 4.0.1**
+Version 4.0.2
+=============
 
-- Make templatePath configurable with Extension Settings
+*   Use translation for path_segment from glosssary2 lang files
 
-**Version 4.0.0**
+Version 4.0.1
+=============
 
-- Remove TYPO3 8 compatibility
-- Add TYPO3 10 compatibility
-- Add Service.yaml for DI
-- BUGFIX: Use DEV-Autoloader of glossary2 instead of events2
-- Repair UnitTests and FunctionalTests.
-- Add many more FunctionalTests
-- Add API to build a Glossary for foreign extensions
-- Add documentation for Glossary API
-- Update DocHeader. Add LICENSE file
+*   Make templatePath configurable with Extension Settings
 
-**Version 3.0.2**
+Version 4.0.0
+=============
 
-- Add link to our new Routes documentation in our documentation
+*   Remove TYPO3 8 compatibility
+*   Add TYPO3 10 compatibility
+*   Add Service.yaml for DI
+*   BUGFIX: Use DEV-Autoloader of glossary2 instead of events2
+*   Repair UnitTests and FunctionalTests.
+*   Add many more FunctionalTests
+*   Add API to build a Glossary for foreign extensions
+*   Add documentation for Glossary API
+*   Update DocHeader. Add LICENSE file
 
-**Version 3.0.1**
+Version 3.0.2
+=============
 
-- Add documentation for Route configuration
+*   Add link to our new Routes documentation in our documentation
 
-**Version 3.0.0**
+Version 3.0.1
+=============
 
-- Changed all templates. They are using bootstrap classes now by default
-- Add SignalSlot to GlossaryRepository to modify Extbase Query
-- Removed SwitchableControllerActions from FlexForm. Please start UpdateWizard.
-- Add option to enable/disable the A-Z links on top
-- Add option to add/remove an ALL-Link in front of A-Z link list.
-- Removed action method showWithoutGlossar from Controller.
-- Moved ext_icon to new location in Public/Icons
-- Add Icon for glossary table
-- Little code refactorings like removing @return void
-- Update documentation
+*   Add documentation for Route configuration
 
-**Version 2.2.0**
+Version 3.0.0
+=============
 
-- Add documentation
-- Add new ext_icon as SVG
+*   Changed all templates. They are using bootstrap classes now by default
+*   Add SignalSlot to GlossaryRepository to modify Extbase Query
+*   Removed SwitchableControllerActions from FlexForm. Please start UpdateWizard.
+*   Add option to enable/disable the A-Z links on top
+*   Add option to add/remove an ALL-Link in front of A-Z link list.
+*   Removed action method showWithoutGlossar from Controller.
+*   Moved ext_icon to new location in Public/Icons
+*   Add Icon for glossary table
+*   Little code refactorings like removing @return void
+*   Update documentation
 
-**Version 2.1.1**
+Version 2.2.0
+=============
 
-Now you can add cropping, alt and title information to images
+*   Add documentation
+*   Add new ext_icon as SVG
+
+Version 2.1.1
+=============
+
+*   Now you can add cropping, alt and title information to images

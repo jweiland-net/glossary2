@@ -1,64 +1,54 @@
-.. include:: Includes.txt
+..  include:: /Includes.rst.txt
 
-
-.. Every manual should have a start label for cross-referencing to
-.. start page. Do not remove this!
 
 .. _start:
 
-=============================================================
+=========
 Glossary2
-=============================================================
+=========
 
-.. only:: html
+:Extension key:
+    glossary2
 
-   :Classification:
-      glossary2
+:Package name:
+    jweiland/glossary2
 
-   :Version:
-      |release|
+:Version:
+    |release|
 
-   :Language:
-      en
+:Language:
+    en
 
-   :Description:
-      Manual covering TYPO3 extension glossary2
+:Author:
+    Stefan Froemken
 
-   :Keywords:
-      glossary, a-z, navigation
+:License:
+    This document is published under the
+    `Creative Commons BY 4.0 <https://creativecommons.org/licenses/by/4.0/>`__
+    license.
 
-   :Copyright:
-      2013-2019
+:Rendered:
+    |today|
 
-   :Author:
-      Stefan Froemken
+----
 
-   :Email:
-      projects@jweiland.net
+`glossary2` is an extension for TYPO3 CMS. It shows you a list of glossary
+entries incl. detail view. Above the list you will see an A-Z navigation.
 
-   :License:
-      This document is published under the Open Publication License
-      available from http://www.opencontent.org/openpub/
+----
 
-   :Rendered:
-      |today|
+**Table of Contents**
 
-   The content of this document is related to TYPO3,
-   a GNU/GPL CMS/Framework available from `www.typo3.org <https://typo3.org/>`__.
+..  toctree::
+    :maxdepth: 2
+    :titlesonly:
 
-
-   **Table of Contents**
-
-.. toctree::
-   :maxdepth: 3
-
-
-   Introduction/Index
-   User/Index
-   Installation/Index
-   Configuration/Index
-   AdministratorManual/Index
-   Developer/Index
-   KnownProblems/Index
-   ChangeLog/Index
-   Links
+    Introduction/Index
+    User/Index
+    Installation/Index
+    Configuration/Index
+    Administrator/Index
+    Developer/Index
+    KnownProblems/Index
+    ChangeLog/Index
+    Links

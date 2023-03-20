@@ -92,9 +92,6 @@ class GlossaryService
      * $constraints[] = $glossary2Service->getLetterConstraintForExtbaseQuery($query, 'title', $letter);
      * return $query->matching($query->logicalAnd($constraints))->execute();
      *
-     * @param QueryInterface $extbaseQuery
-     * @param string $column
-     * @param string $letter
      * @return OrInterface|ComparisonInterface
      */
     public function getLetterConstraintForExtbaseQuery(
@@ -121,11 +118,6 @@ class GlossaryService
      *
      * $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('my_table');
      * $queryBuilder->andWhere($glossary2Service->getLetterConstraintForDoctrineQuery($queryBuilder, 'title', $letter));
-     *
-     * @param QueryBuilder $queryBuilder
-     * @param string $column
-     * @param string $letter
-     * @return CompositeExpression
      */
     public function getLetterConstraintForDoctrineQuery(
         QueryBuilder $queryBuilder,
@@ -173,7 +165,7 @@ class GlossaryService
             $glossaryLetterHasEntries[] = [
                 'letter' => $possibleLetter,
                 'hasLink' => in_array($possibleLetter, $availableLetters, true),
-                'isRequestedLetter' => ($options['variables']['letter'] ?? '') === $possibleLetter
+                'isRequestedLetter' => ($options['variables']['letter'] ?? '') === $possibleLetter,
             ];
         }
 
@@ -249,9 +241,6 @@ class GlossaryService
     /**
      * GROUP BY of DB will group all "a" letters like a, á, â, à to ONE of them. If grouped letter
      * is "a", everything is fine, but in case of "á" we have to convert this letter to ASCII "a" representation.
-     *
-     * @param array $firstLetters
-     * @return array
      */
     protected function cleanUpFirstLetters(array $firstLetters): array
     {

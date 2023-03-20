@@ -39,9 +39,6 @@ class CharsetHelper
     /**
      * Sanitize value by an automatism.
      * If you need, you can implement further sanitizing for chars the automatism does not respect.
-     *
-     * @param string $value
-     * @return string
      */
     public function sanitize(string $value): string
     {

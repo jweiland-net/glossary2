@@ -135,7 +135,7 @@ class GlossaryRepository extends Repository
         }
 
         // check letter
-        if (!is_string($letter) || ($letter !== '' && !preg_match('@^0-9$|^[a-z]$@', $letter))) {
+        if ($letter !== '' && !preg_match('@^0-9$|^[a-z]$@', $letter)) {
             return false;
         }
 
@@ -144,15 +144,12 @@ class GlossaryRepository extends Repository
 
     /**
      * Prepare a QueryBuilder for glossary (A-Z navigation)
-     *
-     * @param array $categories
-     * @return QueryBuilder
      */
     public function getQueryBuilderForGlossary(array $categories = []): QueryBuilder
     {
         $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary', 'g');
 
-        if (!empty($categories)) {
+        if ($categories !== []) {
             $this->addCategoryConstraintToQueryBuilder(
                 $queryBuilder,
                 'tx_glossary2_domain_model_glossary',

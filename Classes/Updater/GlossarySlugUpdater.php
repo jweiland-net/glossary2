@@ -42,8 +42,6 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
     /**
      * Return the identifier for this wizard
      * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
      */
     public function getIdentifier(): string
     {
@@ -122,10 +120,10 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                         $this->fieldName => $this->getUniqueValue(
                             (int)$recordToUpdate['uid'],
                             $slug
-                        )
+                        ),
                     ],
                     [
-                        'uid' => (int)$recordToUpdate['uid']
+                        'uid' => (int)$recordToUpdate['uid'],
                     ]
                 );
             }
@@ -134,11 +132,6 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         return true;
     }
 
-    /**
-     * @param int $uid
-     * @param string $slug
-     * @return string
-     */
     protected function getUniqueValue(int $uid, string $slug): string
     {
         $statement = $this->getUniqueCountStatement($uid, $slug);
@@ -200,15 +193,10 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
     public function getPrerequisites(): array
     {
         return [
-            DatabaseUpdatedPrerequisite::class
+            DatabaseUpdatedPrerequisite::class,
         ];
     }
 
-    /**
-     * Get TYPO3s Connection Pool
-     *
-     * @return ConnectionPool
-     */
     protected function getConnectionPool(): ConnectionPool
     {
         return GeneralUtility::makeInstance(ConnectionPool::class);
