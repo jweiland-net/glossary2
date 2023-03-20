@@ -19,14 +19,14 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'title,description',
-        'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg'
+        'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg',
     ],
     'types' => [
         '1' => [
             'showitem' => '--palette--;;language, --palette--;;titleHidden,
             path_segment, description, images,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access,
-            --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access'
+            --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access',
         ],
     ],
     'palettes' => [
@@ -34,7 +34,7 @@ return [
         'titleHidden' => ['showitem' => 'title, hidden'],
         'access' => [
             'showitem' => 'starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
-        ]
+        ],
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -48,11 +48,11 @@ return [
                     [
                         'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                         -1,
-                        'flags-multiple'
+                        'flags-multiple',
                     ],
                 ],
                 'default' => 0,
-            ]
+            ],
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -65,12 +65,12 @@ return [
                 'maxitems' => 1,
                 'minitems' => 0,
                 'default' => 0,
-            ]
+            ],
         ],
         'l10n_source' => [
             'config' => [
-                'type' => 'passthrough'
-            ]
+                'type' => 'passthrough',
+            ],
         ],
         'hidden' => [
             'exclude' => true,
@@ -82,34 +82,34 @@ return [
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
-            ]
+            ],
         ],
         'cruser_id' => [
             'label' => 'cruser_id',
             'config' => [
-                'type' => 'passthrough'
-            ]
+                'type' => 'passthrough',
+            ],
         ],
         'pid' => [
             'label' => 'pid',
             'config' => [
-                'type' => 'passthrough'
-            ]
+                'type' => 'passthrough',
+            ],
         ],
         'crdate' => [
             'label' => 'crdate',
             'config' => [
                 'type' => 'passthrough',
-            ]
+            ],
         ],
         'tstamp' => [
             'label' => 'tstamp',
             'config' => [
                 'type' => 'passthrough',
-            ]
+            ],
         ],
         'starttime' => [
             'exclude' => true,
@@ -143,7 +143,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
             ],
         ],
         'path_segment' => [
@@ -157,13 +157,13 @@ return [
                     // As pageSlug may contain slashes, we have to remove page slug
                     'prefixParentPageSlug' => false,
                     'replacements' => [
-                        '/' => '-'
+                        '/' => '-',
                     ],
                 ],
                 'fallbackCharacter' => '-',
                 'eval' => 'unique',
-                'default' => ''
-            ]
+                'default' => '',
+            ],
         ],
         'description' => [
             'exclude' => true,
@@ -196,45 +196,45 @@ return [
                         'createNewRelationLinkTitle' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.images.add',
                         'showPossibleLocalizationRecords' => true,
                         'showAllLocalizationLink' => true,
-                        'showSynchronizationLink' => true
+                        'showSynchronizationLink' => true,
                     ],
                     'overrideChildTca' => [
                         'types' => [
                             '0' => [
                                 'showitem' => '
                                 --palette--;;imageoverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                             ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
+                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_TEXT => [
                                 'showitem' => '
                                 --palette--;;imageoverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                             ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_IMAGE => [
                                 'showitem' => '
                                 --palette--;;imageoverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                             ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
+                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_AUDIO => [
                                 'showitem' => '
                                 --palette--;;audioOverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                             ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
+                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_VIDEO => [
                                 'showitem' => '
                                 --palette--;;videoOverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                             ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
+                            \TYPO3\CMS\Core\Resource\AbstractFile::FILETYPE_APPLICATION => [
                                 'showitem' => '
                                 --palette--;;imageoverlayPalette,
-                                --palette--;;filePalette'
-                            ]
+                                --palette--;;filePalette',
+                            ],
                         ],
                     ],
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['SYS']['mediafile_ext']
-            )
-        ]
-    ]
+            ),
+        ],
+    ],
 ];

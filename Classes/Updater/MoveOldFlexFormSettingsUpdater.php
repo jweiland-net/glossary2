@@ -24,8 +24,6 @@ class MoveOldFlexFormSettingsUpdater
     /**
      * Return the identifier for this wizard
      * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
      */
     public function getIdentifier(): string
     {
@@ -34,8 +32,6 @@ class MoveOldFlexFormSettingsUpdater
 
     /**
      * Return the speaking name of this wizard
-     *
-     * @return string
      */
     public function getTitle(): string
     {
@@ -44,8 +40,6 @@ class MoveOldFlexFormSettingsUpdater
 
     /**
      * Return the description for this wizard
-     *
-     * @return string
      */
     public function getDescription(): string
     {
@@ -119,13 +113,13 @@ class MoveOldFlexFormSettingsUpdater
             $connection->update(
                 'tt_content',
                 [
-                    'pi_flexform' => $this->checkValue_flexArray2Xml($valueFromDatabase)
+                    'pi_flexform' => $this->checkValue_flexArray2Xml($valueFromDatabase),
                 ],
                 [
-                    'uid' => (int)$record['uid']
+                    'uid' => (int)$record['uid'],
                 ],
                 [
-                    'pi_flexform' => \PDO::PARAM_STR
+                    'pi_flexform' => \PDO::PARAM_STR,
                 ]
             );
         }
@@ -135,8 +129,6 @@ class MoveOldFlexFormSettingsUpdater
 
     /**
      * Get all (incl. deleted/hidden) tt_content records with plugin glossary2_glossary
-     *
-     * @return array
      */
     protected function getTtContentRecordsWithOutdatedFlexForm(): array
     {
@@ -167,10 +159,8 @@ class MoveOldFlexFormSettingsUpdater
 
     /**
      * It's not a must have, but sDEF seems to be more default than sDEFAULT as first sheet name in TYPO3
-     *
-     * @param array $valueFromDatabase
      */
-    protected function moveSheetDefaultToDef(array &$valueFromDatabase)
+    protected function moveSheetDefaultToDef(array &$valueFromDatabase): void
     {
         if (array_key_exists('sDEFAULT', $valueFromDatabase['data'])) {
             foreach ($valueFromDatabase['data']['sDEFAULT']['lDEF'] as $field => $value) {
@@ -184,19 +174,18 @@ class MoveOldFlexFormSettingsUpdater
 
     /**
      * Move field from one sheet to another and remove field from old location
-     *
-     * @param array $valueFromDatabase
-     * @param string $field
-     * @param string $oldSheet
-     * @param string $newSheet
      */
-    protected function moveFieldFromOldToNewSheet(array &$valueFromDatabase, string $field, string $oldSheet, string $newSheet)
-    {
+    protected function moveFieldFromOldToNewSheet(
+        array &$valueFromDatabase,
+        string $field,
+        string $oldSheet,
+        string $newSheet
+    ): void {
         if (array_key_exists($field, $valueFromDatabase['data'][$oldSheet]['lDEF'])) {
             // Create base sheet, if not exist
             if (!array_key_exists($newSheet, $valueFromDatabase['data'])) {
                 $valueFromDatabase['data'][$newSheet] = [
-                    'lDEF' => []
+                    'lDEF' => [],
                 ];
             }
 
@@ -216,17 +205,12 @@ class MoveOldFlexFormSettingsUpdater
      * @param array $array Array with FlexForm data
      * @return string Input array converted to XML
      */
-    public function checkValue_flexArray2Xml($array): string
+    public function checkValue_flexArray2Xml(array $array): string
     {
-        $flexObj = GeneralUtility::makeInstance(FlexFormTools::class);
-        return $flexObj->flexArray2Xml($array, true);
+        return GeneralUtility::makeInstance(FlexFormTools::class)
+            ->flexArray2Xml($array, true);
     }
 
-    /**
-     * Get TYPO3s Connection Pool
-     *
-     * @return ConnectionPool
-     */
     protected function getConnectionPool(): ConnectionPool
     {
         return GeneralUtility::makeInstance(ConnectionPool::class);
