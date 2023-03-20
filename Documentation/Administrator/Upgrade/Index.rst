@@ -38,7 +38,7 @@ As we have only removed TYPO3 8 and added TYPO3 10 compatibility there should be
 no problem to upgrade to this version.
 
 Upgrade to Version 3.0.0
-=======================
+========================
 
 We have changed Fluid-Templates a lot. We have removed a lot of CSS classes
 and changed them to be compatible with Bootstrap. Further we have moved

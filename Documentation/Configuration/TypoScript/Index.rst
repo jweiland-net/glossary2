@@ -67,11 +67,13 @@ foreign extensions. So TypoScript settings have highest priority.
 
 We also have implemented a more complex setting for `templatePath`:
 
-plugin.tx_glossary2.settings.templatePath {
-  default = EXT:glossary2/Resources/Private/Templates/Glossary2.html
-  events2 = EXT:events2/Resources/Private/Templates/Glossary2.html
-  yellowpages2 = EXT:yellowpages2/Resources/Private/Templates/Glossary2.html
-}
+..  code-block:: typoscript
+
+    plugin.tx_glossary2.settings.templatePath {
+      default = EXT:glossary2/Resources/Private/Templates/Glossary2.html
+      events2 = EXT:events2/Resources/Private/Templates/Glossary2.html
+      yellowpages2 = EXT:yellowpages2/Resources/Private/Templates/Glossary2.html
+    }
 
 `default` will be used, if no templatePath for a given ExtensionKey was found.
 
