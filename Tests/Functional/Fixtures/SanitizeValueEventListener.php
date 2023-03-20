@@ -21,7 +21,7 @@ class SanitizeValueEventListener
     public function __invoke(SanitizeValueForCharsetHelperEvent $event): void
     {
         $letterMapping = [
-            'e' => 'o'
+            'e' => 'o',
         ];
 
         $event->setValue(strtr($event->getValue(), $letterMapping));
