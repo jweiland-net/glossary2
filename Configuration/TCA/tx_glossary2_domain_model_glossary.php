@@ -25,7 +25,7 @@ return [
         '1' => [
             'showitem' => '--palette--;;language, --palette--;;titleHidden,
             path_segment, description, images,
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access, 
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access,
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access'
         ],
     ],
@@ -147,7 +147,6 @@ return [
             ],
         ],
         'path_segment' => [
-            'exclude' => true,
             'label' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary.path_segment',
             'displayCond' => 'VERSION:IS:false',
             'config' => [
