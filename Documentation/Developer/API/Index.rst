@@ -1,4 +1,5 @@
-.. include:: ../../Includes.txt
+..  include:: /Includes.rst.txt
+
 
 .. _glossary-api:
 
@@ -17,64 +18,63 @@ As our API does not know the table to use and does not know further WHERE condit
 you to deliver a QueryBuilder instance as first argument. We prefer to create a new method within your
 Repository like `getQueryBuilderToFindAllEntries`.
 
-.. code-block:: php
+..  code-block:: php
 
-   public function getQueryBuilderToFindAllEntries(): QueryBuilder
-   {
-       $table = 'tx_myext_domain_model_whatever';
-       $query = $this->createQuery();
-       $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-       $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+    public function getQueryBuilderToFindAllEntries(): QueryBuilder
+    {
+        $table = 'tx_myext_domain_model_whatever';
+        $query = $this->createQuery();
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
 
-       // Do not set any SELECT, ORDER BY, GROUP BY statement. It will be set by glossary2 API
-       $queryBuilder
-           ->from($table)
-           ->andWhere(
-               $queryBuilder->expr()->in(
-                   'pid',
-                   $queryBuilder->createNamedParameter(
-                       $query->getQuerySettings()->getStoragePageIds(),
-                       Connection::PARAM_INT_ARRAY
-                   )
-               )
-           );
+        // Do not set any SELECT, ORDER BY, GROUP BY statement. It will be set by glossary2 API
+        $queryBuilder
+            ->from($table)
+            ->andWhere(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter(
+                        $query->getQuerySettings()->getStoragePageIds(),
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
 
-       return $queryBuilder;
-   }
+        return $queryBuilder;
+    }
 
-   protected function getConnectionPool(): ConnectionPool
-   {
-       return GeneralUtility::makeInstance(ConnectionPool::class);
-   }
-
+    protected function getConnectionPool(): ConnectionPool
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class);
+    }
 
 Within your controller you can call our API that way:
 
-.. code-block:: php
+..  code-block:: php
 
-   /**
-    * @param string $letter Show only records starting with this letter
-    * @Extbase\Validate("String", param="letter")
-    * @Extbase\Validate("StringLength", param="letter", options={"minimum": 0, "maximum": 3})
-    */
-   public function listAction(string $letter = ''): void
-   {
-       $companies = $this->companyRepository->findByStartingLetter($letter, $this->settings);
+    /**
+     * @param string $letter Show only records starting with this letter
+     * @Extbase\Validate("String", param="letter")
+     * @Extbase\Validate("StringLength", param="letter", options={"minimum": 0, "maximum": 3})
+     */
+    public function listAction(string $letter = ''): void
+    {
+        $companies = $this->companyRepository->findByStartingLetter($letter, $this->settings);
 
-       $this->view->assign('companies', $companies);
-       $this->view->assign(
-           'glossar',
-           $this->glossaryService->buildGlossary(
-               $this->myRepository->getQueryBuilderToFindAllEntries()
-           )
-       );
-   }
+        $this->view->assign('companies', $companies);
+        $this->view->assign(
+            'glossar',
+            $this->glossaryService->buildGlossary(
+                $this->myRepository->getQueryBuilderToFindAllEntries()
+            )
+        );
+    }
 
 This will transfer the fully rendered HTML Glossar to View. Use `f:format.raw()` in Fluid Template:
 
-.. code-block:: html
+..  code-block:: html
 
-   {glossar -> f:format.raw()}
+    {glossar -> f:format.raw()}
 
 
 Configure Glossary API
@@ -82,18 +82,18 @@ Configure Glossary API
 
 If you want, you can configure our API with second `options` argument:
 
-.. code-block:: php
+..  code-block:: php
 
-   $this->view->assign(
-       'glossar',
-       $this->glossaryService->buildGlossary(
-           $this->myRepository->getQueryBuilderToFindAllEntries(),
-           [
-               'settings' => $this->settings,
-               'templatePath' => 'EXT:myext:/Resources/Private/Templates/Glossary.html',
-           ]
-       )
-   );
+    $this->view->assign(
+        'glossar',
+        $this->glossaryService->buildGlossary(
+            $this->myRepository->getQueryBuilderToFindAllEntries(),
+            [
+                'settings' => $this->settings,
+                'templatePath' => 'EXT:myext:/Resources/Private/Templates/Glossary.html',
+            ]
+        )
+    );
 
 templatePath
 ------------
@@ -205,20 +205,20 @@ Extend your controller
 
 It is up to you to process the letter in your controller. In most cases you may extend your listAction:
 
-.. code-block:: php
+..  code-block:: php
 
-   /**
-    * @param string $letter
-    */
-   public function listAction(string $letter = '')
-   {
-       if ($letter) {
-           $myRecords = $this->myRepo->findByLetter($letter);
-       } else {
-           $myRecords = $this->myRepo->findAll();
-       }
-       $this->view->assign('myRecords', $myRecords);
-   }
+    /**
+     * @param string $letter
+     */
+    public function listAction(string $letter = '')
+    {
+        if ($letter) {
+            $myRecords = $this->myRepo->findByLetter($letter);
+        } else {
+            $myRecords = $this->myRepo->findAll();
+        }
+        $this->view->assign('myRecords', $myRecords);
+    }
 
 Extend your Repository
 ======================
@@ -229,37 +229,37 @@ Extbase Query or Doctrine.
 Example for Extbase Query
 -------------------------
 
-.. code-block:: php
+..  code-block:: php
 
-   public function findByLetter(string $letter): QueryResultInterface
-   {
-       $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
-       $query = $this->createQuery();
+    public function findByLetter(string $letter): QueryResultInterface
+    {
+        $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
+        $query = $this->createQuery();
 
-       $constraints = [];
-       $constraints[] = $glossaryService->getLetterConstraintForExtbaseQuery($query, 'myColumnName', $letter);
+        $constraints = [];
+        $constraints[] = $glossaryService->getLetterConstraintForExtbaseQuery($query, 'myColumnName', $letter);
 
-       return $query->matching($query->logicalAnd($constraints))->execute();
-   }
+        return $query->matching($query->logicalAnd($constraints))->execute();
+    }
 
 Example for Doctrine
 --------------------
 
-.. code-block:: php
+..  code-block:: php
 
-   public function findByLetter(string $letter): QueryResultInterface
-   {
-       $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
-       $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-           ->getQueryBuilderForTable('my_table');
-       $queryBuilder
-           ->select('*')
-           ->from('my_table')
-           ->andWhere($glossaryService->getLetterConstraintForDoctrineQuery($queryBuilder, 'my_colum_name', $letter));
+    public function findByLetter(string $letter): QueryResultInterface
+    {
+        $glossaryService = GeneralUtility::makeInstance(GlossaryService::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('my_table');
+        $queryBuilder
+            ->select('*')
+            ->from('my_table')
+            ->andWhere($glossaryService->getLetterConstraintForDoctrineQuery($queryBuilder, 'my_colum_name', $letter));
 
-       $query = $this->createQuery();
-       return $query->statement($queryBuilder)->execute();
-   }
+        $query = $this->createQuery();
+        return $query->statement($queryBuilder)->execute();
+    }
 
 
 Extend Glossary Function
@@ -274,15 +274,15 @@ After retrieving the possible first letters from database, we clean, sort and re
 The result will then be sent to this SignalSlot including the currently used QueryBuilder.
 It's a simple array as reference:
 
-.. code-block:: php
+..  code-block:: php
 
-   $firstLetters = [
-       0 => '0',
-       1 => 'a',
-       2 => 'b',
-       3 => 'c',
-       ...
-   ];
+    $firstLetters = [
+        0 => '0',
+        1 => 'a',
+        2 => 'b',
+        3 => 'c',
+        ...
+    ];
 
 Add or remove letters as you like.
 
@@ -295,17 +295,17 @@ of each individual letter. Here, we will map all german umlauts ÄÖÜ to its AO
 If you need further mappings like for french or spain you can use this SignalSlot. You will get
 the $letterMapping array which you have to return within SignalSlot (not reference).
 
-.. code-block:: php
+..  code-block:: php
 
-   $letterMapping = [
-       // default entries for germany
-       'ä' => 'a',
-       'ö' => 'e',
-       'ü' => 'u',
+    $letterMapping = [
+        // default entries for germany
+        'ä' => 'a',
+        'ö' => 'e',
+        'ü' => 'u',
 
-       // new entries of your extension
-       'à' => 'a',
-       'è' => 'e',
-       'ù' => 'u',
-       ...
-   ];
+        // new entries of your extension
+        'à' => 'a',
+        'è' => 'e',
+        'ù' => 'u',
+        ...
+    ];

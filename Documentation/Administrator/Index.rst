@@ -1,4 +1,5 @@
-.. include:: ../Includes.txt
+..  include:: /Includes.rst.txt
+
 
 .. _admin-manual:
 
@@ -15,4 +16,4 @@ Administrator manual
 
    Pagination/Index
    Routes/Index
-   Update/Index
+   Upgrade/Index

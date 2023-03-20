@@ -1,18 +1,20 @@
-.. include:: ../../Includes.txt
+..  include:: /Includes.rst.txt
 
-Updating
-========
+
+=======
+Upgrade
+=======
 
 If you update EXT:glossary2 to a newer version, please read this section carefully!
 
 Update to Version 5.0.2
------------------------
+=======================
 
 Sorry, we have implemented the wrong Pagination. With this version we use TYPO3's default SimplePagination.
 Please adopt changes of Partials/Components/Pagination.html to your own templates, if you have overwritten them.
 
-Update to Version 5.0.0
------------------------
+Upgrade to Version 5.0.0
+========================
 
 We have changed some CSS classes in Fluid Templates. Please update them to your needs.
 
@@ -25,18 +27,18 @@ Because of the Pagination change you should also check your RouteEnhancers. If y
 AdministratorManual/Routes for an example here in this documentation.
 
 Update to Version 4.3.1
------------------------
+=======================
 
 We have changed some method arguments, please flush cache in InstallTool
 
-Update to Version 4.0.0
------------------------
+Upgrade to Version 4.0.0
+========================
 
 As we have only removed TYPO3 8 and added TYPO3 10 compatibility there should be
 no problem to upgrade to this version.
 
-Update to Version 3.0.0
------------------------
+Upgrade to Version 3.0.0
+=======================
 
 We have changed Fluid-Templates a lot. We have removed a lot of CSS classes
 and changed them to be compatible with Bootstrap. Further we have moved
