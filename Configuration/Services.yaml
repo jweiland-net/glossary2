@@ -6,6 +6,7 @@ services:
 
   JWeiland\Glossary2\:
     resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
 
   JWeiland\Glossary2\EventListener\AddPaginatorEventListener:
     tags:
