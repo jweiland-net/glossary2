@@ -10,11 +10,13 @@ ChangeLog
 Version 5.0.10
 ==============
 
+*   [BUGFIX] Remove exclude from path_segment in TCA
 *   [DOCU] Set indents to 4 spaces
 *   [DOCU] Streamline the headers
 *   [DOCU] Convert Readme.rst to README.md
 *   Update .gitignore
 *   Update .editorconfig
+*   Implement new php-cs-fixer configuration
 
 Version 5.0.9
 =============
