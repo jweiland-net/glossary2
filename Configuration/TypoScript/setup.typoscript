@@ -13,12 +13,15 @@ plugin.tx_glossary2 {
       1 = {$plugin.tx_glossary2.view.layoutRootPath}
     }
   }
+
   persistence {
     storagePid = {$plugin.tx_glossary2.persistence.storagePid}
   }
+
   features {
     skipDefaultArguments = 1
   }
+
   settings {
     pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage}
 

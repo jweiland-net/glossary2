@@ -7,10 +7,12 @@ plugin.tx_glossary2 {
     # cat=plugin.tx_glossary2/file; type=string; label=Path to template layouts (FE)
     layoutRootPath = EXT:glossary2/Resources/Private/Layouts/
   }
+
   persistence {
     # cat=plugin.tx_glossary2//a; type=string; label=Default storage PID
     storagePid =
   }
+
   settings {
     # cat=plugin.tx_glossary2//c; type=int+; label=PID of Detail page: Leave empty to show details on current page.
     pidOfDetailPage =
