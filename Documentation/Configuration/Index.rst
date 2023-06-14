@@ -7,7 +7,7 @@
 Configuration
 =============
 
-This chapter describes the various configuration settings of glossary2.
+This chapter describes the various configuration settings of `glossary2`.
 
 ..  toctree::
     :maxdepth: 2

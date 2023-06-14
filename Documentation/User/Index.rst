@@ -41,11 +41,13 @@ Glossary Record
 
 #.  Create a new record of type `Glossary`
 
-#.  Give it a title. We will of the first letter of title to sort it into our glossary navigation (if activated).
+#.  Give it a title. We will of the first letter of title to sort it into our
+    glossary navigation (if activated).
 
 #.  Enter a description which will be shown on configured detail page
 
 #.  By default you can insert up to 5 images to glossary record.
 
-#.  At tab `Categories` you can relate glossary entry to a category. That way you can show only glossary records of
-    a defined category in plugin, if you want.
+#.  At tab `Categories` you can relate glossary entry to a category. That way
+    you can show only glossary records of a defined category in plugin,
+    if you want.
