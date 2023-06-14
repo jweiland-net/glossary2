@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
-use JWeiland\Glossary2\Event\ModifyQueryOfGetGlossariesEvent;
 use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
 use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\Connection;
