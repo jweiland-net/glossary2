@@ -14,6 +14,7 @@ namespace JWeiland\Glossary2\Domain\Repository;
 use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -22,6 +23,13 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class GlossaryRepository extends Repository
 {
+    /**
+     * @var array
+     */
+    protected $defaultOrderings = [
+        'title' => QueryInterface::ORDER_ASCENDING,
+    ];
+
     /**
      * @var EventDispatcher
      */
