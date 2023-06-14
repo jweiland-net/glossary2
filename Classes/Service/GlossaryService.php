@@ -15,7 +15,6 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
-use JWeiland\Glossary2\Helper\OverlayHelper;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -26,6 +25,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -37,11 +37,6 @@ class GlossaryService
      * @var ExtConf
      */
     protected $extConf;
-
-    /**
-     * @var OverlayHelper
-     */
-    protected $overlayHelper;
 
     /**
      * @var EventDispatcher
@@ -59,12 +54,10 @@ class GlossaryService
 
     public function __construct(
         ExtConf $extConf,
-        OverlayHelper $overlayHelper,
         EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager
     ) {
         $this->extConf = $extConf;
-        $this->overlayHelper = $overlayHelper;
         $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
@@ -73,7 +66,10 @@ class GlossaryService
         ) ?: [];
     }
 
-    public function buildGlossary(QueryBuilder $queryBuilder, array $options = []): string
+    /**
+     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     */
+    public function buildGlossary($queryBuilder, array $options = []): string
     {
         $view = $this->getFluidTemplateObject($options);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
@@ -147,7 +143,10 @@ class GlossaryService
         return $queryBuilder->expr()->orX(...$letterConstraints);
     }
 
-    protected function getLinkedGlossary(QueryBuilder $queryBuilder, array $options): array
+    /**
+     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     */
+    protected function getLinkedGlossary($queryBuilder, array $options): array
     {
         // These are the available first letters from Database
         $availableLetters = $this->getAvailableLetters($queryBuilder, $options);
@@ -197,12 +196,24 @@ class GlossaryService
         return array_merge($availableNumbers, $availableLetters);
     }
 
+    /**
+     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     */
     protected function getFirstLettersOfGlossaryRecords(
-        QueryBuilder $queryBuilder,
+        $queryBuilder,
         string $column,
         string $columnAlias
     ): array {
-        if ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        if ($queryBuilder instanceof QueryResultInterface) {
+            // As we can not modify SELECT part, we have to loop through all records
+            $propertyGetter = 'get' . GeneralUtility::underscoredToUpperCamelCase($column);
+            foreach ($queryBuilder as $record) {
+                if (method_exists($record, $propertyGetter)) {
+                    $firstLetter = mb_strtolower(mb_substr(call_user_func([$record, $propertyGetter]), 0, 1));
+                    $firstLetters[$firstLetter] = $firstLetter;
+                }
+            }
+        } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
             $statement = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
                 ->add('groupBy', $columnAlias)

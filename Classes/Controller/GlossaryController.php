@@ -21,7 +21,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 /**
- * Main controller of glossary2
+ * Main controller of glossary2 to list and show glossary records
  */
 class GlossaryController extends ActionController
 {

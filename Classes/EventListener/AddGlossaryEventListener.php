@@ -46,7 +46,7 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
             $event->addFluidVariable(
                 'glossary',
                 $this->glossaryService->buildGlossary(
-                    $this->glossaryRepository->getQueryBuilderForGlossary(),
+                    $this->glossaryRepository->getExtbaseQueryForGlossary(),
                     $this->getOptions($event)
                 )
             );

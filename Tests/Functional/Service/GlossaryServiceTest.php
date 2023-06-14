@@ -13,7 +13,6 @@ use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Event\SanitizeValueForCharsetHelperEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
-use JWeiland\Glossary2\Helper\OverlayHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
 use JWeiland\Glossary2\Tests\Functional\Fixtures\ProcessFirstLettersEventListener;
 use JWeiland\Glossary2\Tests\Functional\Fixtures\SanitizeValueEventListener;
@@ -47,11 +46,6 @@ class GlossaryServiceTest extends FunctionalTestCase
      * @var ExtConf
      */
     protected $extConf;
-
-    /**
-     * @var OverlayHelper
-     */
-    protected $overlayHelper;
 
     /**
      * @var ListenerProvider|ObjectProphecy
@@ -92,7 +86,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
 
         $this->extConf = GeneralUtility::makeInstance(ExtConf::class);
-        $this->overlayHelper = GeneralUtility::makeInstance(OverlayHelper::class);
         $this->listenerProviderProphecy = $this->prophesize(ListenerProvider::class);
         $this->listenerProviderProphecy
             ->getListenersForEvent(Argument::any())
@@ -132,7 +125,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         unset(
             $this->subject,
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->viewProphecy
         );
@@ -155,7 +147,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -252,7 +243,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -286,7 +276,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -321,7 +310,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -345,7 +333,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -375,7 +362,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -409,7 +395,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -465,7 +450,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -504,7 +488,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
@@ -537,7 +520,6 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject = new GlossaryService(
             $this->extConf,
-            $this->overlayHelper,
             $this->eventDispatcher,
             $this->configurationManagerProphecy->reveal()
         );
