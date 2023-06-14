@@ -1,28 +1,28 @@
 <html lang="en"
-			xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-			data-namespace-typo3-fluid="true">
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
 <f:if condition="{glossaries}">
-	<f:then>
-		<div class="layout-list scroll-container">
-			<f:for each="{glossaries}" as="glossary">
-				<div class="scroll-item border-top flex-list">
-					<div class="fontsize4">
-						<f:link.action action="show"
-													 class="nav-link"
-													 pageUid="{settings.pidOfDetailPage}"
-													 arguments="{glossary: glossary}">
-							{glossary.title}
-						</f:link.action>
-					</div>
-				</div>
-			</f:for>
-		</div>
-		<f:render partial="Component/Pagination"
-							arguments="{pagination: pagination, paginator: paginator, actionName: actionName}" />
-	</f:then>
-	<f:else>
-		<div class="noResults">{f:translate(key: "noResults")}</div>
-	</f:else>
+    <f:then>
+        <div class="layout-list scroll-container">
+            <f:for each="{glossaries}" as="glossary">
+                <div class="scroll-item border-top flex-list">
+                    <div class="fontsize4">
+                        <f:link.action action="show"
+                                       class="nav-link"
+                                       pageUid="{settings.pidOfDetailPage}"
+                                       arguments="{glossary: glossary}">
+                            {glossary.title}
+                        </f:link.action>
+                    </div>
+                </div>
+            </f:for>
+        </div>
+        <f:render partial="Component/Pagination"
+                  arguments="{pagination: pagination, paginator: paginator, actionName: actionName}"/>
+    </f:then>
+    <f:else>
+        <div class="noResults">{f:translate(key: "noResults")}</div>
+    </f:else>
 </f:if>
 </html>

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Event;
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /*
  * Use this event, if you want to modify the query of GlossaryRepository::searchGlossaries.
@@ -19,9 +19,9 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 class ModifyQueryOfSearchGlossariesEvent
 {
     /**
-     * @var QueryBuilder
+     * @var QueryResultInterface
      */
-    protected $queryBuilder;
+    protected $queryResult;
 
     /**
      * @var array
@@ -34,18 +34,18 @@ class ModifyQueryOfSearchGlossariesEvent
     protected $letter = '';
 
     public function __construct(
-        QueryBuilder $queryBuilder,
+        QueryResultInterface $extbaseQuery,
         array $categories,
         string $letter
     ) {
-        $this->queryBuilder = $queryBuilder;
+        $this->queryResult = $extbaseQuery;
         $this->categories = $categories;
         $this->letter = $letter;
     }
 
-    public function getQueryBuilder(): QueryBuilder
+    public function getQueryResult(): QueryResultInterface
     {
-        return $this->queryBuilder;
+        return $this->queryResult;
     }
 
     public function getCategories(): array

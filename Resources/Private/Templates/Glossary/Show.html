@@ -1,54 +1,59 @@
 <html lang="en"
-			xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-			data-namespace-typo3-fluid="true">
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
-<f:layout name="Default" />
+<f:layout name="Default"/>
 
 <f:section name="main">
-	<div class="jumbotron">
-		<h2>{glossary.title}</h2>
-		<f:if condition="{glossary.images -> f:count()}">
-			<f:render section="renderImages" arguments="{glossary: glossary}" />
-		</f:if>
-		<f:if condition="{glossary.description}">
-			<p class="lead">
-				<f:format.html>{glossary.description}</f:format.html>
-			</p>
-		</f:if>
+    <div class="jumbotron">
+        <h2>{glossary.title}</h2>
+        <f:if condition="{glossary.images -> f:count()}">
+            <f:render section="renderImages" arguments="{glossary: glossary}"/>
+        </f:if>
+        <f:if condition="{glossary.description}">
+            <p class="lead">
+                <f:format.html>{glossary.description}</f:format.html>
+            </p>
+        </f:if>
 
-		<f:if condition="{letter}">
-			<f:then>
-				<f:link.action action="list" pageUid="{settings.pidOfListPage}" arguments="{letter: letter}">{f:translate(key: 'backToList')}</f:link.action><br />
-			</f:then>
-			<f:else>
-				<f:link.action action="list" pageUid="{settings.pidOfListPage}">{f:translate(key: 'backToList')}</f:link.action><br />
-			</f:else>
-		</f:if>
-	</div>
+        <f:if condition="{letter}">
+            <f:then>
+                <f:link.action action="list" pageUid="{settings.pidOfListPage}" arguments="{letter: letter}">
+                    {f:translate(key: 'backToList')}
+                </f:link.action>
+                <br/>
+            </f:then>
+            <f:else>
+                <f:link.action action="list" pageUid="{settings.pidOfListPage}">{f:translate(key: 'backToList')}
+                </f:link.action>
+                <br/>
+            </f:else>
+        </f:if>
+    </div>
 </f:section>
 
 <f:section name="renderImages">
-	<div class="card-deck">
-		<f:for each="{glossary.images}" as="extbaseResource" iteration="iterator">
-			<f:variable name="image" value="{extbaseResource.originalResource}" />
-			<div class="card">
-				<f:image image="{image}"
-								 alt="{image.alternative}"
-								 width="{settings.show.image.width}"
-								 height="{settings.show.image.height}" />
+    <div class="card-deck">
+        <f:for each="{glossary.images}" as="extbaseResource" iteration="iterator">
+            <f:variable name="image" value="{extbaseResource.originalResource}"/>
+            <div class="card">
+                <f:image image="{image}"
+                         alt="{image.alternative}"
+                         width="{settings.show.image.width}"
+                         height="{settings.show.image.height}"/>
 
-				<f:if condition="{image.title} || {image.description}">
-					<div class="card-body">
-						<f:if condition="{image.title}">
-							<h5 class="card-title">{image.title}</h5>
-						</f:if>
-						<f:if condition="{image.description}">
-							<p class="card-text">{image.description}</p>
-						</f:if>
-					</div>
-				</f:if>
-			</div>
-		</f:for>
-	</div>
+                <f:if condition="{image.title} || {image.description}">
+                    <div class="card-body">
+                        <f:if condition="{image.title}">
+                            <h5 class="card-title">{image.title}</h5>
+                        </f:if>
+                        <f:if condition="{image.description}">
+                            <p class="card-text">{image.description}</p>
+                        </f:if>
+                    </div>
+                </f:if>
+            </div>
+        </f:for>
+    </div>
 </f:section>
 </html>

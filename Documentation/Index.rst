@@ -51,4 +51,11 @@ entries incl. detail view. Above the list you will see an A-Z navigation.
     Developer/Index
     KnownProblems/Index
     ChangeLog/Index
-    Links
+
+..  Meta Menu
+
+..  toctree::
+    :hidden:
+
+    Sitemap
+    genindex

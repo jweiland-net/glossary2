@@ -1,11 +1,11 @@
 ..  include:: /Includes.rst.txt
 
 
-.. _configuration:
+.. _typoscript:
 
-=============
-Configuration
-=============
+==========
+TypoScript
+==========
 
 View
 ====
@@ -15,21 +15,24 @@ view.templateRootPaths
 
 Default: Value from Constants *EXT:glossary2/Resources/Private/Templates/*
 
-You can override our Templates with your own SitePackage extension. We prefer to change this value in TS Constants.
+You can override our Templates with your own SitePackage extension. We prefer
+to change this value in TS Constants.
 
 view.partialRootPaths
 ---------------------
 
 Default: Value from Constants *EXT:glossary2/Resources/Private/Partials/*
 
-You can override our Partials with your own SitePackage extension. We prefer to change this value in TS Constants.
+You can override our Partials with your own SitePackage extension. We prefer
+to change this value in TS Constants.
 
 view.layoutsRootPaths
 ---------------------
 
 Default: Value from Constants *EXT:glossary2/Resources/Layouts/Templates/*
 
-You can override our Layouts with your own SitePackage extension. We prefer to change this value in TS Constants.
+You can override our Layouts with your own SitePackage extension. We prefer to
+change this value in TS Constants.
 
 
 Persistence
@@ -53,7 +56,8 @@ Default: 0
 
 Example: `plugin.tx_glossary2.settings.pidOfDetailPage = 84`
 
-Often it is useful to move the detail view onto a separate page for design/layout reasons.
+Often it is useful to move the detail view onto a separate page
+for design/layout reasons.
 
 setting.templatePath
 --------------------
@@ -62,8 +66,9 @@ Default: empty (Use value of Extension Settings as fallback)
 
 Example: `plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html`
 
-With this setting you can override the default templatePath of glossary2 and defined templatePaths coming from
-foreign extensions. So TypoScript settings have highest priority.
+With this setting you can override the default templatePath of glossary2 and
+defined templatePaths coming from foreign extensions. So TypoScript settings
+have highest priority.
 
 We also have implemented a more complex setting for `templatePath`:
 
