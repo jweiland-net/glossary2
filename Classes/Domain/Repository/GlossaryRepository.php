@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
+use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -57,19 +58,20 @@ class GlossaryRepository extends Repository
             }
         }
 
-        /* $this->eventDispatcher->dispatch(
-            new ModifyQueryOfSearchGlossariesEvent($queryBuilder, $categories, $letter)
-        );*/
-
-        if ($constraints === []) {
-            return $query->execute();
+        $queryResult = $query->execute();
+        if ($constraints !== []) {
+            $queryResult = $query->matching($query->logicalAnd(...$constraints))->execute();
         }
 
-        return $query->matching($query->logicalAnd(...$constraints))->execute();
+        $this->eventDispatcher->dispatch(
+            new ModifyQueryOfSearchGlossariesEvent($queryResult, $categories, $letter)
+        );
+
+        return $queryResult;
     }
 
     /**
-     * Prepare an Extbase QueryResult for glossary (A-Z navigation)
+     * Prepare an Extbase QueryResult for GlossaryService (A-Z navigation)
      */
     public function getExtbaseQueryForGlossary(array $categories = []): QueryResultInterface
     {
