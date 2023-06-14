@@ -45,6 +45,7 @@ plugin.tx_glossary2 {
     }
 
     pageBrowser {
+      class = TYPO3\CMS\Core\Pagination\SimplePagination
       itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
     }
   }
