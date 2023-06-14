@@ -90,7 +90,6 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginationClass = $this->fallbackPaginationClass;
         }
 
-
         if (!is_subclass_of($paginationClass, PaginationInterface::class)) {
             $paginationClass = $this->fallbackPaginationClass;
         }
