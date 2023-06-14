@@ -1,14 +1,14 @@
 <html lang="en"
-			xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-			data-namespace-typo3-fluid="true">
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
-<f:layout name="Default" />
+<f:layout name="Default"/>
 
 <f:section name="main">
-	<f:flashMessages />
+    <f:flashMessages/>
 
-	<f:if condition="{settings.showGlossar}">{glossary -> f:format.raw()}</f:if>
+    <f:if condition="{settings.showGlossar}">{glossary -> f:format.raw()}</f:if>
 
-	<f:render partial="Glossary/List" arguments="{_all}" />
+    <f:render partial="Glossary/List" arguments="{_all}"/>
 </f:section>
 </html>

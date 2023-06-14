@@ -1,45 +1,49 @@
 <html lang="en"
-			xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-			data-namespace-typo3-fluid="true">
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 
 <nav class="nav">
-	<ul class="horizontal">
-		<f:if condition="{settings.showAllLink}">
-			<li>
-				<f:link.action action="{options.actionName}">
-					{f:translate(key: 'all')}
-				</f:link.action>
-			</li>
-		</f:if>
+    <ul class="horizontal">
+        <f:if condition="{settings.showAllLink}">
+            <li>
+                <f:link.action action="{options.actionName}">
+                    {f:translate(key: 'all')}
+                </f:link.action>
+            </li>
+        </f:if>
 
-		<f:for each="{glossary}" as="glossaryEntry">
-			<li class="{f:if(condition: glossaryEntry.isRequestedLetter, then: 'active', else: '')}">
-				<f:render section="renderListEntry"
-									arguments="{letter: glossaryEntry.letter, options: options, hasLink: glossaryEntry.hasLink}" />
-			</li>
-		</f:for>
-	</ul>
+        <f:for each="{glossary}" as="glossaryEntry">
+            <li class="{f:if(condition: glossaryEntry.isRequestedLetter, then: 'active', else: '')}">
+                <f:render section="renderListEntry"
+                          arguments="{letter: glossaryEntry.letter, options: options, hasLink: glossaryEntry.hasLink}"/>
+            </li>
+        </f:for>
+    </ul>
 </nav>
 
 <f:section name="renderListEntry">
-	<f:if condition="{hasLink}">
-		<f:then>
-			<f:if condition="{letter}">
-				<f:then>
-					<f:link.action action="{options.actionName}" arguments="{letter: letter}">
-						<f:format.raw><f:format.case mode="upper"><span>{letter}</span></f:format.case></f:format.raw>
-					</f:link.action>
-				</f:then>
-				<f:else>
-					<f:link.action action="{options.actionName}">
-						<f:format.raw><span>{f:translate(key: 'all')}</span></f:format.raw>
-					</f:link.action>
-				</f:else>
-			</f:if>
-		</f:then>
-		<f:else>
-			<f:format.raw><f:format.case mode="upper"><span>{letter}</span></f:format.case></f:format.raw>
-		</f:else>
-	</f:if>
+    <f:if condition="{hasLink}">
+        <f:then>
+            <f:if condition="{letter}">
+                <f:then>
+                    <f:link.action action="{options.actionName}" arguments="{letter: letter}">
+                        <f:format.raw>
+                            <f:format.case mode="upper"><span>{letter}</span></f:format.case>
+                        </f:format.raw>
+                    </f:link.action>
+                </f:then>
+                <f:else>
+                    <f:link.action action="{options.actionName}">
+                        <f:format.raw><span>{f:translate(key: 'all')}</span></f:format.raw>
+                    </f:link.action>
+                </f:else>
+            </f:if>
+        </f:then>
+        <f:else>
+            <f:format.raw>
+                <f:format.case mode="upper"><span>{letter}</span></f:format.case>
+            </f:format.raw>
+        </f:else>
+    </f:if>
 </f:section>
 </html>
