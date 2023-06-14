@@ -48,22 +48,9 @@ class GlossaryRepository extends Repository
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getGlossaries(): QueryResultInterface
-    {
-        $extbaseQuery = $this->createQuery();
-        $queryBuilder = $this->getQueryBuilderForTable('tx_glossary2_domain_model_glossary', 'g');
-        $queryBuilder->select('*');
-
-        $this->eventDispatcher->dispatch(new ModifyQueryOfGetGlossariesEvent($queryBuilder));
-
-        $extbaseQuery->statement($queryBuilder);
-
-        return $extbaseQuery->execute();
-    }
-
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
-        // Set respectSysLanguage to false to keep our already translated records
+        // Set respectSysLanguage to false, to keep our already translated records
         $extbaseQuery = $this->createQuery();
         $extbaseQuery->getQuerySettings()->setRespectSysLanguage(false);
 

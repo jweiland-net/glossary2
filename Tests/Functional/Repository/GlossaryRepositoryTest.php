@@ -81,18 +81,6 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getGlossariesWillFindAllEntries(): void
-    {
-        $this->subject->setDefaultQuerySettings($this->querySettings);
-        self::assertCount(
-            7,
-            $this->subject->getGlossaries()->toArray()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function searchGlossariesWithInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
