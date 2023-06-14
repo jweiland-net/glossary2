@@ -7,6 +7,17 @@
 ChangeLog
 =========
 
+Version 5.1.0
+=============
+
+*   [FEATURE] Allow QueryBuilder and extbase QueryResult for buildGlossar()
+*   [DOCU] Update section about how to use Glossary API
+*   [BUGFIX] Use extbase query for better localization support (BREAKING)
+*   [TASK] Modify params of ModifyQueryOfSearchGlossariesEvent
+*   [TASK] Show only categories in default language in FlexForm
+*   [TASK] Remove OverlayHelper class
+*   [TASK] Remove unused getGlossaries() method from repo
+
 Version 5.0.10
 ==============
 
