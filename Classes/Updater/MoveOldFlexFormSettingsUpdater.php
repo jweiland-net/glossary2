@@ -136,18 +136,13 @@ class MoveOldFlexFormSettingsUpdater
         $queryBuilder->getRestrictions()->removeAll();
         $records = $queryBuilder
             ->select('uid', 'pi_flexform')
-            ->from('tt_content')
-            ->andWhere(
-                $queryBuilder->expr()->eq(
-                    'CType',
-                    $queryBuilder->createNamedParameter('list', \PDO::PARAM_STR)
-                ),
-                $queryBuilder->expr()->eq(
-                    'list_type',
-                    $queryBuilder->createNamedParameter('glossary2_glossary', \PDO::PARAM_STR)
-                )
-            )
-            ->execute()
+            ->from('tt_content')->andWhere($queryBuilder->expr()->eq(
+                'CType',
+                $queryBuilder->createNamedParameter('list', \PDO::PARAM_STR)
+            ), $queryBuilder->expr()->eq(
+                'list_type',
+                $queryBuilder->createNamedParameter('glossary2_glossary', \PDO::PARAM_STR)
+            ))->executeQuery()
             ->fetchAll();
 
         if ($records === false) {

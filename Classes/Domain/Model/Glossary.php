@@ -13,7 +13,7 @@ namespace JWeiland\Glossary2\Domain\Model;
 
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Annotation as Extbase;
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -36,14 +36,14 @@ class Glossary extends AbstractEntity
 
     /**
      * @var ObjectStorage<FileReference>
-     * @Extbase\ORM\Lazy
      */
+    #[Lazy]
     protected $images;
 
     /**
      * @var ObjectStorage<Category>
-     * @Extbase\ORM\Lazy
      */
+    #[Lazy]
     protected $categories;
 
     public function __construct()

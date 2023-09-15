@@ -140,7 +140,7 @@ class GlossaryService
                 )
             );
         }
-        return $queryBuilder->expr()->orX(...$letterConstraints);
+        return $queryBuilder->expr()->or(...$letterConstraints);
     }
 
     /**
@@ -216,9 +216,7 @@ class GlossaryService
         } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
             $statement = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
-                ->execute();
+                ->add('groupBy', $columnAlias)->add('orderBy', $columnAlias)->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {
@@ -230,9 +228,7 @@ class GlossaryService
             // performance issue, if you have a lot of records
             $statement = $queryBuilder
                 ->select($column . ' AS ' . $columnAlias)
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
-                ->execute();
+                ->add('groupBy', $columnAlias)->add('orderBy', $columnAlias)->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {

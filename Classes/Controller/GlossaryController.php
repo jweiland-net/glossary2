@@ -15,6 +15,7 @@ use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -61,9 +62,9 @@ class GlossaryController extends ActionController
 
     /**
      * @param string $letter Show only records starting with this letter
-     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
-    public function listAction(string $letter = ''): void
+    #[Extbase\Validate(['validator' => 'StringLength', 'options' => ['minimum' => 1, 'maximum' => 3], 'param' => 'letter'])]
+    public function listAction(string $letter = ''): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,
@@ -72,17 +73,16 @@ class GlossaryController extends ActionController
                 $letter
             ),
         ]);
+        return $this->htmlResponse();
     }
 
-    /**
-     * @param Glossary $glossary
-     */
-    public function showAction(Glossary $glossary): void
+    public function showAction(Glossary $glossary): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
             'glossary' => $glossary,
             'letter' => $glossary->getSanitizedFirstLetterOfTitle(),
         ]);
+        return $this->htmlResponse();
     }
 
     protected function postProcessAndAssignFluidVariables(array $variables = []): void
