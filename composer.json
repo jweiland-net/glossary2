@@ -27,6 +27,9 @@
 		"typo3/coding-standards": "^0.6",
 		"typo3/testing-framework": "^7.0.2"
 	},
+	"replace": {
+		"typo3-ter/glossary2": "self.version"
+	},
 	"autoload": {
 		"psr-4": {
 			"JWeiland\\Glossary2\\": "Classes"
