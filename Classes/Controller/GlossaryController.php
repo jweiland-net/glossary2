@@ -19,7 +19,6 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 
 /**
  * Main controller of glossary2 to list and show glossary records
@@ -48,6 +47,9 @@ class GlossaryController extends ActionController
 
     public function initializeAction(): void
     {
+        // setUp request variable in service
+        $this->glossaryService->setRequestObject($this->request);
+
         // If this value was not set, then it will be filled with 0, but this is bad as
         // UriBuilder accepts 0 as pid. So it's better to set it to null
         if (empty($this->settings['pidOfDetailPage'])) {
@@ -55,7 +57,7 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(ViewInterface $view): void
+    protected function initializeView($view): void
     {
         $view->assign('data', $this->configurationManager->getContentObject()->data);
     }

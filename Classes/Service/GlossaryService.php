@@ -21,6 +21,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
@@ -37,6 +38,11 @@ class GlossaryService
      * @var ExtConf
      */
     protected $extConf;
+
+    /**
+     * @var Request
+     */
+    protected $request;
 
     /**
      * @var EventDispatcher
@@ -57,6 +63,7 @@ class GlossaryService
         EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager
     ) {
+        $this->request = $request;
         $this->extConf = $extConf;
         $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
@@ -237,7 +244,7 @@ class GlossaryService
             }
         }
 
-        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
+        $firstLetters = is_array($firstLetters) ? array_unique($this->cleanUpFirstLetters($firstLetters)) : [];
 
         /** @var PostProcessFirstLettersEvent $event */
         $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
@@ -271,14 +278,18 @@ class GlossaryService
     protected function getFluidTemplateObject(array $options): StandaloneView
     {
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
+
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename($this->getTemplatePath($options));
-        $view->getRequest()->setControllerExtensionName($extensionName);
-        $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-        $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-        $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
-
+        $view->setRequest($this->request);
         return $view;
+    }
+
+    public function setRequestObject(Request $request): void
+    {
+        if (!$this->request) {
+            $this->request = $request;
+        }
     }
 
     protected function getTemplatePath(array $options): string
