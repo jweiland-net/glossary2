@@ -47,9 +47,6 @@ class GlossaryController extends ActionController
 
     public function initializeAction(): void
     {
-        // setUp request variable in service
-        $this->glossaryService->setRequestObject($this->request);
-
         // If this value was not set, then it will be filled with 0, but this is bad as
         // UriBuilder accepts 0 as pid. So it's better to set it to null
         if (empty($this->settings['pidOfDetailPage'])) {
