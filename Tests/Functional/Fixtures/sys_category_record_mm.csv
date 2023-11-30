@@ -1,0 +1,6 @@
+"sys_category_record_mm",,,,,,
+,"uid_local","uid_foreign","tablenames","fieldname","sorting","sorting_foreign"
+,1,2,"tx_glossary2_domain_model_glossary","categories",0,0
+,3,2,"tx_glossary2_domain_model_glossary","categories",0,1
+,2,4,"tx_glossary2_domain_model_glossary","categories",0,0
+,1,6,"tx_glossary2_domain_model_glossary","categories",0,0
