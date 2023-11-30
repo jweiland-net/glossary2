@@ -10,10 +10,10 @@
 namespace JWeiland\Glossary2\Tests\Unit\Domain\Model;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Test case.

@@ -15,13 +15,14 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
@@ -38,11 +39,6 @@ class GlossaryService
      * @var ExtConf
      */
     protected $extConf;
-
-    /**
-     * @var Request
-     */
-    protected $request;
 
     /**
      * @var EventDispatcher
@@ -63,7 +59,6 @@ class GlossaryService
         EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager
     ) {
-        $this->request = $request;
         $this->extConf = $extConf;
         $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
@@ -76,9 +71,9 @@ class GlossaryService
     /**
      * @param QueryBuilder|QueryResultInterface $queryBuilder
      */
-    public function buildGlossary($queryBuilder, array $options = []): string
+    public function buildGlossary($queryBuilder, array $options = [], ServerRequestInterface $request = null): string
     {
-        $view = $this->getFluidTemplateObject($options);
+        $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
         $view->assign('variables', $options['variables'] ?? []);
@@ -223,7 +218,9 @@ class GlossaryService
         } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
             $statement = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
-                ->add('groupBy', $columnAlias)->add('orderBy', $columnAlias)->executeQuery();
+                ->add('groupBy', $columnAlias)
+                ->add('orderBy', $columnAlias)
+                ->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {
@@ -235,7 +232,9 @@ class GlossaryService
             // performance issue, if you have a lot of records
             $statement = $queryBuilder
                 ->select($column . ' AS ' . $columnAlias)
-                ->add('groupBy', $columnAlias)->add('orderBy', $columnAlias)->executeQuery();
+                ->add('groupBy', $columnAlias)
+                ->add('orderBy', $columnAlias)
+                ->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {
@@ -275,21 +274,17 @@ class GlossaryService
         return array_unique($firstLetters);
     }
 
-    protected function getFluidTemplateObject(array $options): StandaloneView
+    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): StandaloneView
     {
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
-
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename($this->getTemplatePath($options));
-        $view->setRequest($this->request);
-        return $view;
-    }
-
-    public function setRequestObject(Request $request): void
-    {
-        if (!$this->request) {
-            $this->request = $request;
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        if (version_compare($typo3Version->getBranch(), '12.0', '>=')) {
+            $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
         }
+
+        return $view;
     }
 
     protected function getTemplatePath(array $options): string
