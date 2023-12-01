@@ -278,11 +278,17 @@ class GlossaryService
     {
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
         $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        if (version_compare($typo3Version->getBranch(), '12.0', '>=')) {
+
+        if (version_compare($typo3Version->getBranch(), '12.0', '<')) {
+            $view->getRequest()->setControllerExtensionName($extensionName);
+            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
+            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
+            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
+        } elseif (version_compare($typo3Version->getBranch(), '12.0', '>=')) {
             $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
         }
+        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
 
         return $view;
     }
