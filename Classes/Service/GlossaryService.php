@@ -23,6 +23,7 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
@@ -281,13 +282,14 @@ class GlossaryService
 
         $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
 
-        $view->getRequest()->setControllerExtensionName($extensionName);
-        $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-        $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-        $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
 
         if (version_compare($this->getTypo3Version()->getBranch(), '12.0', '>=')) {
             $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
+        } else {
+            $view->getRequest()->setControllerExtensionName($extensionName);
+            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
+            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
+            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
         }
 
         return $view;

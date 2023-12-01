@@ -102,7 +102,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->expects(self::atLeastOnce())
             ->method('setTemplatePathAndFilename');
         $this->viewMock
-            ->expects(self::atLeastOnce())
+            ->expects(self::any())
             ->method('getRequest')
             ->willReturn($this->requestMock);
         $this->viewMock
