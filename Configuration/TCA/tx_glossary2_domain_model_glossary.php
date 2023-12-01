@@ -23,7 +23,7 @@ return [
     'types' => [
         '1' => [
             'showitem' => '--palette--;;language, --palette--;;titleHidden,
-            path_segment, description, images,
+            path_segment, description, images, categories,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access,
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access',
         ],
