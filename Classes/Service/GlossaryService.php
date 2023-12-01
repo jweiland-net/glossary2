@@ -276,21 +276,19 @@ class GlossaryService
 
     protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): StandaloneView
     {
-        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
         $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
 
-        if (version_compare($typo3Version->getBranch(), '12.0', '<')
-            && $view->getRequest() instanceof ServerRequestInterface
-        ) {
-            $view->getRequest()->setControllerExtensionName($extensionName);
-            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
-        } elseif (version_compare($typo3Version->getBranch(), '12.0', '>=')) {
+        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
+
+        $view->getRequest()->setControllerExtensionName($extensionName);
+        $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
+        $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
+        $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
+
+        if (version_compare($this->getTypo3Version()->getBranch(), '12.0', '>=')) {
             $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
         }
-        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
 
         return $view;
     }
@@ -344,6 +342,11 @@ class GlossaryService
         }
 
         return GeneralUtility::getFileAbsFileName($templatePath);
+    }
+
+    protected function getTypo3Version(): Typo3Version
+    {
+        return GeneralUtility::makeInstance(Typo3Version::class);
     }
 
     protected function getConnectionPool(): ConnectionPool

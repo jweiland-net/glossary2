@@ -13,6 +13,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
@@ -56,14 +57,14 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected $configurationManager;
 
     /**
-     * @var Request
+     * @var Request|MockObject
      */
-    protected $request;
+    protected $requestMock;
 
     /**
-     * @var StandaloneView
+     * @var StandaloneView|MockObject
      */
-    protected $view;
+    protected $viewMock;
 
     /**
      * @var string[]
@@ -94,16 +95,24 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->configurationManager = $this->createMock(ConfigurationManager::class);
 
-        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
-            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+        $this->requestMock = $this->createMock(Request::class);
 
-
-
-        $this->view = $this->createMock(StandaloneView::class);
-        $this->view->expects(self::atLeastOnce())
+        $this->viewMock = $this->createMock(StandaloneView::class);
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('setTemplatePathAndFilename');
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('getRequest')
+            ->willReturn($this->requestMock);
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('assign');
+        $this->viewMock
+            ->expects(self::atLeastOnce())
             ->method('render')
             ->willReturn('running some functional tests');
-        GeneralUtility::addInstance(StandaloneView::class, $this->view);
+        GeneralUtility::addInstance(StandaloneView::class, $this->viewMock);
 
     }
 
@@ -113,7 +122,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->subject,
             $this->extConf,
             $this->eventDispatcher,
-            $this->view
+            $this->viewMock
         );
         parent::tearDown();
     }
@@ -123,7 +132,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillConvertGermanUmlauts(): void
     {
-        $this->view
+        $this->viewMock
             ->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
@@ -212,12 +221,12 @@ class GlossaryServiceTest extends FunctionalTestCase
             )
             ->willReturn($settings);
 
-        $this->view->setTemplatePathAndFilename(
+        $this->viewMock->setTemplatePathAndFilename(
             GeneralUtility::getFileAbsFileName(
                 $expectedPath
             )
         );
-        $this->view->assign('glossary', $this->getGlossary());
+        $this->viewMock->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -243,7 +252,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary[5]['hasLink'] = false;
         $expectedGlossary[15]['hasLink'] = true;
 
-        $this->view
+        $this->viewMock
             ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
@@ -271,7 +280,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         // Add link for letter "k"
         $expectedGlossary[11]['hasLink'] = true;
 
-        $this->view
+        $this->viewMock
             ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
@@ -293,7 +302,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
     {
-        $this->view
+        $this->viewMock
             ->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
@@ -321,7 +330,7 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillAddSettingsToView(): void
     {
-        $this->view
+        $this->viewMock
             ->assign('settings', ['foo' => 'bar']);
 
         $queryBuilder = $this
@@ -353,7 +362,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary = $this->getGlossary();
         $expectedGlossary[0]['hasLink'] = false;
 
-        $this->view
+        $this->viewMock
             ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
@@ -407,7 +416,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             ]
         );
 
-        $this->view
+        $this->viewMock
             ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
