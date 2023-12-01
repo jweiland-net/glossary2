@@ -280,7 +280,9 @@ class GlossaryService
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
 
-        if (version_compare($typo3Version->getBranch(), '12.0', '<')) {
+        if (version_compare($typo3Version->getBranch(), '12.0', '<')
+            && $view->getRequest() instanceof ServerRequestInterface
+        ) {
             $view->getRequest()->setControllerExtensionName($extensionName);
             $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
             $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));

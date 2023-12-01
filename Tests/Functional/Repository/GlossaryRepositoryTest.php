@@ -13,7 +13,6 @@ use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 
 /**
@@ -43,7 +42,6 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         parent::setUp();
 
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
-
         $this->querySettings = GeneralUtility::makeInstance(QuerySettingsInterface::class);
         $this->querySettings->setStoragePageIds([12]);
         $this->subject = GeneralUtility::makeInstance(GlossaryRepository::class);

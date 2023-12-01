@@ -9,6 +9,7 @@
 
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
@@ -101,7 +102,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->view = $this->createMock(StandaloneView::class);
         $this->view->expects(self::atLeastOnce())
             ->method('render')
-            ->willReturn('test');
+            ->willReturn('running some functional tests');
         GeneralUtility::addInstance(StandaloneView::class, $this->view);
 
     }
