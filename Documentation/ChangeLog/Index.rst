@@ -7,6 +7,13 @@
 ChangeLog
 =========
 
+Version 5.2.0
+=============
+
+*   [TASK] Compatibility fix for TYPO3 Version 12
+*   [TASK] Category in TCA fixed with type `category´
+*   [TASK] Migrated testing framework to TYPO3 Testing Framework
+
 Version 5.1.0
 =============
 
