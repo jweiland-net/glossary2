@@ -24,3 +24,7 @@ services:
 
   JWeiland\Glossary2\Service\GlossaryService:
     public: true
+
+  # Called by makeInstance out of TypoScript
+  JWeiland\Glossary2\PageTitleProvider\Glossary2PageTitleProvider:
+    public: true
