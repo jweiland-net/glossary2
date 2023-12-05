@@ -13,8 +13,9 @@ namespace JWeiland\Glossary2\PageTitleProvider;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\PageTitle\PageTitleProviderInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
  * Instead of just setting the PageTitle to DetailView on Detail Page,
@@ -33,25 +34,34 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
 
     public function getTitle(): string
     {
-        $pageTitle = '';
-        $gp = $this->getMergedRequestParameters();
+        $gp = $this->getValidPluginArguments();
 
-        if ($this->isValidRequest($gp)) {
+        if ($gp !== null) {
             $glossaryRecord = $this->glossaryRepository->findByUid((int)$gp['glossary']);
+
             if ($glossaryRecord instanceof Glossary) {
-                $pageTitle = sprintf(
-                    '%s',
-                    trim($glossaryRecord->getTitle())
-                );
+                return trim($glossaryRecord->getTitle());
             }
         }
 
-        return $pageTitle;
+        return '';
     }
 
-    protected function getMergedRequestParameters(): array
+    private function getValidPluginArguments(): ?array
     {
-        return GeneralUtility::_GPmerged('tx_glossary2_glossary');
+        $requestObject = $this->getRequest();
+
+        if (!($requestObject instanceof ServerRequestInterface)) {
+            return null;
+        }
+
+        $gp = $this->getPluginArgumentsFromRequest($requestObject);
+
+        if (is_array($gp) && $this->isValidRequest($gp)) {
+            return $gp;
+        }
+
+        return null;
     }
 
     /**
@@ -65,5 +75,19 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
         }
 
         return (int)$gp['glossary'] > 0;
+    }
+
+    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject)
+    {
+        $queryParams = $requestObject->getQueryParams();
+
+        return ArrayUtility::isValidPath($queryParams, 'tx_glossary2_glossary')
+            ? ArrayUtility::getValueByPath($queryParams, 'tx_glossary2_glossary')
+            : false;
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+     return $GLOBALS['TYPO3_REQUEST'];
     }
 }
