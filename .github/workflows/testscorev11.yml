@@ -1,7 +1,6 @@
 name: Test glossary2 for TYPO3 11 LTS
 
-on:
-  pull_request:
+on: pull_request
 
 jobs:
   CGL:
