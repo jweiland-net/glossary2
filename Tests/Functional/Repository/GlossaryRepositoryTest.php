@@ -41,7 +41,10 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category_record_mm.csv');
+
         $this->querySettings = GeneralUtility::makeInstance(QuerySettingsInterface::class);
         $this->querySettings->setStoragePageIds([12]);
         $this->subject = GeneralUtility::makeInstance(GlossaryRepository::class);
