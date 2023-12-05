@@ -36,14 +36,14 @@ class Glossary extends AbstractEntity
 
     /**
      * @var ObjectStorage<FileReference>
+     * @Lazy
      */
-    #[Lazy]
     protected $images;
 
     /**
      * @var ObjectStorage<Category>
+     * @Lazy
      */
-    #[Lazy]
     protected $categories;
 
     public function __construct()
