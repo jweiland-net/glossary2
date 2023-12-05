@@ -1,5 +1,5 @@
 <?php
-$typo3Version = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Information\Typo3Version::class);
+
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary',
@@ -64,13 +64,11 @@ return [
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
-                'items' => $typo3Version->getMajorVersion() < 12 ? [
+                'items' => [
                     [
                         0 => '',
                         1 => '',
                     ],
-                ] : [
-                    ['label' => '', 'value' => ''],
                 ],
             ],
         ],
