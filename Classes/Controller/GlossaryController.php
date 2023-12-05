@@ -61,8 +61,8 @@ class GlossaryController extends ActionController
 
     /**
      * @param string $letter Show only records starting with this letter
+     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
-    #[Extbase\Validate(['validator' => 'StringLength', 'options' => ['minimum' => 1, 'maximum' => 3], 'param' => 'letter'])]
     public function listAction(string $letter = ''): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
