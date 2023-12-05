@@ -14,6 +14,7 @@ namespace JWeiland\Glossary2\Tests\Functional\PageTitleProvider;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\PageTitleProvider\Glossary2PageTitleProvider;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
@@ -63,8 +64,16 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
      */
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $_GET['tx_glossary2_glossary']['action'] = 'show';
-        $_GET['tx_glossary2_glossary']['glossary'] = 1;
+        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/?tx_glossary2_glossary[action]=show&tx_glossary2_glossary[glossary]=1'))
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
+            ->withQueryParams(
+                [
+                    'tx_glossary2_glossary' => [
+                        'action' => 'show',
+                        'glossary' => 1,
+                    ],
+                ],
+            );
 
         self::assertSame(
             'Nice title for detail page',
