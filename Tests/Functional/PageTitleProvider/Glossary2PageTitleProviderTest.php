@@ -27,7 +27,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
     protected Glossary2PageTitleProvider $subject;
 
     protected array $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2'
+        'jweiland/glossary2',
     ];
 
     protected function setUp(): void
