@@ -24,27 +24,21 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Glossary extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $title = '';
+    protected string $title = '';
 
-    /**
-     * @var string
-     */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * @var ObjectStorage<FileReference>
      * @Lazy
      */
-    protected $images;
+    protected ObjectStorage $images;
 
     /**
      * @var ObjectStorage<Category>
      * @Lazy
      */
-    protected $categories;
+    protected ObjectStorage $categories;
 
     public function __construct()
     {

@@ -18,15 +18,9 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 class AddGlossaryEventListener extends AbstractControllerEventListener
 {
-    /**
-     * @var GlossaryService
-     */
-    protected $glossaryService;
+    protected GlossaryService $glossaryService;
 
-    /**
-     * @var GlossaryRepository
-     */
-    protected $glossaryRepository;
+    protected GlossaryRepository $glossaryRepository;
 
     protected $allowedControllerActions = [
         'Glossary' => [

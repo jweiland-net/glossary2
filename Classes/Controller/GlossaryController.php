@@ -25,15 +25,9 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class GlossaryController extends ActionController
 {
-    /**
-     * @var GlossaryRepository
-     */
-    protected $glossaryRepository;
+    protected GlossaryRepository $glossaryRepository;
 
-    /**
-     * @var GlossaryService
-     */
-    protected $glossaryService;
+    protected GlossaryService $glossaryService;
 
     public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
     {
