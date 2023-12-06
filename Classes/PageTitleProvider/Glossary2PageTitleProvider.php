@@ -49,8 +49,7 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
 
     private function getValidPluginArguments(): ?array
     {
-        $requestObject = $this->getRequest();
-        $gp = $this->getPluginArgumentsFromRequest($requestObject);
+        $gp = $this->getPluginArgumentsFromRequest($this->getRequest());
 
         if (is_array($gp) && $this->isValidRequest($gp)) {
             return $gp;

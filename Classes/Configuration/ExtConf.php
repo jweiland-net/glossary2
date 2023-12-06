@@ -21,15 +21,9 @@ use TYPO3\CMS\Core\SingletonInterface;
  */
 class ExtConf implements SingletonInterface
 {
-    /**
-     * @var string
-     */
-    protected $possibleLetters = '';
+    protected string $possibleLetters = '';
 
-    /**
-     * @var string
-     */
-    protected $templatePath = '';
+    protected string $templatePath = '';
 
     public function __construct(ExtensionConfiguration $extensionConfiguration)
     {

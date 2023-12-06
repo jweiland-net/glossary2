@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Updater;
 
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -54,8 +56,7 @@ class MoveOldFlexFormSettingsUpdater
      */
     public function updateNecessary(): bool
     {
-        $records = $this->getTtContentRecordsWithOutdatedFlexForm();
-        foreach ($records as $record) {
+        foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
             $valueFromDatabase = (string)$record['pi_flexform'] !== '' ? GeneralUtility::xml2array($record['pi_flexform']) : [];
             if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
                 continue;
@@ -65,13 +66,16 @@ class MoveOldFlexFormSettingsUpdater
                 return true;
             }
 
-            if (
-                array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEF']['lDEF'] ?? [])
-                || array_key_exists('switchableControllerActions', $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? [])
-            ) {
-                return true;
-            }
+            return array_key_exists(
+                'switchableControllerActions',
+                    $valueFromDatabase['data']['sDEF']['lDEF'] ?? []
+                )
+                || array_key_exists(
+                    'switchableControllerActions',
+                        $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? []
+                );
         }
+
         return false;
     }
 
@@ -82,12 +86,15 @@ class MoveOldFlexFormSettingsUpdater
      */
     public function executeUpdate(): bool
     {
-        $records = $this->getTtContentRecordsWithOutdatedFlexForm();
-        foreach ($records as $record) {
-            $valueFromDatabase = (string)$record['pi_flexform'] !== '' ? GeneralUtility::xml2array($record['pi_flexform']) : [];
+        foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
+            $valueFromDatabase = (string)$record['pi_flexform'] !== ''
+                ? GeneralUtility::xml2array($record['pi_flexform'])
+                : [];
+
             if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
                 continue;
             }
+
             $this->moveSheetDefaultToDef($valueFromDatabase);
 
             // Move SCA to new field showGlossar
@@ -119,7 +126,7 @@ class MoveOldFlexFormSettingsUpdater
                     'uid' => (int)$record['uid'],
                 ],
                 [
-                    'pi_flexform' => \PDO::PARAM_STR,
+                    'pi_flexform' => Connection::PARAM_STR,
                 ]
             );
         }
@@ -133,27 +140,30 @@ class MoveOldFlexFormSettingsUpdater
     protected function getTtContentRecordsWithOutdatedFlexForm(): array
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tt_content');
-        $queryBuilder->getRestrictions()->removeAll();
-        $records = $queryBuilder
+        $queryBuilder
+            ->getRestrictions()
+            ->removeAll()
+            ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
+        return $queryBuilder
             ->select('uid', 'pi_flexform')
-            ->from('tt_content')->andWhere($queryBuilder->expr()->eq(
-                'CType',
-                $queryBuilder->createNamedParameter('list', \PDO::PARAM_STR)
-            ), $queryBuilder->expr()->eq(
-                'list_type',
-                $queryBuilder->createNamedParameter('glossary2_glossary', \PDO::PARAM_STR)
-            ))->executeQuery()
+            ->from('tt_content')
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'CType',
+                    $queryBuilder->createNamedParameter('list')
+                ),
+                $queryBuilder->expr()->eq(
+                    'list_type',
+                    $queryBuilder->createNamedParameter('glossary2_glossary')
+                )
+            )
+            ->executeQuery()
             ->fetchAllAssociative();
-
-        if ($records === false) {
-            $records = [];
-        }
-
-        return $records;
     }
 
     /**
-     * It's not a must have, but sDEF seems to be more default than sDEFAULT as first sheet name in TYPO3
+     * It's not a must-have, but sDEF seems to be more default than sDEFAULT as first sheet name in TYPO3
      */
     protected function moveSheetDefaultToDef(array &$valueFromDatabase): void
     {
@@ -162,7 +172,7 @@ class MoveOldFlexFormSettingsUpdater
                 $this->moveFieldFromOldToNewSheet($valueFromDatabase, $field, 'sDEFAULT', 'sDEF');
             }
 
-            // remove old sheet completely
+            // Remove old sheet completely
             unset($valueFromDatabase['data']['sDEFAULT']);
         }
     }

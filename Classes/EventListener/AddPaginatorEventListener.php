@@ -21,24 +21,16 @@ use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
 class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    /**
-     * @var int
-     */
-    protected $itemsPerPage = 15;
+    protected int $itemsPerPage = 15;
 
     /**
      * Fluid variable name for paginated records
-     *
-     * @var string
      */
-    protected $fluidVariableForPaginatedRecords = 'glossaries';
+    protected string $fluidVariableForPaginatedRecords = 'glossaries';
 
-    /**
-     * @var string
-     */
-    protected $fallbackPaginationClass = SimplePagination::class;
+    protected string $fallbackPaginationClass = SimplePagination::class;
 
-    protected $allowedControllerActions = [
+    protected array $allowedControllerActions = [
         'Glossary' => [
             'list',
         ],
