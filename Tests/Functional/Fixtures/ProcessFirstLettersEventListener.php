@@ -21,7 +21,7 @@ class ProcessFirstLettersEventListener
     public function __invoke(PostProcessFirstLettersEvent $event): void
     {
         $firstLetters = $event->getFirstLetters();
-        $key = array_search('a', $firstLetters);
+        $key = array_search('a', $firstLetters, true);
         unset($firstLetters[$key]);
         $firstLetters[] = 'k';
 

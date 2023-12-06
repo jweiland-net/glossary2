@@ -1,17 +1,19 @@
 <?php
-if (!defined('TYPO3_MODE')) {
+if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 call_user_func(static function () {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::makeCategorizable(
-        'glossary2',
-        'tx_glossary2_domain_model_glossary',
-        'categories',
-        [
-            'fieldConfiguration' => [
-                'foreign_table_where' => ' AND sys_category.sys_language_uid IN (-1, 0) ORDER BY sys_category.title ASC',
-            ],
+    $GLOBALS['TCA']['tx_glossary2_domain_model_glossary']['columns']['categories'] = [
+        'config' => [
+            'type' => 'category'
         ]
+    ];
+
+    ExtensionManagementUtility::addToAllTCAtypes(
+        'tx_glossary2_domain_model_glossary',
+        'categories'
     );
 });

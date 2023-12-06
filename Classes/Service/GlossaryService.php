@@ -15,12 +15,15 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
@@ -69,9 +72,9 @@ class GlossaryService
     /**
      * @param QueryBuilder|QueryResultInterface $queryBuilder
      */
-    public function buildGlossary($queryBuilder, array $options = []): string
+    public function buildGlossary($queryBuilder, array $options = [], ServerRequestInterface $request = null): string
     {
-        $view = $this->getFluidTemplateObject($options);
+        $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
         $view->assign('variables', $options['variables'] ?? []);
@@ -140,7 +143,7 @@ class GlossaryService
                 )
             );
         }
-        return $queryBuilder->expr()->orX(...$letterConstraints);
+        return $queryBuilder->expr()->or(...$letterConstraints);
     }
 
     /**
@@ -218,7 +221,7 @@ class GlossaryService
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
-                ->execute();
+                ->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {
@@ -232,7 +235,7 @@ class GlossaryService
                 ->select($column . ' AS ' . $columnAlias)
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
-                ->execute();
+                ->executeQuery();
 
             $firstLetters = [];
             while ($record = $statement->fetch()) {
@@ -241,7 +244,7 @@ class GlossaryService
             }
         }
 
-        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
+        $firstLetters = is_array($firstLetters) ? array_unique($this->cleanUpFirstLetters($firstLetters)) : [];
 
         /** @var PostProcessFirstLettersEvent $event */
         $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
@@ -272,15 +275,22 @@ class GlossaryService
         return array_unique($firstLetters);
     }
 
-    protected function getFluidTemplateObject(array $options): StandaloneView
+    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): StandaloneView
     {
-        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename($this->getTemplatePath($options));
-        $view->getRequest()->setControllerExtensionName($extensionName);
-        $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-        $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-        $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
+
+        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
+
+
+        if (version_compare($this->getTypo3Version()->getBranch(), '12.0', '>=')) {
+            $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
+        } else {
+            $view->getRequest()->setControllerExtensionName($extensionName);
+            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
+            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
+            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
+        }
 
         return $view;
     }
@@ -334,6 +344,11 @@ class GlossaryService
         }
 
         return GeneralUtility::getFileAbsFileName($templatePath);
+    }
+
+    protected function getTypo3Version(): Typo3Version
+    {
+        return GeneralUtility::makeInstance(Typo3Version::class);
     }
 
     protected function getConnectionPool(): ConnectionPool

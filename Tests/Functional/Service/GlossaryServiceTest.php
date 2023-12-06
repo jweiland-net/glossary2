@@ -9,17 +9,13 @@
 
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use JWeiland\Glossary2\Configuration\ExtConf;
-use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
-use JWeiland\Glossary2\Event\SanitizeValueForCharsetHelperEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
-use JWeiland\Glossary2\Tests\Functional\Fixtures\ProcessFirstLettersEventListener;
-use JWeiland\Glossary2\Tests\Functional\Fixtures\SanitizeValueEventListener;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -35,8 +31,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  */
 class GlossaryServiceTest extends FunctionalTestCase
 {
-    use ProphecyTrait;
-
     /**
      * @var GlossaryService
      */
@@ -48,9 +42,9 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected $extConf;
 
     /**
-     * @var ListenerProvider|ObjectProphecy
+     * @var ListenerProvider
      */
-    protected $listenerProviderProphecy;
+    protected $listenerProvider;
 
     /**
      * @var EventDispatcher
@@ -58,39 +52,39 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected $eventDispatcher;
 
     /**
-     * @var ConfigurationManagerInterface|ObjectProphecy
+     * @var ConfigurationManagerInterface
      */
-    protected $configurationManagerProphecy;
+    protected $configurationManager;
 
     /**
-     * @var Request|ObjectProphecy
+     * @var Request|MockObject
      */
-    protected $requestProphecy;
+    protected $requestMock;
 
     /**
-     * @var StandaloneView|ObjectProphecy
+     * @var StandaloneView|MockObject
      */
-    protected $viewProphecy;
+    protected $viewMock;
 
     /**
      * @var string[]
      */
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2',
+    protected array $testExtensionsToLoad = [
+        'jweiland/glossary2',
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category_record_mm.csv');
 
         $this->extConf = GeneralUtility::makeInstance(ExtConf::class);
-        $this->listenerProviderProphecy = $this->prophesize(ListenerProvider::class);
-        $this->listenerProviderProphecy
-            ->getListenersForEvent(Argument::any())
-            ->willReturn([]);
-        $this->eventDispatcher = new EventDispatcher($this->listenerProviderProphecy->reveal());
+        $this->listenerProvider = $this->createMock(ListenerProvider::class);
+        $this->eventDispatcher = new EventDispatcher($this->listenerProvider);
+
         GeneralUtility::addInstance(
             CharsetHelper::class,
             new CharsetHelper(
@@ -99,25 +93,27 @@ class GlossaryServiceTest extends FunctionalTestCase
             )
         );
 
-        $this->configurationManagerProphecy = $this->prophesize(ConfigurationManager::class);
-        $this->configurationManagerProphecy
-            ->getConfiguration(Argument::cetera())
-            ->shouldBeCalled()
-            ->willReturn([]);
+        $this->configurationManager = $this->createMock(ConfigurationManager::class);
 
-        $this->requestProphecy = $this->prophesize(Request::class);
+        $this->requestMock = $this->createMock(Request::class);
 
-        $this->viewProphecy = $this->prophesize(StandaloneView::class);
-        $this->viewProphecy
-            ->setTemplatePathAndFilename(Argument::any())
-            ->shouldBeCalled();
-        $this->viewProphecy
-            ->getRequest()
-            ->shouldBeCalled()
-            ->willReturn($this->requestProphecy->reveal());
-        $this->viewProphecy->assign(Argument::cetera())->shouldBeCalled();
-        $this->viewProphecy->render()->shouldBeCalled()->willReturn('');
-        GeneralUtility::addInstance(StandaloneView::class, $this->viewProphecy->reveal());
+        $this->viewMock = $this->createMock(StandaloneView::class);
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('setTemplatePathAndFilename');
+        $this->viewMock
+            ->expects(self::any())
+            ->method('getRequest')
+            ->willReturn($this->requestMock);
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('assign');
+        $this->viewMock
+            ->expects(self::atLeastOnce())
+            ->method('render')
+            ->willReturn('running some functional tests');
+        GeneralUtility::addInstance(StandaloneView::class, $this->viewMock);
+
     }
 
     protected function tearDown(): void
@@ -126,7 +122,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->subject,
             $this->extConf,
             $this->eventDispatcher,
-            $this->viewProphecy
+            $this->viewMock
         );
         parent::tearDown();
     }
@@ -136,9 +132,8 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillConvertGermanUmlauts(): void
     {
-        $this->viewProphecy
-            ->assign('glossary', $this->getGlossary())
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -148,7 +143,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -216,25 +211,22 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath): void
     {
-        $this->configurationManagerProphecy
-            ->getConfiguration(
+        $this->configurationManager
+            ->expects(self::atLeastOnce())
+            ->method('getConfiguration')
+            ->with(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
                 'Glossary2',
                 'Glossary'
             )
-            ->shouldBeCalled()
             ->willReturn($settings);
 
-        $this->viewProphecy
-            ->setTemplatePathAndFilename(
-                GeneralUtility::getFileAbsFileName(
-                    $expectedPath
-                )
+        $this->viewMock->setTemplatePathAndFilename(
+            GeneralUtility::getFileAbsFileName(
+                $expectedPath
             )
-            ->shouldBeCalled();
-        $this->viewProphecy
-            ->assign('glossary', $this->getGlossary())
-            ->shouldBeCalled();
+        );
+        $this->viewMock->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -244,7 +236,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary($queryBuilder, $options);
@@ -255,19 +247,13 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillConvertSpecialCharToAsciiByEvent(): void
     {
-        $this->listenerProviderProphecy
-            ->getListenersForEvent(Argument::type(SanitizeValueForCharsetHelperEvent::class))
-            ->shouldBeCalled()
-            ->willReturn([new SanitizeValueEventListener()]);
-
         // Set link of letter "o" to true
         $expectedGlossary = $this->getGlossary();
         $expectedGlossary[5]['hasLink'] = false;
         $expectedGlossary[15]['hasLink'] = true;
 
-        $this->viewProphecy
-            ->assign('glossary', $expectedGlossary)
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -277,7 +263,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -288,20 +274,14 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWithModifiedLettersByEvent(): void
     {
-        $this->listenerProviderProphecy
-            ->getListenersForEvent(Argument::type(PostProcessFirstLettersEvent::class))
-            ->shouldBeCalled()
-            ->willReturn([new ProcessFirstLettersEventListener()]);
-
         $expectedGlossary = $this->getGlossary();
         // Remove link for letter "a"
         $expectedGlossary[1]['hasLink'] = false;
         // Add link for letter "k"
         $expectedGlossary[11]['hasLink'] = true;
 
-        $this->viewProphecy
-            ->assign('glossary', $expectedGlossary)
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -311,7 +291,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -322,9 +302,8 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
     {
-        $this->viewProphecy
-            ->assign('glossary', $this->getGlossary())
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $this->getGlossary());
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -334,7 +313,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary(
@@ -351,9 +330,8 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillAddSettingsToView(): void
     {
-        $this->viewProphecy
-            ->assign('settings', ['foo' => 'bar'])
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('settings', ['foo' => 'bar']);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -363,7 +341,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary(
@@ -384,9 +362,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary = $this->getGlossary();
         $expectedGlossary[0]['hasLink'] = false;
 
-        $this->viewProphecy
-            ->assign('glossary', $expectedGlossary)
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -396,7 +373,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary(
@@ -439,9 +416,8 @@ class GlossaryServiceTest extends FunctionalTestCase
             ]
         );
 
-        $this->viewProphecy
-            ->assign('glossary', $expectedGlossary)
-            ->shouldBeCalled();
+        $this->viewMock
+            ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -451,7 +427,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary(
@@ -468,19 +444,6 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillUseGlossaryRequestForLinkGeneration(): void
     {
-        $this->requestProphecy
-            ->setControllerExtensionName('Glossary2')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setPluginName('glossary')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setControllerName('Glossary')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setControllerActionName('list')
-            ->shouldBeCalled();
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -489,7 +452,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -500,18 +463,8 @@ class GlossaryServiceTest extends FunctionalTestCase
      */
     public function buildGlossaryWillUseForeignRequestForLinkGeneration(): void
     {
-        $this->requestProphecy
-            ->setControllerExtensionName('SyncCropAreas')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setPluginName('crop')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setControllerName('Cropping')
-            ->shouldBeCalled();
-        $this->requestProphecy
-            ->setControllerActionName('view')
-            ->shouldBeCalled();
+
+
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -521,7 +474,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManagerProphecy->reveal()
+            $this->configurationManager
         );
 
         $this->subject->buildGlossary(

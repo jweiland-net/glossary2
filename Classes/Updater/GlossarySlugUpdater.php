@@ -63,19 +63,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
         $amountOfRecordsWithEmptySlug = $queryBuilder
             ->count('*')
-            ->from($this->tableName)
-            ->andWhere(
-                $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->eq(
-                        $this->fieldName,
-                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
-                    ),
-                    $queryBuilder->expr()->isNull(
-                        $this->fieldName
-                    )
-                )
-            )
-            ->execute()
+            ->from($this->tableName)->andWhere($queryBuilder->expr()->or($queryBuilder->expr()->eq(
+                $this->fieldName,
+                $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+            ), $queryBuilder->expr()->isNull(
+                $this->fieldName
+            )))->executeQuery()
             ->fetchColumn(0);
 
         return (bool)$amountOfRecordsWithEmptySlug;
@@ -91,19 +84,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
         $recordsToUpdate = $queryBuilder
             ->select('uid', 'title', 'path_segment')
-            ->from($this->tableName)
-            ->andWhere(
-                $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->eq(
-                        $this->fieldName,
-                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
-                    ),
-                    $queryBuilder->expr()->isNull(
-                        $this->fieldName
-                    )
-                )
-            )
-            ->execute()
+            ->from($this->tableName)->andWhere($queryBuilder->expr()->or($queryBuilder->expr()->eq(
+                $this->fieldName,
+                $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+            ), $queryBuilder->expr()->isNull(
+                $this->fieldName
+            )))->executeQuery()
             ->fetchAll();
 
         if ($recordsToUpdate === false) {
@@ -159,18 +145,13 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
 
         return $queryBuilder
             ->count('uid')
-            ->from($this->tableName)
-            ->andWhere(
-                $queryBuilder->expr()->eq(
-                    $this->fieldName,
-                    $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
-                ),
-                $queryBuilder->expr()->neq(
-                    'uid',
-                    $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
-                )
-            )
-            ->execute();
+            ->from($this->tableName)->andWhere($queryBuilder->expr()->eq(
+                $this->fieldName,
+                $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
+            ), $queryBuilder->expr()->neq(
+                'uid',
+                $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
+            ))->executeQuery();
     }
 
     protected function getSlugHelper(): SlugHelper

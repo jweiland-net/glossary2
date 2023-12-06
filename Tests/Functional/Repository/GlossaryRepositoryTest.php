@@ -11,9 +11,8 @@ namespace JWeiland\Glossary2\Tests\Functional\Repository;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 
 /**
@@ -34,20 +33,21 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     /**
      * @var string[]
      */
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2',
+    protected array $testExtensionsToLoad = [
+        'jweiland/glossary2',
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->importDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.xml');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category_record_mm.csv');
 
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->querySettings = $objectManager->get(QuerySettingsInterface::class);
+        $this->querySettings = GeneralUtility::makeInstance(QuerySettingsInterface::class);
         $this->querySettings->setStoragePageIds([12]);
-        $this->subject = $objectManager->get(GlossaryRepository::class);
+        $this->subject = GeneralUtility::makeInstance(GlossaryRepository::class);
     }
 
     protected function tearDown(): void

@@ -10,8 +10,8 @@
 namespace JWeiland\Glossary2\Tests\Functional\Configuration;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
-use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case
@@ -26,8 +26,8 @@ class ExtConfTest extends FunctionalTestCase
     /**
      * @var string[]
      */
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/glossary2',
+    protected array $testExtensionsToLoad = [
+        'jweiland/glossary2',
     ];
 
     protected function setUp(): void
