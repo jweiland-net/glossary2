@@ -13,6 +13,7 @@ namespace JWeiland\Glossary2\Updater;
 
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\SlugHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -28,7 +29,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
 
     protected string $fieldName = 'path_segment';
 
-    protected SlugHelper $slugHelper;
+    protected ?SlugHelper $slugHelper = null;
 
     /**
      * Return the identifier for this wizard
@@ -125,13 +126,17 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
 
     protected function getUniqueValue(int $uid, string $slug): string
     {
-        $statement = $this->getUniqueCountStatement($uid, $slug);
-        if ($statement->fetchOne()) {
+        $queryBuilder = $this->getUniqueCountQueryBuilder($uid, $slug);
+        $statement = $queryBuilder->prepare();
+        $queryResult = $statement->executeQuery();
+
+        if ($queryResult->fetchOne()) {
             for ($counter = 1; $counter <= 100; $counter++) {
+                $queryResult->free();
                 $newSlug = $slug . '-' . $counter;
                 $statement->bindValue(1, $newSlug);
-                $statement->executeQuery();
-                if (!$statement->fetchOne()) {
+                $resultQuery = $statement->executeQuery();
+                if (!$resultQuery->fetchOne()) {
                     break;
                 }
             }
@@ -140,7 +145,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         return $newSlug ?? $slug;
     }
 
-    protected function getUniqueCountStatement(int $uid, string $slug)
+    protected function getUniqueCountQueryBuilder(int $uid, string $slug): QueryBuilder
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
         $queryBuilder
@@ -160,8 +165,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                     'uid',
                     $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
                 )
-            )
-            ->executeQuery();
+            );
     }
 
     protected function getSlugHelper(): SlugHelper
@@ -171,7 +175,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                 SlugHelper::class,
                 $this->tableName,
                 $this->fieldName,
-                $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config']
+                $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config'] ?? []
             );
         }
 

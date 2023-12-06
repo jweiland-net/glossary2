@@ -101,7 +101,8 @@ class GlossaryService
                 addcslashes($letter, '_%') . '%'
             );
         }
-        return $extbaseQuery->logicalOr($letterConstraints);
+
+        return $extbaseQuery->logicalOr(...$letterConstraints);
     }
 
     /**
@@ -120,21 +121,18 @@ class GlossaryService
             for ($i = 0; $i < 10; $i++) {
                 $letterConstraints[] = $queryBuilder->expr()->like(
                     $column,
-                    $queryBuilder->createNamedParameter(
-                        $i . '%',
-                        \PDO::PARAM_STR
-                    )
+                    $queryBuilder->createNamedParameter($i . '%')
                 );
             }
         } else {
             $letterConstraints[] = $queryBuilder->expr()->like(
                 $column,
                 $queryBuilder->createNamedParameter(
-                    $queryBuilder->escapeLikeWildcards($letter) . '%',
-                    \PDO::PARAM_STR
+                    $queryBuilder->escapeLikeWildcards($letter) . '%'
                 )
             );
         }
+
         return $queryBuilder->expr()->or(...$letterConstraints);
     }
 
@@ -166,6 +164,9 @@ class GlossaryService
         return $glossaryLetterHasEntries;
     }
 
+    /**
+     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     */
     protected function getAvailableLetters($queryBuilder, array $options): array
     {
         $mergeNumbers = (bool)($options['mergeNumbers'] ?? true);
@@ -209,28 +210,28 @@ class GlossaryService
                 }
             }
         } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
-            $statement = $queryBuilder
+            $queryResult = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
                 ->executeQuery();
 
             $firstLetters = [];
-            while ($record = $statement->fetchAssociative()) {
+            while ($record = $queryResult->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias]);
                 $firstLetters[] = $firstLetter;
             }
         } else {
             // This will collect nearly all records and could be an
             // performance issue, if you have a lot of records
-            $statement = $queryBuilder
+            $queryResult = $queryBuilder
                 ->select($column . ' AS ' . $columnAlias)
                 ->add('groupBy', $columnAlias)
                 ->add('orderBy', $columnAlias)
                 ->executeQuery();
 
             $firstLetters = [];
-            while ($record = $statement->fetchAssociative()) {
+            while ($record = $queryResult->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias][0]);
                 $firstLetters[$firstLetter] = $firstLetter;
             }
