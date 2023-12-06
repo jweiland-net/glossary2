@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Updater;
 
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -119,7 +120,7 @@ class MoveOldFlexFormSettingsUpdater
                     'uid' => (int)$record['uid'],
                 ],
                 [
-                    'pi_flexform' => \PDO::PARAM_STR,
+                    'pi_flexform' => Connection::PARAM_STR,
                 ]
             );
         }
@@ -138,10 +139,10 @@ class MoveOldFlexFormSettingsUpdater
             ->select('uid', 'pi_flexform')
             ->from('tt_content')->andWhere($queryBuilder->expr()->eq(
                 'CType',
-                $queryBuilder->createNamedParameter('list', \PDO::PARAM_STR)
+                $queryBuilder->createNamedParameter('list')
             ), $queryBuilder->expr()->eq(
                 'list_type',
-                $queryBuilder->createNamedParameter('glossary2_glossary', \PDO::PARAM_STR)
+                $queryBuilder->createNamedParameter('glossary2_glossary')
             ))->executeQuery()
             ->fetchAllAssociative();
 
