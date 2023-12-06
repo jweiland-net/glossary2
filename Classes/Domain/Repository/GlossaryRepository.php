@@ -44,7 +44,6 @@ class GlossaryRepository extends Repository
     {
         // Set respectSysLanguage to false, to keep our already translated records
         $query = $this->createQuery();
-        // $query->getQuerySettings()->setRespectSysLanguage(false);
 
         $constraints = [];
         if ($this->checkArgumentsForSearchGlossaries($categories, $letter)) {
