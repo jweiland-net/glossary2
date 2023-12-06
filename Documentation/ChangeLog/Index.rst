@@ -7,7 +7,7 @@
 ChangeLog
 =========
 
-Version 5.2.0
+Version 6.0.0
 =============
 
 *   [TASK] Compatibility fix for TYPO3 Version 12

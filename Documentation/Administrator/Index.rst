@@ -15,6 +15,8 @@ Administrator manual
     :maxdepth: 2
     :titlesonly:
 
+    PageTitleProvider/Index
     Pagination/Index
     Routes/Index
     Upgrade/Index
+
