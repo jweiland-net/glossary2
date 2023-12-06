@@ -30,10 +30,7 @@ class GlossaryRepository extends Repository
         'title' => QueryInterface::ORDER_ASCENDING,
     ];
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
     public function injectEventDispatcher(EventDispatcher $eventDispatcher): void
     {
@@ -42,7 +39,6 @@ class GlossaryRepository extends Repository
 
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
-        // Set respectSysLanguage to false, to keep our already translated records
         $query = $this->createQuery();
 
         $constraints = [];
