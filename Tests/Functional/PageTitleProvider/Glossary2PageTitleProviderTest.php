@@ -64,7 +64,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
      */
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/?tx_glossary2_glossary[action]=show&tx_glossary2_glossary[glossary]=1'))
+        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
             ->withQueryParams(
                 [

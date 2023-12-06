@@ -88,6 +88,6 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
 
     protected function getRequest(): ServerRequestInterface
     {
-     return $GLOBALS['TYPO3_REQUEST'];
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
