@@ -39,9 +39,7 @@ class GlossaryRepository extends Repository
 
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
-        // Set respectSysLanguage to false, to keep our already translated records
         $query = $this->createQuery();
-        // $query->getQuerySettings()->setRespectSysLanguage(false);
 
         $constraints = [];
         if ($this->checkArgumentsForSearchGlossaries($categories, $letter)) {
