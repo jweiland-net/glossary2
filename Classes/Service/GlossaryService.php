@@ -224,7 +224,7 @@ class GlossaryService
                 ->executeQuery();
 
             $firstLetters = [];
-            while ($record = $statement->fetch()) {
+            while ($record = $statement->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias]);
                 $firstLetters[] = $firstLetter;
             }
@@ -238,7 +238,7 @@ class GlossaryService
                 ->executeQuery();
 
             $firstLetters = [];
-            while ($record = $statement->fetch()) {
+            while ($record = $statement->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias][0]);
                 $firstLetters[$firstLetter] = $firstLetter;
             }

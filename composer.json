@@ -10,6 +10,11 @@
 			"name": "Stefan Froemken",
 			"email": "sfroemken@jweiland.net",
 			"role": "Lead Developer"
+		},
+		{
+			"name": "Hoja Mustaffa Abdul Latheef",
+			"email": "hlatheef@jweiland.net",
+			"role": "Senior Developer"
 		}
 	],
 	"support": {
@@ -27,9 +32,6 @@
 		"roave/security-advisories": "dev-latest",
 		"typo3/coding-standards": "^0.6",
 		"typo3/testing-framework": "^7.0.2"
-	},
-	"replace": {
-		"typo3-ter/glossary2": "self.version"
 	},
 	"replace": {
 		"typo3-ter/glossary2": "self.version"
