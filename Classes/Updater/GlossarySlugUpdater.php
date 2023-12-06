@@ -24,20 +24,11 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  */
 class GlossarySlugUpdater implements UpgradeWizardInterface
 {
-    /**
-     * @var string
-     */
-    protected $tableName = 'tx_glossary2_domain_model_glossary';
+    protected string $tableName = 'tx_glossary2_domain_model_glossary';
 
-    /**
-     * @var string
-     */
-    protected $fieldName = 'path_segment';
+    protected string $fieldName = 'path_segment';
 
-    /**
-     * @var SlugHelper
-     */
-    protected $slugHelper;
+    protected SlugHelper $slugHelper;
 
     /**
      * Return the identifier for this wizard
@@ -63,13 +54,20 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
         $amountOfRecordsWithEmptySlug = $queryBuilder
             ->count('*')
-            ->from($this->tableName)->andWhere($queryBuilder->expr()->or($queryBuilder->expr()->eq(
-                $this->fieldName,
-                $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
-            ), $queryBuilder->expr()->isNull(
-                $this->fieldName
-            )))->executeQuery()
-            ->fetchColumn(0);
+            ->from($this->tableName)
+            ->andWhere(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq(
+                        $this->fieldName,
+                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+                    ),
+                    $queryBuilder->expr()->isNull(
+                        $this->fieldName
+                    )
+                )
+            )
+            ->executeQuery()
+            ->fetchOne();
 
         return (bool)$amountOfRecordsWithEmptySlug;
     }
@@ -84,13 +82,20 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
         $recordsToUpdate = $queryBuilder
             ->select('uid', 'title', 'path_segment')
-            ->from($this->tableName)->andWhere($queryBuilder->expr()->or($queryBuilder->expr()->eq(
-                $this->fieldName,
-                $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
-            ), $queryBuilder->expr()->isNull(
-                $this->fieldName
-            )))->executeQuery()
-            ->fetchAll();
+            ->from($this->tableName)
+            ->andWhere(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq(
+                        $this->fieldName,
+                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+                    ),
+                    $queryBuilder->expr()->isNull(
+                        $this->fieldName
+                    )
+                )
+            )
+            ->executeQuery()
+            ->fetchAllAssociative();
 
         if ($recordsToUpdate === false) {
             $recordsToUpdate = [];
@@ -121,12 +126,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
     protected function getUniqueValue(int $uid, string $slug): string
     {
         $statement = $this->getUniqueCountStatement($uid, $slug);
-        if ($statement->fetchColumn(0)) {
+        if ($statement->fetchOne()) {
             for ($counter = 1; $counter <= 100; $counter++) {
                 $newSlug = $slug . '-' . $counter;
                 $statement->bindValue(1, $newSlug);
-                $statement->execute();
-                if (!$statement->fetchColumn()) {
+                $statement->executeQuery();
+                if (!$statement->fetchOne()) {
                     break;
                 }
             }
@@ -145,13 +150,18 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
 
         return $queryBuilder
             ->count('uid')
-            ->from($this->tableName)->andWhere($queryBuilder->expr()->eq(
-                $this->fieldName,
-                $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
-            ), $queryBuilder->expr()->neq(
-                'uid',
-                $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
-            ))->executeQuery();
+            ->from($this->tableName)
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    $this->fieldName,
+                    $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
+                ),
+                $queryBuilder->expr()->neq(
+                    'uid',
+                    $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
+                )
+            )
+            ->executeQuery();
     }
 
     protected function getSlugHelper(): SlugHelper

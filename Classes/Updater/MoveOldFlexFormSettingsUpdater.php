@@ -143,7 +143,7 @@ class MoveOldFlexFormSettingsUpdater
                 'list_type',
                 $queryBuilder->createNamedParameter('glossary2_glossary', \PDO::PARAM_STR)
             ))->executeQuery()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
         if ($records === false) {
             $records = [];
