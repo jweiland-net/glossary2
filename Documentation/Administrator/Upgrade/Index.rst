@@ -8,6 +8,20 @@ Upgrade
 If you update `glossary2` to a newer version, please read this section
 carefully!
 
+Upgrade to Version 6.0.0
+========================
+
+We enhanced the extension's compatibility to TYPO3 version 12 while
+establishing a minimum requirement of version 11. As part of this upgrade,
+a new page title provider was introduced within the extension.
+In addition, comprehensive documentation was provided to guide users in
+seamlessly implementing the page title using the newly added provider.
+Furthermore, the testing framework for the extension was successfully migrated
+to the TYPO3 Testing framework, ensuring robust and efficient testing practices
+in line with the latest TYPO3 standards. These upgrades collectively contribute
+to an improved and up-to-date extension experience for users within
+the TYPO3 ecosystem.
+
 Update to Version 5.1.0
 =======================
 

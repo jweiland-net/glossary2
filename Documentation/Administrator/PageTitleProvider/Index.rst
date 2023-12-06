@@ -1,8 +1,6 @@
 ..  include:: /Includes.rst.txt
 
 
-..  _pageTitleProvider:
-
 ===================
 Page Title Provider
 ===================
