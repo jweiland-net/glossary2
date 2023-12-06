@@ -36,24 +36,16 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  */
 class GlossaryService
 {
-    /**
-     * @var ExtConf
-     */
-    protected $extConf;
+    protected ExtConf $extConf;
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
     /**
      * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
      * and NOT of the calling extension which uses this API!
      * We need that property to override templatePath on per page basis.
-     *
-     * @var array
      */
-    protected $glossary2Settings;
+    protected array $glossary2Settings;
 
     public function __construct(
         ExtConf $extConf,

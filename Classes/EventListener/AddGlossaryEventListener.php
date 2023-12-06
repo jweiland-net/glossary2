@@ -22,7 +22,7 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
 
     protected GlossaryRepository $glossaryRepository;
 
-    protected $allowedControllerActions = [
+    protected array $allowedControllerActions = [
         'Glossary' => [
             'list',
         ],

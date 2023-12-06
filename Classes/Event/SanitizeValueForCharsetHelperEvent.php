@@ -17,10 +17,7 @@ namespace JWeiland\Glossary2\Event;
  */
 class SanitizeValueForCharsetHelperEvent
 {
-    /**
-     * @var string
-     */
-    protected $value = '';
+    protected string $value = '';
 
     public function __construct(string $value)
     {

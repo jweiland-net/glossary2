@@ -30,10 +30,7 @@ class GlossaryRepository extends Repository
         'title' => QueryInterface::ORDER_ASCENDING,
     ];
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
     public function injectEventDispatcher(EventDispatcher $eventDispatcher): void
     {

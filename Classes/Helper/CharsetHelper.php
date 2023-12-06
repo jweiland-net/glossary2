@@ -20,15 +20,9 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
  */
 class CharsetHelper
 {
-    /**
-     * @var CharsetConverter
-     */
-    protected $charsetConverter;
+    protected CharsetConverter $charsetConverter;
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
     public function __construct(CharsetConverter $charsetConverter, EventDispatcher $eventDispatcher)
     {
