@@ -3,7 +3,7 @@ if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
-call_user_func(static function () {
+call_user_func(static function (): void {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Glossary2',
         'Glossary',
@@ -11,16 +11,6 @@ call_user_func(static function () {
             \JWeiland\Glossary2\Controller\GlossaryController::class => 'list, listWithoutGlossar, show',
         ]
     );
-
-    // Register SVG Icon Identifier
-    $svgIcons = [
-        'ext-glossary2-wizard-icon' => 'plugin_wizard.svg',
-    ];
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-        \TYPO3\CMS\Core\Imaging\IconRegistry::class
-    );
-    foreach ($svgIcons as $identifier => $fileName) {
-    }
 
     // Add glossary2 plugin to new element wizard
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(

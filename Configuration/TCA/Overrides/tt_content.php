@@ -4,6 +4,7 @@ if (!defined('TYPO3')) {
 }
 
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['glossary2_glossary'] = 'pi_flexform';
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
     'glossary2_glossary',
     'FILE:EXT:glossary2/Configuration/FlexForms/Glossary.xml'

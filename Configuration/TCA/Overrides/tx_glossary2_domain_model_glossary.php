@@ -5,7 +5,7 @@ if (!defined('TYPO3')) {
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-call_user_func(static function () {
+call_user_func(static function (): void {
     $GLOBALS['TCA']['tx_glossary2_domain_model_glossary']['columns']['categories'] = [
         'config' => [
             'type' => 'category'
