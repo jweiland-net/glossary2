@@ -200,6 +200,8 @@ class GlossaryService
         string $column,
         string $columnAlias
     ): array {
+        $firstLetters = [];
+
         if ($queryBuilder instanceof QueryResultInterface) {
             // As we can not modify SELECT part, we have to loop through all records
             $propertyGetter = 'get' . GeneralUtility::underscoredToUpperCamelCase($column);
@@ -216,7 +218,6 @@ class GlossaryService
                 ->add('orderBy', $columnAlias)
                 ->executeQuery();
 
-            $firstLetters = [];
             while ($record = $queryResult->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias]);
                 $firstLetters[] = $firstLetter;
@@ -230,14 +231,13 @@ class GlossaryService
                 ->add('orderBy', $columnAlias)
                 ->executeQuery();
 
-            $firstLetters = [];
             while ($record = $queryResult->fetchAssociative()) {
                 $firstLetter = mb_strtolower($record[$columnAlias][0]);
                 $firstLetters[$firstLetter] = $firstLetter;
             }
         }
 
-        $firstLetters = is_array($firstLetters) ? array_unique($this->cleanUpFirstLetters($firstLetters)) : [];
+        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
 
         /** @var PostProcessFirstLettersEvent $event */
         $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
