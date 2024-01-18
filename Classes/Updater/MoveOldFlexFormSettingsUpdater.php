@@ -16,12 +16,13 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * With glossary2 3.0.0 we have changed some FlexForm Settings.
  * This Updater converts existing settings to new version.
  */
-class MoveOldFlexFormSettingsUpdater
+class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
 {
     /**
      * Return the identifier for this wizard
@@ -77,6 +78,13 @@ class MoveOldFlexFormSettingsUpdater
         }
 
         return false;
+    }
+
+    public function getPrerequisites(): array
+    {
+        return [
+            DatabaseUpdatedPrerequisite::class,
+        ];
     }
 
     /**

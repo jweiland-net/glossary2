@@ -42,7 +42,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
 
     public function getTitle(): string
     {
-        return 'Update Slug of glossary2 records';
+        return '[glossary2] Update url slugs of glossary2 records';
     }
 
     public function getDescription(): string
