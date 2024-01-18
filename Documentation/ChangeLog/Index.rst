@@ -7,6 +7,13 @@
 ChangeLog
 =========
 
+
+Version 6.0.1
+=============
+
+*   [BUGFIX] Due to missing upgrade wizard implementation extension throws
+    error in CLI and backend upgrade wizard.
+
 Version 6.0.0
 =============
 
