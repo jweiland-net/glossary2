@@ -1,32 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2">
-		<header/>
-		<body>
-			<trans-unit id="sheetGeneral" xml:space="preserve">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="de">
+    <header/>
+    <body>
+      <trans-unit id="sheetGeneral" xml:space="preserve">
 				<source>General</source>
-				<target>Allgemein</target>
-			</trans-unit>
-			<trans-unit id="pidOfDetailPage">
-				<source>PID of detail page</source>
-				<target>PID der Detailansicht</target>
-			</trans-unit>
-			<trans-unit id="pidOfListPage">
-				<source>PID of list page</source>
-				<target>PID der Listenansicht. Sinnvoll, wenn auch eine Detailansicht definiert wurde</target>
-			</trans-unit>
-			<trans-unit id="showGlossar" xml:space="preserve">
+			<target state="needs-translation">General</target></trans-unit>
+      <trans-unit id="pidOfDetailPage">
+        <source>PID of detail page</source>
+        <target state="needs-translation">PID of detail page</target>
+      </trans-unit>
+      <trans-unit id="pidOfListPage">
+        <source>PID of list page</source>
+        <target state="needs-translation">PID of list page</target>
+      </trans-unit>
+      <trans-unit id="showGlossar" xml:space="preserve">
 				<source>Show A-Z links</source>
-				<target>Zeige A-Z Links</target>
-			</trans-unit>
-			<trans-unit id="showAllLink" xml:space="preserve">
+			<target state="needs-translation">Show A-Z links</target></trans-unit>
+      <trans-unit id="showAllLink" xml:space="preserve">
 				<source>Add ALL Link</source>
-				<target>Füge ALL Link ein</target>
-			</trans-unit>
-			<trans-unit id="categories" xml:space="preserve">
+			<target state="needs-translation">Add ALL Link</target></trans-unit>
+      <trans-unit id="categories" xml:space="preserve">
 				<source>Show all entries of a chosen category</source>
-				<target>Zeige alle Einträge einer gewählten Kategorie</target>
-			</trans-unit>
-		</body>
-	</file>
+			<target state="needs-translation">Show all entries of a chosen category</target></trans-unit>
+    </body>
+  </file>
 </xliff>
