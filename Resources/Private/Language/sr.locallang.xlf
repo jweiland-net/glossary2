@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="sr">
+    <header/>
+    <body>
+      <trans-unit id="all">
+        <source>All</source>
+        <target state="needs-translation">All</target>
+      </trans-unit>
+      <trans-unit id="backToList">
+        <source>Back to list</source>
+        <target state="needs-translation">Back to list</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary">
+        <source>Glossary</source>
+        <target state="needs-translation">Glossary</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+        <source>Letter</source>
+        <target state="needs-translation">Letter</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+        <source>Title</source>
+        <target state="needs-translation">Title</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+        <source>Description</source>
+        <target state="needs-translation">Description</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+        <source>Images</source>
+        <target state="needs-translation">Images</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.first">
+        <source>First</source>
+        <target state="needs-translation">First</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.previous">
+        <source>Previous</source>
+        <target state="needs-translation">Previous</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.next">
+        <source>Next</source>
+        <target state="needs-translation">Next</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.last">
+        <source>Last</source>
+        <target state="needs-translation">Last</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
