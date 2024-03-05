@@ -1,45 +1,44 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
-		<header/>
-		<body>
-			<trans-unit id="plugin.glossary.title">
-				<source>Glossary</source>
-				<target>Wörterverzeichnis</target>
-			</trans-unit>
-			<trans-unit id="plugin.glossary.description">
-				<source>Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly to an entry.</source>
-				<target>Zeigt ein Wörterverzeichnis an. Über dem Wörterverzeichnis kann eine A-Z Navigation eingeblendet werden, vor der aus gewünschte Einträge direkt erreicht werden können.</target>
-			</trans-unit>
-
-			<trans-unit id="tx_glossary2_domain_model_glossary">
-				<source>Glossary</source>
-				<target>Glossar</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.letter">
-				<source>Letter</source>
-				<target>Buchstabe</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.title">
-				<source>Title</source>
-				<target>Titel</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
-				<source>Segment for URL</source>
-				<target>Abschnitt für URL</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.description">
-				<source>Description</source>
-				<target>Beschreibung</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.images">
-				<source>Images</source>
-				<target>Bilder</target>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.images.add">
-				<source>Add image</source>
-				<target>Bild hinzufügen</target>
-			</trans-unit>
-		</body>
-	</file>
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="de">
+    <header/>
+    <body>
+      <trans-unit id="plugin.glossary.title">
+        <source>Glossary</source>
+        <target state="needs-translation">Glossary</target>
+      </trans-unit>
+      <trans-unit id="plugin.glossary.description">
+        <source>Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly to an entry.</source>
+        <target state="needs-translation">Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly to an entry.</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary">
+        <source>Glossary</source>
+        <target state="needs-translation">Glossary</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+        <source>Letter</source>
+        <target state="needs-translation">Letter</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+        <source>Title</source>
+        <target state="needs-translation">Title</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
+        <source>Segment for URL</source>
+        <target state="needs-translation">Segment for URL</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+        <source>Description</source>
+        <target state="needs-translation">Description</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+        <source>Images</source>
+        <target state="needs-translation">Images</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images.add">
+        <source>Add image</source>
+        <target state="needs-translation">Add image</target>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
