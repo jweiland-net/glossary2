@@ -3,49 +3,49 @@
   <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="de">
     <header/>
     <body>
-      <trans-unit id="all">
+      <trans-unit id="all" approved="yes">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="final">Alle</target>
       </trans-unit>
-      <trans-unit id="backToList">
+      <trans-unit id="backToList" approved="yes">
         <source>Back to list</source>
-        <target state="needs-translation">Back to list</target>
+        <target state="final">Zurück zur Listenansicht</target>
       </trans-unit>
-      <trans-unit id="tx_glossary2_domain_model_glossary">
+      <trans-unit id="tx_glossary2_domain_model_glossary" approved="yes">
         <source>Glossary</source>
-        <target state="needs-translation">Glossary</target>
+        <target state="final">Glossar</target>
       </trans-unit>
-      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter" approved="yes">
         <source>Letter</source>
-        <target state="needs-translation">Letter</target>
+        <target state="final">Buchstabe</target>
       </trans-unit>
-      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+      <trans-unit id="tx_glossary2_domain_model_glossary.title" approved="yes">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="final">Titel</target>
       </trans-unit>
-      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+      <trans-unit id="tx_glossary2_domain_model_glossary.description" approved="yes">
         <source>Description</source>
-        <target state="needs-translation">Description</target>
+        <target state="final">Beschreibung</target>
       </trans-unit>
-      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+      <trans-unit id="tx_glossary2_domain_model_glossary.images" approved="yes">
         <source>Images</source>
-        <target state="needs-translation">Images</target>
+        <target state="final">Bilder</target>
       </trans-unit>
-      <trans-unit id="pageBrowser.first">
+      <trans-unit id="pageBrowser.first" approved="yes">
         <source>First</source>
-        <target state="needs-translation">First</target>
+        <target state="final">Erste</target>
       </trans-unit>
-      <trans-unit id="pageBrowser.previous">
+      <trans-unit id="pageBrowser.previous" approved="yes">
         <source>Previous</source>
-        <target state="needs-translation">Previous</target>
+        <target state="final">Vorherige</target>
       </trans-unit>
-      <trans-unit id="pageBrowser.next">
+      <trans-unit id="pageBrowser.next" approved="yes">
         <source>Next</source>
-        <target state="needs-translation">Next</target>
+        <target state="final">Nächste</target>
       </trans-unit>
-      <trans-unit id="pageBrowser.last">
+      <trans-unit id="pageBrowser.last" approved="yes">
         <source>Last</source>
-        <target state="needs-translation">Last</target>
+        <target state="final">Letzte</target>
       </trans-unit>
     </body>
   </file>
