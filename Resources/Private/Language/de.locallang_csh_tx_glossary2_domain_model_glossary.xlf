@@ -3,21 +3,21 @@
   <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="de">
     <header/>
     <body>
-      <trans-unit id="letter.description">
+      <trans-unit id="letter.description" approved="yes">
         <source>Letter</source>
-        <target state="needs-translation">Letter</target>
+        <target state="final">Buchstabe</target>
       </trans-unit>
-      <trans-unit id="title.description">
+      <trans-unit id="title.description" approved="yes">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="final">Titel</target>
       </trans-unit>
-      <trans-unit id="description.description">
+      <trans-unit id="description.description" approved="yes">
         <source>Description</source>
-        <target state="needs-translation">Description</target>
+        <target state="final">Beschreibung</target>
       </trans-unit>
-      <trans-unit id="images.description">
+      <trans-unit id="images.description" approved="yes">
         <source>Images</source>
-        <target state="needs-translation">Images</target>
+        <target state="final">Bilder</target>
       </trans-unit>
     </body>
   </file>
