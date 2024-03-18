@@ -3,26 +3,26 @@
   <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="de">
     <header/>
     <body>
-      <trans-unit id="sheetGeneral" xml:space="preserve">
+      <trans-unit id="sheetGeneral" xml:space="preserve" approved="yes">
 				<source>General</source>
-			<target state="needs-translation">General</target></trans-unit>
-      <trans-unit id="pidOfDetailPage">
+			<target state="final">Allgemein</target></trans-unit>
+      <trans-unit id="pidOfDetailPage" approved="yes">
         <source>PID of detail page</source>
-        <target state="needs-translation">PID of detail page</target>
+        <target state="final">PID der Detailseite</target>
       </trans-unit>
-      <trans-unit id="pidOfListPage">
+      <trans-unit id="pidOfListPage" approved="yes">
         <source>PID of list page</source>
-        <target state="needs-translation">PID of list page</target>
+        <target state="final">PID der Listenseite</target>
       </trans-unit>
-      <trans-unit id="showGlossar" xml:space="preserve">
+      <trans-unit id="showGlossar" xml:space="preserve" approved="yes">
 				<source>Show A-Z links</source>
-			<target state="needs-translation">Show A-Z links</target></trans-unit>
-      <trans-unit id="showAllLink" xml:space="preserve">
+			<target state="final">A-Z Links anzeigen</target></trans-unit>
+      <trans-unit id="showAllLink" xml:space="preserve" approved="yes">
 				<source>Add ALL Link</source>
-			<target state="needs-translation">Add ALL Link</target></trans-unit>
-      <trans-unit id="categories" xml:space="preserve">
+			<target state="final">ALLE Link hinzufügen</target></trans-unit>
+      <trans-unit id="categories" xml:space="preserve" approved="yes">
 				<source>Show all entries of a chosen category</source>
-			<target state="needs-translation">Show all entries of a chosen category</target></trans-unit>
+			<target state="final">Alle Einträge einer ausgewählten Kategorie anzeigen</target></trans-unit>
     </body>
   </file>
 </xliff>
