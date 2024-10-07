@@ -10,9 +10,8 @@ declare(strict_types=1);
  */
 
 namespace JWeiland\Glossary2\Domain\Repository;
-
+use Psr\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
-use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
