@@ -100,10 +100,10 @@ return [
             'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime,int',
+                'type' => 'datetime',
+                'format' => 'date, int',
                 'default' => 0,
+                'eval' => 'date,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
@@ -113,10 +113,10 @@ return [
             'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime,int',
+                'type' => 'datetime',
+                'format' => 'date',
                 'default' => 0,
+                'eval' => 'date,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
