@@ -66,8 +66,12 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        0 => '',
-                        1 => '',
+                        'label' => '',
+                        'value' => '0',
+                    ],
+                    [
+                        'label' => '',
+                        'value' => '1',
                     ],
                 ],
             ],
@@ -101,9 +105,9 @@ return [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'datetime',
-                'format' => 'date, int',
+                'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'date,int',
+                'eval' => 'datetime,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
@@ -114,9 +118,9 @@ return [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'datetime',
-                'format' => 'date',
+                'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'date,int',
+                'eval' => 'datetime,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
