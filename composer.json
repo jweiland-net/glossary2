@@ -24,14 +24,14 @@
 	},
 	"require": {
 		"ext-pdo": "*",
-		"typo3/cms-core": "^13.3.0 || ^13.4.0"
+		"typo3/cms-core": "^13.4.0"
 	},
 	"require-dev": {
 		"friendsofphp/php-cs-fixer": "^3.14",
-		"phpunit/phpunit": "^9.6",
+		"phpunit/phpunit": "^11.2.5",
 		"roave/security-advisories": "dev-latest",
-		"typo3/coding-standards": "^0.6",
-		"typo3/testing-framework": "^7.0.2"
+		"typo3/coding-standards": "^0.8",
+		"typo3/testing-framework": "^9.0.1"
 	},
 	"replace": {
 		"typo3-ter/glossary2": "self.version"
