@@ -15,7 +15,6 @@ use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
 use Psr\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;

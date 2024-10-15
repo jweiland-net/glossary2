@@ -75,10 +75,9 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
         return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
     }
 
-
     protected function getPagination(
         PostProcessFluidVariablesEvent $event,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
     ): PaginationInterface {
         $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? $this->fallbackPaginationClass;
 
