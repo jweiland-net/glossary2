@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the package jweiland/glossary2.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE file that was distributed with this source code.
+ */
+
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary',

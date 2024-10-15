@@ -9,13 +9,10 @@
 
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
-use GuzzleHttp\Psr7\ServerRequest;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
 use PHPUnit\Framework\MockObject\MockObject;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -25,6 +22,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case
@@ -89,8 +87,8 @@ class GlossaryServiceTest extends FunctionalTestCase
             CharsetHelper::class,
             new CharsetHelper(
                 new CharsetConverter(),
-                $this->eventDispatcher
-            )
+                $this->eventDispatcher,
+            ),
         );
 
         $this->configurationManager = $this->createMock(ConfigurationManager::class);
@@ -122,7 +120,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->subject,
             $this->extConf,
             $this->eventDispatcher,
-            $this->viewMock
+            $this->viewMock,
         );
         parent::tearDown();
     }
@@ -143,7 +141,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -217,14 +215,14 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->with(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
                 'Glossary2',
-                'Glossary'
+                'Glossary',
             )
             ->willReturn($settings);
 
         $this->viewMock->setTemplatePathAndFilename(
             GeneralUtility::getFileAbsFileName(
-                $expectedPath
-            )
+                $expectedPath,
+            ),
         );
         $this->viewMock->assign('glossary', $this->getGlossary());
 
@@ -236,7 +234,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary($queryBuilder, $options);
@@ -263,7 +261,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -291,7 +289,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -313,7 +311,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary(
@@ -321,7 +319,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'column' => 'title',
                 'columnAlias' => 'Buchstaben',
-            ]
+            ],
         );
     }
 
@@ -341,7 +339,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary(
@@ -350,7 +348,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'settings' => [
                     'foo' => 'bar',
                 ],
-            ]
+            ],
         );
     }
 
@@ -373,14 +371,14 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary(
             $queryBuilder,
             [
                 'mergeNumbers' => false,
-            ]
+            ],
         );
     }
 
@@ -413,7 +411,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'letter' => '3',
                 'hasLink' => false,
                 'isRequestedLetter' => false,
-            ]
+            ],
         );
 
         $this->viewMock
@@ -427,7 +425,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary(
@@ -435,7 +433,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'mergeNumbers' => false,
                 'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
-            ]
+            ],
         );
     }
 
@@ -452,7 +450,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -464,8 +462,6 @@ class GlossaryServiceTest extends FunctionalTestCase
     public function buildGlossaryWillUseForeignRequestForLinkGeneration(): void
     {
 
-
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -474,7 +470,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
         );
 
         $this->subject->buildGlossary(
@@ -484,7 +480,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'pluginName' => 'crop',
                 'controllerName' => 'Cropping',
                 'actionName' => 'view',
-            ]
+            ],
         );
     }
 

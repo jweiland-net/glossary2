@@ -30,6 +30,9 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected string $fallbackPaginationClass = SimplePagination::class;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $allowedControllerActions = [
         'Glossary' => [
             'list',
@@ -42,7 +45,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginator = new QueryResultPaginator(
                 $event->getFluidVariables()[$this->fluidVariableForPaginatedRecords],
                 $this->getCurrentPage($event),
-                $this->getItemsPerPage($event)
+                $this->getItemsPerPage($event),
             );
 
             $event->addFluidVariable('actionName', $event->getActionName());
@@ -60,7 +63,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             // See: AbstractPaginator::setCurrentPageNumber()
             $currentPage = MathUtility::forceIntegerInRange(
                 (int)$event->getRequest()->getArgument('currentPage'),
-                1
+                1,
             );
         }
 
@@ -71,6 +74,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
     {
         return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
     }
+
 
     protected function getPagination(
         PostProcessFluidVariablesEvent $event,
@@ -86,6 +90,10 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginationClass = $this->fallbackPaginationClass;
         }
 
-        return GeneralUtility::makeInstance($paginationClass, $paginator);
+        // Explicitly tell PHPStan that the result is an instance of PaginationInterface
+        /** @phpstan-ignore-next-line */
+        $instance = GeneralUtility::makeInstance($paginationClass, $paginator);
+
+        return $instance;
     }
 }

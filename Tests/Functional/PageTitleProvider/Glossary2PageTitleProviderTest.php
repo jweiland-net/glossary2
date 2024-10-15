@@ -15,10 +15,10 @@ use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\PageTitleProvider\Glossary2PageTitleProvider;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Functional test for Glossary2PageTitleProvider
@@ -77,7 +77,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
         self::assertSame(
             'Nice title for detail page',
-            $this->subject->getTitle()
+            $this->subject->getTitle(),
         );
     }
 }

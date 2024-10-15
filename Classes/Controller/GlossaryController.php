@@ -48,6 +48,7 @@ class GlossaryController extends ActionController
         }
     }
 
+    /** @phpstan-ignore-next-line */
     protected function initializeView($view): void
     {
         $view->assign('data', $this->configurationManager->getContentObject()->data);
@@ -63,7 +64,7 @@ class GlossaryController extends ActionController
             'letter' => $letter,
             'glossaries' => $this->glossaryRepository->searchGlossaries(
                 GeneralUtility::intExplode(',', $this->settings['categories'], true),
-                $letter
+                $letter,
             ),
         ]);
         return $this->htmlResponse();
@@ -78,15 +79,19 @@ class GlossaryController extends ActionController
         return $this->htmlResponse();
     }
 
+    /**
+     * @param array<string, mixed> $variables
+     */
     protected function postProcessAndAssignFluidVariables(array $variables = []): void
     {
         /** @var PostProcessFluidVariablesEvent $event */
         $event = $this->eventDispatcher->dispatch(
             new PostProcessFluidVariablesEvent(
+                /** @phpstan-ignore-next-line */
                 $this->request,
                 $this->settings,
-                $variables
-            )
+                $variables,
+            ),
         );
 
         $this->view->assignMultiple($event->getFluidVariables());
