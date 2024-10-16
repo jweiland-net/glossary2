@@ -51,7 +51,7 @@ class GlossaryController extends ActionController
     /** @phpstan-ignore-next-line */
     protected function initializeView($view): void
     {
-        $view->assign('data', $this->configurationManager->getContentObject()->data);
+        $view->assign('data', $this->getContentObjectData());
     }
 
     /**
@@ -95,5 +95,15 @@ class GlossaryController extends ActionController
         );
 
         $this->view->assignMultiple($event->getFluidVariables());
+    }
+
+    protected function getContentObjectData(): array
+    {
+        $data = [];
+        if (is_array($this->request->getAttribute('currentContentObject')->data)) {
+            $data = $this->request->getAttribute('currentContentObject')->data;
+        }
+
+        return $data;
     }
 }
