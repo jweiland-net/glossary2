@@ -246,8 +246,8 @@ class GlossaryService
             // performance issue, if you have a lot of records
             $queryResult = $queryBuilder
                 ->select($column . ' AS ' . $columnAlias)
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
+                ->groupBy($columnAlias)
+                ->orderBy($columnAlias)
                 ->executeQuery();
 
             while ($record = $queryResult->fetchAssociative()) {
@@ -297,17 +297,7 @@ class GlossaryService
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename($this->getTemplatePath($options));
-
-        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
-
-        if (version_compare($this->getTypo3Version()->getBranch(), '12.0', '>=')) {
-            $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
-        } else {
-            $view->getRequest()->setControllerExtensionName($extensionName);
-            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
-        }
+        $view->setRequest($request ?? $this->getRequest());
 
         return $view;
     }
@@ -366,13 +356,13 @@ class GlossaryService
         return GeneralUtility::getFileAbsFileName($templatePath);
     }
 
-    protected function getTypo3Version(): Typo3Version
-    {
-        return GeneralUtility::makeInstance(Typo3Version::class);
-    }
-
     protected function getConnectionPool(): ConnectionPool
     {
         return GeneralUtility::makeInstance(ConnectionPool::class);
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
