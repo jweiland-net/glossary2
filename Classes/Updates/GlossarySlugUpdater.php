@@ -11,18 +11,21 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Updater;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\SlugHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Updater to fill empty slug columns of glossary records
  */
+#[UpgradeWizard('glossary2UpdateSlug')]
 class GlossarySlugUpdater implements UpgradeWizardInterface
 {
     protected string $tableName = 'tx_glossary2_domain_model_glossary';
@@ -30,15 +33,6 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
     protected string $fieldName = 'path_segment';
 
     protected ?SlugHelper $slugHelper = null;
-
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     */
-    public function getIdentifier(): string
-    {
-        return 'glossary2UpdateSlug';
-    }
 
     public function getTitle(): string
     {
@@ -60,12 +54,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                 $queryBuilder->expr()->or(
                     $queryBuilder->expr()->eq(
                         $this->fieldName,
-                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR),
                     ),
                     $queryBuilder->expr()->isNull(
-                        $this->fieldName
-                    )
-                )
+                        $this->fieldName,
+                    ),
+                ),
             )
             ->executeQuery()
             ->fetchOne();
@@ -77,6 +71,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
      * Performs the accordant updates.
      *
      * @return bool Whether everything went smoothly or not
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {
@@ -88,19 +83,15 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                 $queryBuilder->expr()->or(
                     $queryBuilder->expr()->eq(
                         $this->fieldName,
-                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR)
+                        $queryBuilder->createNamedParameter('', Connection::PARAM_STR),
                     ),
                     $queryBuilder->expr()->isNull(
-                        $this->fieldName
-                    )
-                )
+                        $this->fieldName,
+                    ),
+                ),
             )
             ->executeQuery()
             ->fetchAllAssociative();
-
-        if ($recordsToUpdate === false) {
-            $recordsToUpdate = [];
-        }
 
         $connection = $this->getConnectionPool()->getConnectionForTable($this->tableName);
         foreach ($recordsToUpdate as $recordToUpdate) {
@@ -111,12 +102,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                     [
                         $this->fieldName => $this->getUniqueValue(
                             (int)$recordToUpdate['uid'],
-                            $slug
+                            $slug,
                         ),
                     ],
                     [
                         'uid' => (int)$recordToUpdate['uid'],
-                    ]
+                    ],
                 );
             }
         }
@@ -159,12 +150,12 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
             ->andWhere(
                 $queryBuilder->expr()->eq(
                     $this->fieldName,
-                    $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR)
+                    $queryBuilder->createPositionalParameter($slug, Connection::PARAM_STR),
                 ),
                 $queryBuilder->expr()->neq(
                     'uid',
-                    $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT)
-                )
+                    $queryBuilder->createPositionalParameter($uid, Connection::PARAM_INT),
+                ),
             );
     }
 
@@ -175,7 +166,7 @@ class GlossarySlugUpdater implements UpgradeWizardInterface
                 SlugHelper::class,
                 $this->tableName,
                 $this->fieldName,
-                $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config'] ?? []
+                $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config'] ?? [],
             );
         }
 

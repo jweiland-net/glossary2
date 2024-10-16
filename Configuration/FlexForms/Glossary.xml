@@ -5,79 +5,69 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:sheetGeneral</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:sheetGeneral</sheetTitle>
                 <type>array</type>
                 <el>
                     <settings.pidOfDetailPage>
-                        <TCEforms>
-                            <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfDetailPage</label>
-                            <config>
-                                <type>group</type>
-                                <internal_type>db</internal_type>
-                                <allowed>pages</allowed>
-                                <size>1</size>
-                                <maxitems>1</maxitems>
-                                <minitems>0</minitems>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfDetailPage</label>
+                        <config>
+                            <type>group</type>
+                            <internal_type>db</internal_type>
+                            <allowed>pages</allowed>
+                            <size>1</size>
+                            <maxitems>1</maxitems>
+                            <minitems>0</minitems>
+                        </config>
                     </settings.pidOfDetailPage>
                     <settings.pidOfListPage>
-                        <TCEforms>
-                            <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfListPage</label>
-                            <config>
-                                <type>group</type>
-                                <internal_type>db</internal_type>
-                                <allowed>pages</allowed>
-                                <size>1</size>
-                                <maxitems>1</maxitems>
-                                <minitems>0</minitems>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfListPage</label>
+                        <config>
+                            <type>group</type>
+                            <internal_type>db</internal_type>
+                            <allowed>pages</allowed>
+                            <size>1</size>
+                            <maxitems>1</maxitems>
+                            <minitems>0</minitems>
+                        </config>
                     </settings.pidOfListPage>
                     <settings.showGlossar>
-                        <TCEforms>
-                            <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showGlossar</label>
-                            <config>
-                                <type>check</type>
-                                <renderType>checkboxToggle</renderType>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showGlossar</label>
+                        <config>
+                            <type>check</type>
+                            <renderType>checkboxToggle</renderType>
+                            <default>1</default>
+                        </config>
                     </settings.showGlossar>
                     <settings.showAllLink>
-                        <TCEforms>
-                            <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showAllLink</label>
-                            <config>
-                                <type>check</type>
-                                <renderType>checkboxToggle</renderType>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:showAllLink</label>
+                        <config>
+                            <type>check</type>
+                            <renderType>checkboxToggle</renderType>
+                            <default>1</default>
+                        </config>
                     </settings.showAllLink>
                     <settings.categories>
-                        <TCEforms>
-                            <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:categories</label>
-                            <config>
-                                <type>select</type>
-                                <renderType>selectTree</renderType>
-                                <foreign_table>sys_category</foreign_table>
-                                <foreign_table_where>AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
-                                <renderMode>tree</renderMode>
-                                <treeConfig>
-                                    <parentField>parent</parentField>
-                                    <rootUid>0</rootUid>
-                                    <appearance>
-                                        <showHeader>TRUE</showHeader>
-                                        <expandAll>FALSE</expandAll>
-                                    </appearance>
-                                </treeConfig>
-                                <size>15</size>
-                                <minitems>0</minitems>
-                                <maxitems>99</maxitems>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:categories</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectTree</renderType>
+                            <foreign_table>sys_category</foreign_table>
+                            <foreign_table_where>AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0)
+                                ORDER BY sys_category.sorting
+                            </foreign_table_where>
+                            <renderMode>tree</renderMode>
+                            <treeConfig>
+                                <parentField>parent</parentField>
+                                <rootUid>0</rootUid>
+                                <appearance>
+                                    <showHeader>TRUE</showHeader>
+                                    <expandAll>FALSE</expandAll>
+                                </appearance>
+                            </treeConfig>
+                            <size>15</size>
+                            <minitems>0</minitems>
+                            <maxitems>99</maxitems>
+                        </config>
                     </settings.categories>
                 </el>
             </ROOT>

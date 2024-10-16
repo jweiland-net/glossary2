@@ -42,7 +42,7 @@ class GlossaryTest extends UnitTestCase
     {
         self::assertSame(
             '',
-            $this->subject->getTitle()
+            $this->subject->getTitle(),
         );
     }
 
@@ -55,7 +55,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             'foo bar',
-            $this->subject->getTitle()
+            $this->subject->getTitle(),
         );
     }
 
@@ -84,7 +84,7 @@ class GlossaryTest extends UnitTestCase
     {
         self::assertSame(
             '',
-            $this->subject->getDescription()
+            $this->subject->getDescription(),
         );
     }
 
@@ -97,7 +97,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             'foo bar',
-            $this->subject->getDescription()
+            $this->subject->getDescription(),
         );
     }
 
@@ -126,7 +126,7 @@ class GlossaryTest extends UnitTestCase
     {
         self::assertEquals(
             new ObjectStorage(),
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
@@ -142,7 +142,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
@@ -161,7 +161,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
@@ -180,7 +180,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
@@ -191,7 +191,7 @@ class GlossaryTest extends UnitTestCase
     {
         self::assertEquals(
             new ObjectStorage(),
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
@@ -207,7 +207,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
@@ -226,7 +226,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
@@ -245,7 +245,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 }

@@ -11,9 +11,9 @@ namespace JWeiland\Glossary2\Tests\Functional\Repository;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case.
@@ -54,7 +54,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     {
         unset(
             $this->subject,
-            $this->objectManager
+            $this->objectManager,
         );
         parent::tearDown();
     }
@@ -74,7 +74,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
 
         self::assertSame(
             $sortedGlossaries,
-            $glossaries
+            $glossaries,
         );
     }
 
@@ -86,7 +86,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries(['0', 'a'])->toArray()
+            $this->subject->searchGlossaries(['0', 'a'])->toArray(),
         );
     }
 
@@ -98,7 +98,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             2,
-            $this->subject->searchGlossaries([1])->toArray()
+            $this->subject->searchGlossaries([1])->toArray(),
         );
     }
 
@@ -110,7 +110,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries(['0', 'a', 1])->toArray()
+            $this->subject->searchGlossaries(['0', 'a', 1])->toArray(),
         );
     }
 
@@ -123,7 +123,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             2,
-            $this->subject->searchGlossaries([], 'u')->toArray()
+            $this->subject->searchGlossaries([], 'u')->toArray(),
         );
     }
 
@@ -135,7 +135,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries([], '/')->toArray()
+            $this->subject->searchGlossaries([], '/')->toArray(),
         );
     }
 
@@ -148,7 +148,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             1,
-            $this->subject->searchGlossaries([2], 'u')->toArray()
+            $this->subject->searchGlossaries([2], 'u')->toArray(),
         );
     }
 }

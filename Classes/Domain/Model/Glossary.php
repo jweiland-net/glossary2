@@ -75,11 +75,17 @@ class Glossary extends AbstractEntity
         $this->description = $description;
     }
 
+    /**
+     * @return ObjectStorage<FileReference>
+     */
     public function getImages(): ObjectStorage
     {
         return $this->images;
     }
 
+    /**
+     * @param ObjectStorage<FileReference> $images
+     */
     public function setImages(ObjectStorage $images): void
     {
         $this->images = $images;
@@ -95,11 +101,17 @@ class Glossary extends AbstractEntity
         $this->images->detach($image);
     }
 
+    /**
+     * @return ObjectStorage<Category>
+     */
     public function getCategories(): ObjectStorage
     {
         return $this->categories;
     }
 
+    /**
+     * @param ObjectStorage<Category> $categories
+     */
     public function setCategories(ObjectStorage $categories): void
     {
         $this->categories = $categories;
