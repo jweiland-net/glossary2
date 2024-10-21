@@ -107,11 +107,11 @@ class GlossaryServiceTest extends FunctionalTestCase
     public function buildGlossaryWillConvertGermanUmlauts(): void
     {
         $view = $this->createViewMock();
-        $view->expects($this->atLeastOnce())
+        $view->expects(self::atLeastOnce())
             ->method('assign')
             ->with('glossary', $this->getGlossary());
 
-        $this->viewFactoryMock->expects($this->once())
+        $this->viewFactoryMock->expects(self::once())
             ->method('create')
             ->willReturn($view);
 
@@ -124,7 +124,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -193,7 +193,7 @@ class GlossaryServiceTest extends FunctionalTestCase
     public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath): void
     {
         $this->configurationManager
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getConfiguration')
             ->with(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
@@ -204,22 +204,22 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $viewMock = $this->createViewMock();
 
-        $viewMock->expects($this->atLeastOnce())
+        $viewMock->expects(self::atLeastOnce())
             ->method('assign')
             ->with(
                 ['glossary', $this->getGlossary()],
                 ['settings', $options['settings'] ?? []],
                 ['variables', $options['variables'] ?? []],
-                ['options', $options]
+                ['options', $options],
             );
 
-        $viewMock->expects($this->once())
+        $viewMock->expects(self::once())
             ->method('render')
             ->willReturn('Rendered Content');
 
-        $this->viewFactoryMock->expects($this->once())
+        $this->viewFactoryMock->expects(self::once())
             ->method('create')
-            ->with($this->callback(function (ViewFactoryData $viewFactoryData) use ($expectedPath) {
+            ->with(self::callback(function (ViewFactoryData $viewFactoryData) use ($expectedPath) {
                 // Check if the template path is correctly set in ViewFactoryData
                 return $viewFactoryData->templatePathAndFilename === GeneralUtility::getFileAbsFileName($expectedPath);
             }))
@@ -236,14 +236,14 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         // Call the method under test
         $result = $this->subject->buildGlossary($queryBuilder, $options);
 
         // Assert that the rendered content is returned
-        $this->assertSame('Rendered Content', $result);
+        self::assertSame('Rendered Content', $result);
     }
 
     /**
@@ -257,7 +257,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary[15]['hasLink'] = true;
 
         $viewMock = $this->createViewMock();
-        $viewMock->expects($this->atLeastOnce())
+        $viewMock->expects(self::atLeastOnce())
             ->method('assign')
             ->with('glossary', $expectedGlossary);
 
@@ -274,7 +274,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -292,7 +292,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary[11]['hasLink'] = true;
 
         $viewMock = $this->createViewMock();
-        $viewMock->expects($this->once())
+        $viewMock->expects(self::once())
             ->method('assign')
             ->with('glossary', $expectedGlossary);
 
@@ -309,7 +309,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -322,11 +322,11 @@ class GlossaryServiceTest extends FunctionalTestCase
     public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
     {
         $viewMock = $this->createViewMock();
-        $viewMock->expects($this->atLeastOnce())
+        $viewMock->expects(self::atLeastOnce())
             ->method('assign')
             ->with('glossary', $this->getGlossary());
 
-        $this->viewFactoryMock->expects($this->once())
+        $this->viewFactoryMock->expects(self::once())
             ->method('create')
             ->willReturn($viewMock);
 
@@ -339,7 +339,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary(
@@ -358,11 +358,11 @@ class GlossaryServiceTest extends FunctionalTestCase
     public function buildGlossaryWillAddSettingsToView(): void
     {
         $viewMock = $this->createViewMock();
-        $viewMock->expects($this->atLeastOnce())
+        $viewMock->expects(self::atLeastOnce())
             ->method('assign')
             ->with(['settings' => ['foo' => 'bar']]);
 
-        $this->viewFactoryMock->expects($this->once())
+        $this->viewFactoryMock->expects(self::once())
             ->method('create')
             ->willReturn($viewMock);
 
@@ -375,7 +375,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary(
@@ -405,7 +405,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary(
@@ -457,7 +457,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary(
@@ -483,7 +483,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary($queryBuilder);
@@ -504,7 +504,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactoryMock
+            $this->viewFactoryMock,
         );
 
         $this->subject->buildGlossary(

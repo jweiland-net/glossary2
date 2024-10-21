@@ -53,7 +53,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
             TypoScriptFrontendController::class,
-            $GLOBALS['TYPO3_REQUEST']
+            $GLOBALS['TYPO3_REQUEST'],
         );
 
         $pageId = 15;
