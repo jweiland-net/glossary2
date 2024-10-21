@@ -22,14 +22,15 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Public API to build your glossary (A-Z) for your own Extension
@@ -53,6 +54,7 @@ class GlossaryService
         ExtConf $extConf,
         EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager,
+        private readonly ViewFactoryInterface $viewFactory,
     ) {
         $this->extConf = $extConf;
         $this->eventDispatcher = $eventDispatcher;
@@ -70,8 +72,11 @@ class GlossaryService
      * @return string
      * @throws Exception
      */
-    public function buildGlossary(QueryResultInterface|QueryBuilder $queryBuilder, array $options = [], ServerRequestInterface $request = null): string
-    {
+    public function buildGlossary(
+        QueryResultInterface|QueryBuilder $queryBuilder,
+        array $options = [],
+        ServerRequestInterface $request = null
+    ): string {
         $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
@@ -233,8 +238,8 @@ class GlossaryService
         } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySQLPlatform) {
             $queryResult = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
+                ->groupBy($columnAlias)
+                ->orderBy($columnAlias)
                 ->executeQuery();
 
             while ($record = $queryResult->fetchAssociative()) {
@@ -293,13 +298,14 @@ class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): StandaloneView
+    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): ViewInterface
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
-        $view->setRequest($request ?? $this->getRequest());
+        $viewFactoryData = new ViewFactoryData(
+            templatePathAndFilename: $this->getTemplatePath($options),
+            request: $request,
+        );
 
-        return $view;
+        return $this->viewFactory->create($viewFactoryData);
     }
 
     /**

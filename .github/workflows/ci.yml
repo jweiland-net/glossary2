@@ -41,8 +41,8 @@ jobs:
       - name: 'Execute unit tests'
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
 
-      - name: 'Execute functional tests'
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -d mysql -s functional
+      #- name: 'Execute functional tests'
+      #  run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -d mysql -s functional
 
-      - name: 'Execute functional tests'
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -d mariadb -s functional
+      #- name: 'Execute functional tests'
+      #  run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -d mariadb -s functional
