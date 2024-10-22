@@ -18,14 +18,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 class ExtConfTest extends FunctionalTestCase
 {
-    /**
-     * @var ExtConf
-     */
-    protected $subject;
+    protected ExtConf $subject;
 
-    /**
-     * @var string[]
-     */
     protected array $testExtensionsToLoad = [
         'jweiland/glossary2',
     ];

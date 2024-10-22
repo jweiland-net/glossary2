@@ -11,6 +11,7 @@ namespace JWeiland\Glossary2\Tests\Functional\Repository;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
@@ -24,19 +25,10 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 class GlossaryRepositoryTest extends FunctionalTestCase
 {
-    /**
-     * @var GlossaryRepository
-     */
-    protected $subject;
+    protected GlossaryRepository $subject;
 
-    /**
-     * @var QuerySettingsInterface
-     */
-    protected $querySettings;
+    protected QuerySettingsInterface $querySettings;
 
-    /**
-     * @var string[]
-     */
     protected array $testExtensionsToLoad = [
         'jweiland/glossary2',
     ];
@@ -69,9 +61,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findAllWillFindGlossariesSorted(): void
     {
         $glossaries = [];
@@ -88,9 +78,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
@@ -100,9 +88,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithGivenCategoryWillFindTwoEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
@@ -112,9 +98,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithSomeInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
@@ -124,9 +108,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithLetterWillFindTwoEntries(): void
     {
         // "u" will find records with "u" and "ü"
@@ -137,9 +119,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithInvalidLetterWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
@@ -149,9 +129,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithCategoryAndLetterWillFindOneEntry(): void
     {
         // "u" will find records with "u" and "ü"

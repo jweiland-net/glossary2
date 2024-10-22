@@ -14,6 +14,7 @@ namespace JWeiland\Glossary2\Tests\Functional\PageTitleProvider;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\PageTitleProvider\Glossary2PageTitleProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
@@ -80,9 +81,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
         $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
