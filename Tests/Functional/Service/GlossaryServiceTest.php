@@ -9,7 +9,6 @@
 
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
-use Doctrine\DBAL\Exception;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
@@ -193,7 +192,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             )
             ->willReturn($settings);
 
-        $this->viewFactory->expects($this->atLeastOnce())
+        $this->viewFactory->expects(self::atLeastOnce())
             ->method('assign')
             ->with(
                 ['glossary', $this->getGlossary()],
@@ -202,11 +201,11 @@ class GlossaryServiceTest extends FunctionalTestCase
                 ['options', $options],
             );
 
-        $this->viewFactory->expects($this->once())
+        $this->viewFactory->expects(self::once())
             ->method('render')
             ->willReturn('Rendered Content');
 
-        $this->viewFactory->expects($this->once())
+        $this->viewFactory->expects(self::once())
             ->method('create')
             ->with(self::callback(static function (ViewFactoryData $viewFactoryData) use ($expectedPath) {
                 // Check if the template path is correctly set in ViewFactoryData
@@ -252,7 +251,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->extConf,
             $this->eventDispatcher,
             $this->configurationManager,
-            $this->viewFactory
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
@@ -329,7 +328,7 @@ class GlossaryServiceTest extends FunctionalTestCase
                     'foo' => 'bar',
                 ],
             ],
-            $this->getExtbaseRequest()
+            $this->getExtbaseRequest(),
         );
     }
 
