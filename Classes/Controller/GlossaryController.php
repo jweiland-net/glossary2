@@ -97,6 +97,9 @@ class GlossaryController extends ActionController
         $this->view->assignMultiple($event->getFluidVariables());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getContentObjectData(): array
     {
         $data = [];
