@@ -10,6 +10,7 @@
 namespace JWeiland\Glossary2\Tests\Unit\Domain\Model;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -20,10 +21,7 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 class GlossaryTest extends UnitTestCase
 {
-    /**
-     * @var Glossary
-     */
-    protected $subject;
+    protected Glossary $subject;
 
     protected function setUp(): void
     {
@@ -35,104 +33,84 @@ class GlossaryTest extends UnitTestCase
         unset($this->subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getTitleInitiallyReturnsEmptyString(): void
     {
         self::assertSame(
             '',
-            $this->subject->getTitle()
+            $this->subject->getTitle(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setTitleSetsTitle(): void
     {
         $this->subject->setTitle('foo bar');
 
         self::assertSame(
             'foo bar',
-            $this->subject->getTitle()
+            $this->subject->getTitle(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setTitleWithIntegerResultsInString(): void
     {
         $this->subject->setTitle(123);
         self::assertSame('123', $this->subject->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setTitleWithBooleanResultsInString(): void
     {
         $this->subject->setTitle(true);
         self::assertSame('1', $this->subject->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getDescriptionInitiallyReturnsEmptyString(): void
     {
         self::assertSame(
             '',
-            $this->subject->getDescription()
+            $this->subject->getDescription(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setDescriptionSetsDescription(): void
     {
         $this->subject->setDescription('foo bar');
 
         self::assertSame(
             'foo bar',
-            $this->subject->getDescription()
+            $this->subject->getDescription(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setDescriptionWithIntegerResultsInString(): void
     {
         $this->subject->setDescription(123);
         self::assertSame('123', $this->subject->getDescription());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setDescriptionWithBooleanResultsInString(): void
     {
         $this->subject->setDescription(true);
         self::assertSame('1', $this->subject->getDescription());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getImagesInitiallyReturnsObjectStorage(): void
     {
         self::assertEquals(
             new ObjectStorage(),
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setImagesSetsImages(): void
     {
         $object = new FileReference();
@@ -142,13 +120,11 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addImageAddsOneImage(): void
     {
         $objectStorage = new ObjectStorage();
@@ -161,13 +137,11 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeImageRemovesOneImage(): void
     {
         $object = new FileReference();
@@ -180,24 +154,20 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getImages()
+            $this->subject->getImages(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getCategoriesInitiallyReturnsObjectStorage(): void
     {
         self::assertEquals(
             new ObjectStorage(),
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setCategoriesSetsCategories(): void
     {
         $object = new Category();
@@ -207,13 +177,11 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addCategoryAddsOneCategory(): void
     {
         $objectStorage = new ObjectStorage();
@@ -226,13 +194,11 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeCategoryRemovesOneCategory(): void
     {
         $object = new Category();
@@ -245,7 +211,7 @@ class GlossaryTest extends UnitTestCase
 
         self::assertSame(
             $objectStorage,
-            $this->subject->getCategories()
+            $this->subject->getCategories(),
         );
     }
 }

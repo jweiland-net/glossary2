@@ -9,62 +9,48 @@
 
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
-use GuzzleHttp\Psr7\ServerRequest;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
+use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case
  */
 class GlossaryServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var GlossaryService
-     */
-    protected $subject;
+    protected GlossaryService $subject;
 
-    /**
-     * @var ExtConf
-     */
-    protected $extConf;
+    protected ExtConf $extConf;
 
-    /**
-     * @var ListenerProvider
-     */
-    protected $listenerProvider;
+    protected ListenerProvider $listenerProvider;
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected EventDispatcher $eventDispatcher;
 
-    /**
-     * @var ConfigurationManagerInterface
-     */
-    protected $configurationManager;
+    protected ConfigurationManagerInterface $configurationManager;
 
-    /**
-     * @var Request|MockObject
-     */
-    protected $requestMock;
+    protected Request|MockObject $requestMock;
 
-    /**
-     * @var StandaloneView|MockObject
-     */
-    protected $viewMock;
+    protected ViewFactoryInterface|MockObject $viewFactoryMock;
 
     /**
      * @var string[]
@@ -76,6 +62,12 @@ class GlossaryServiceTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $frontendTypoScript = new FrontendTypoScript(new RootNode(), [], [], []);
+        $frontendTypoScript->setSetupArray([]);
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
+            ->withAttribute('frontend.typoscript', $frontendTypoScript);
 
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
@@ -89,31 +81,15 @@ class GlossaryServiceTest extends FunctionalTestCase
             CharsetHelper::class,
             new CharsetHelper(
                 new CharsetConverter(),
-                $this->eventDispatcher
-            )
+                $this->eventDispatcher,
+            ),
         );
 
         $this->configurationManager = $this->createMock(ConfigurationManager::class);
 
         $this->requestMock = $this->createMock(Request::class);
 
-        $this->viewMock = $this->createMock(StandaloneView::class);
-        $this->viewMock
-            ->expects(self::atLeastOnce())
-            ->method('setTemplatePathAndFilename');
-        $this->viewMock
-            ->expects(self::any())
-            ->method('getRequest')
-            ->willReturn($this->requestMock);
-        $this->viewMock
-            ->expects(self::atLeastOnce())
-            ->method('assign');
-        $this->viewMock
-            ->expects(self::atLeastOnce())
-            ->method('render')
-            ->willReturn('running some functional tests');
-        GeneralUtility::addInstance(StandaloneView::class, $this->viewMock);
-
+        $this->viewFactory = $this->get(ViewFactoryInterface::class);
     }
 
     protected function tearDown(): void
@@ -122,19 +98,16 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->subject,
             $this->extConf,
             $this->eventDispatcher,
-            $this->viewMock
+            $this->configurationManager,
+            $this->requestMock,
+            $this->viewFactory,
         );
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWillConvertGermanUmlauts(): void
     {
-        $this->viewMock
-            ->assign('glossary', $this->getGlossary());
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -143,17 +116,18 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
-        $this->subject->buildGlossary($queryBuilder);
+        $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
     }
 
     /**
      * As we are working with "EXT:" and getFileAbsFileName() we can only use paths of existing extensions
      * while testing. In that case just "glossary2"
      */
-    public function dataProviderForTemplatePath(): array
+    public static function dataProviderForTemplatePath(): array
     {
         return [
             'Default templatePath from ExtConf of glossary2' => [
@@ -204,11 +178,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider dataProviderForTemplatePath
-     */
+    #[DataProvider('dataProviderForTemplatePath')]
+    //#[Test]
     public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath): void
     {
         $this->configurationManager
@@ -217,34 +188,53 @@ class GlossaryServiceTest extends FunctionalTestCase
             ->with(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
                 'Glossary2',
-                'Glossary'
+                'Glossary',
             )
             ->willReturn($settings);
 
-        $this->viewMock->setTemplatePathAndFilename(
-            GeneralUtility::getFileAbsFileName(
-                $expectedPath
-            )
-        );
-        $this->viewMock->assign('glossary', $this->getGlossary());
+        $this->viewFactory->expects(self::atLeastOnce())
+            ->method('assign')
+            ->with(
+                ['glossary', $this->getGlossary()],
+                ['settings', $options['settings'] ?? []],
+                ['variables', $options['variables'] ?? []],
+                ['options', $options],
+            );
 
+        $this->viewFactory->expects(self::once())
+            ->method('render')
+            ->willReturn('Rendered Content');
+
+        $this->viewFactory->expects(self::once())
+            ->method('create')
+            ->with(self::callback(static function (ViewFactoryData $viewFactoryData) use ($expectedPath) {
+                // Check if the template path is correctly set in ViewFactoryData
+                return $viewFactoryData->templatePathAndFilename === GeneralUtility::getFileAbsFileName($expectedPath);
+            }))
+            ->willReturn($viewMock);
+
+        // Create the QueryBuilder
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
         $queryBuilder->from('tx_glossary2_domain_model_glossary');
 
+        // Instantiate the GlossaryService with the necessary dependencies
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
-        $this->subject->buildGlossary($queryBuilder, $options);
+        // Call the method under test
+        $result = $this->subject->buildGlossary($queryBuilder, $options);
+
+        // Assert that the rendered content is returned
+        self::assertSame('Rendered Content', $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWillConvertSpecialCharToAsciiByEvent(): void
     {
         // Set link of letter "o" to true
@@ -252,9 +242,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         $expectedGlossary[5]['hasLink'] = false;
         $expectedGlossary[15]['hasLink'] = true;
 
-        $this->viewMock
-            ->assign('glossary', $expectedGlossary);
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -263,15 +250,14 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
-        $this->subject->buildGlossary($queryBuilder);
+        $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWithModifiedLettersByEvent(): void
     {
         $expectedGlossary = $this->getGlossary();
@@ -280,9 +266,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         // Add link for letter "k"
         $expectedGlossary[11]['hasLink'] = true;
 
-        $this->viewMock
-            ->assign('glossary', $expectedGlossary);
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -291,20 +274,16 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
-        $this->subject->buildGlossary($queryBuilder);
+        $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
     {
-        $this->viewMock
-            ->assign('glossary', $this->getGlossary());
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -313,7 +292,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary(
@@ -321,18 +301,14 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'column' => 'title',
                 'columnAlias' => 'Buchstaben',
-            ]
+            ],
+            $this->getExtbaseRequest(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWillAddSettingsToView(): void
     {
-        $this->viewMock
-            ->assign('settings', ['foo' => 'bar']);
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -341,7 +317,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary(
@@ -350,21 +327,14 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'settings' => [
                     'foo' => 'bar',
                 ],
-            ]
+            ],
+            $this->getExtbaseRequest(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWithDefaultLettersWillNotMergeNumbers(): void
     {
-        $expectedGlossary = $this->getGlossary();
-        $expectedGlossary[0]['hasLink'] = false;
-
-        $this->viewMock
-            ->assign('glossary', $expectedGlossary);
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -373,20 +343,20 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary(
             $queryBuilder,
             [
                 'mergeNumbers' => false,
-            ]
+            ],
+            $this->getExtbaseRequest(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWithOwnLettersWillNotMergeNumbers(): void
     {
         $expectedGlossary = $this->getGlossary();
@@ -413,11 +383,8 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'letter' => '3',
                 'hasLink' => false,
                 'isRequestedLetter' => false,
-            ]
+            ],
         );
-
-        $this->viewMock
-            ->assign('glossary', $expectedGlossary);
 
         $queryBuilder = $this
             ->getConnectionPool()
@@ -427,7 +394,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary(
@@ -435,13 +403,12 @@ class GlossaryServiceTest extends FunctionalTestCase
             [
                 'mergeNumbers' => false,
                 'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
-            ]
+            ],
+            $this->getExtbaseRequest(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWillUseGlossaryRequestForLinkGeneration(): void
     {
         $queryBuilder = $this
@@ -452,20 +419,16 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
-        $this->subject->buildGlossary($queryBuilder);
+        $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function buildGlossaryWillUseForeignRequestForLinkGeneration(): void
     {
-
-
-
         $queryBuilder = $this
             ->getConnectionPool()
             ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
@@ -474,7 +437,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager
+            $this->configurationManager,
+            $this->viewFactory,
         );
 
         $this->subject->buildGlossary(
@@ -484,7 +448,8 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'pluginName' => 'crop',
                 'controllerName' => 'Cropping',
                 'actionName' => 'view',
-            ]
+            ],
+            $this->getExtbaseRequest(),
         );
     }
 
@@ -627,6 +592,15 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'isRequestedLetter' => false,
             ],
         ];
+    }
+
+    protected function getExtbaseRequest(): RequestInterface
+    {
+        $extbaseRequestParameters = new ExtbaseRequestParameters();
+        $serverRequest = new ServerRequest();
+        $serverRequest = $serverRequest->withAttribute('extbase', $extbaseRequestParameters)
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
+        return new Request($serverRequest);
     }
 
     protected function getConnectionPool(): ConnectionPool

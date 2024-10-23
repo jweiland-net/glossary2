@@ -39,12 +39,12 @@ class CharsetHelper
         // This should sanitize the most values to ASCII
         $preSanitizedValue = $this->charsetConverter->specCharsToASCII(
             'utf-8',
-            mb_strtolower($value, 'utf-8')
+            mb_strtolower($value, 'utf-8'),
         );
 
         /** @var SanitizeValueForCharsetHelperEvent $event */
         $event = $this->eventDispatcher->dispatch(
-            new SanitizeValueForCharsetHelperEvent($preSanitizedValue)
+            new SanitizeValueForCharsetHelperEvent($preSanitizedValue),
         );
 
         return $event->getValue();

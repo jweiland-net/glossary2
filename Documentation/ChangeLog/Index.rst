@@ -7,6 +7,11 @@
 ChangeLog
 =========
 
+Version 7.0.0
+=============
+
+*   [TASK] Compatibility fixes for TYPO3 13 LTS
+*   [TASK] Removed CSH-related method calls from extension
 
 Version 6.0.1
 =============

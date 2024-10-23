@@ -22,6 +22,9 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
 
     protected GlossaryRepository $glossaryRepository;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $allowedControllerActions = [
         'Glossary' => [
             'list',
@@ -42,12 +45,15 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
                 $this->glossaryService->buildGlossary(
                     $this->glossaryRepository->getExtbaseQueryForGlossary(),
                     $this->getOptions($event),
-                    $event->getRequest()
-                )
+                    $event->getRequest(),
+                ),
             );
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getOptions(PostProcessFluidVariablesEvent $event): array
     {
         $options = [
