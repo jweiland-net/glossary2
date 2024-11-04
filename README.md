@@ -48,7 +48,7 @@ Download and install `glossary2` with the extension manager module.
 
 [extension-monthly-downloads]: https://poser.pugx.org/jweiland/glossary2/d/monthly?style=for-the-badge
 
-[extension-ter-url]: https://extensions.typo3.org/extension/telephonedirectory/
+[extension-ter-url]: https://extensions.typo3.org/extension/glossary2/
 
 [extension-packagist-url]: https://packagist.org/packages/jweiland/glossary2/
 
@@ -58,4 +58,4 @@ Download and install `glossary2` with the extension manager module.
 
 [TYPO3-shield]: https://img.shields.io/badge/TYPO3-13.4-green.svg?style=for-the-badge&logo=typo3
 
-[LICENSE_BADGE]: https://img.shields.io/github/license/jweiland-net/telephonedirectory?label=license&style=for-the-badge
+[LICENSE_BADGE]: https://img.shields.io/github/license/jweiland-net/glossary2?label=license&style=for-the-badge
