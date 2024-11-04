@@ -77,8 +77,8 @@ class GlossaryRepository extends Repository
 
     /**
      * Prepare an Extbase QueryResult for GlossaryService (A-Z navigation)
-     * @param array $categories
      *
+     * @param array $categories
      * @throws InvalidQueryException
      */
     /** @phpstan-ignore-next-line */
