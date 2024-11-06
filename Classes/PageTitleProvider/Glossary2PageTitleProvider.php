@@ -80,7 +80,7 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
      * @param ServerRequestInterface $requestObject
      * @return false|mixed
      */
-    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): mixed
+    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
     {
         $queryParams = $requestObject->getQueryParams();
 
