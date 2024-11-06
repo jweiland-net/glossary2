@@ -14,7 +14,7 @@ namespace JWeiland\Glossary2\Event;
 /*
  * Use this event, if you want to modify the query of GlossaryRepository::findEntries.
  */
-readonly class PostProcessFirstLettersEvent
+class PostProcessFirstLettersEvent
 {
     /**
      * @var array<string, mixed>

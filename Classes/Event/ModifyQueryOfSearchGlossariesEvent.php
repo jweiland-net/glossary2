@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 /*
  * Use this event, if you want to modify the query of GlossaryRepository::searchGlossaries.
  */
-readonly class ModifyQueryOfSearchGlossariesEvent
+class ModifyQueryOfSearchGlossariesEvent
 {
     /**
      * @var QueryResultInterface<int, Glossary>

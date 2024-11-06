@@ -14,15 +14,17 @@ if (!defined('TYPO3')) {
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
-$pluginSignature = ExtensionUtility::registerPlugin(
-    'glossary2',
-    'Glossary',
-    'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.title',
-);
+call_user_func(static function () {
+    $pluginSignature = ExtensionUtility::registerPlugin(
+        'glossary2',
+        'Glossary',
+        'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.title',
+    );
 
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['glossary2_glossary'] = 'pi_flexform';
+    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['glossary2_glossary'] = 'pi_flexform';
 
-ExtensionManagementUtility::addPiFlexFormValue(
-    $pluginSignature,
-    'FILE:EXT:glossary2/Configuration/FlexForms/Glossary.xml',
-);
+    ExtensionManagementUtility::addPiFlexFormValue(
+        $pluginSignature,
+        'FILE:EXT:glossary2/Configuration/FlexForms/Glossary.xml',
+    );
+});

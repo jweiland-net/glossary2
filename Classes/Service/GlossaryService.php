@@ -94,9 +94,6 @@ class GlossaryService
      * return $query->matching($query->logicalAnd($constraints))->execute();
      *
      * @param QueryInterface<Glossary> $extbaseQuery
-     * @param string $column
-     * @param string $letter
-     * @return ConstraintInterface
      * @throws InvalidQueryException
      */
     public function getLetterConstraintForExtbaseQuery(

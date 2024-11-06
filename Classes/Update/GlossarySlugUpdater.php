@@ -9,7 +9,7 @@ declare(strict_types=1);
  * LICENSE file that was distributed with this source code.
  */
 
-namespace JWeiland\Glossary2\Updates;
+namespace JWeiland\Glossary2\Update;
 
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
