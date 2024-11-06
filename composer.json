@@ -21,7 +21,7 @@
 			"role": "Senior Developer"
 		}
 	],
-	"homepage": "https://www.jweiland.net",
+	"homepage": "https://jweiland.net",
 	"support": {
 		"email": "projects@jweiland.net",
 		"issues": "https://github.com/jweiland-net/glossary2/issues",
@@ -29,8 +29,7 @@
 	},
 	"require": {
 		"ext-pdo": "*",
-		"typo3/cms-core": "^13.4.0",
-		"typo3/cms-install": "^13.4.0"
+		"typo3/cms-core": "^13.4.0"
 	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.44",

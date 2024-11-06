@@ -91,8 +91,6 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
         // Explicitly tell PHPStan that the result is an instance of PaginationInterface
         /** @phpstan-ignore-next-line */
-        $instance = GeneralUtility::makeInstance($paginationClass, $paginator);
-
-        return $instance;
+        return new $paginationClass($paginator);
     }
 }

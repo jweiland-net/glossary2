@@ -38,7 +38,11 @@ class GlossaryRepository extends Repository
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @param int[] $categories Array of category IDs
+     * @param string $letter The letter to filter glossaries by title
+     * @return QueryResultInterface<int, Glossary> Result set of glossaries matching the criteria
+     */
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
         $query = $this->createQuery();
