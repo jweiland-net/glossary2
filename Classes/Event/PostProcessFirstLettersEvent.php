@@ -14,7 +14,7 @@ namespace JWeiland\Glossary2\Event;
 /*
  * Use this event, if you want to modify the query of GlossaryRepository::findEntries.
  */
-class PostProcessFirstLettersEvent
+readonly class PostProcessFirstLettersEvent
 {
     /**
      * @var array<string, mixed>
@@ -35,13 +35,5 @@ class PostProcessFirstLettersEvent
     public function getFirstLetters(): array
     {
         return $this->firstLetters;
-    }
-
-    /**
-     * @param array<string, mixed> $firstLetters
-     */
-    public function setFirstLetters(array $firstLetters): void
-    {
-        $this->firstLetters = $firstLetters;
     }
 }
