@@ -26,7 +26,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Updater to fill empty slug columns of glossary records
  */
 #[UpgradeWizard('glossary2UpdateSlug')]
-class GlossarySlugUpdater implements UpgradeWizardInterface
+class GlossarySlugUpdate implements UpgradeWizardInterface
 {
     protected string $tableName = 'tx_glossary2_domain_model_glossary';
 
