@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
  * Main controller of glossary2 to list and show glossary records
@@ -103,8 +104,9 @@ class GlossaryController extends ActionController
     protected function getContentObjectData(): array
     {
         $data = [];
-        if (is_array($this->request->getAttribute('currentContentObject')->data)) {
-            $data = $this->request->getAttribute('currentContentObject')->data;
+        $contentObjectRenderer = $this->request->getAttribute('currentContentObject');
+        if ($contentObjectRenderer instanceof ContentObjectRenderer && is_array($contentObjectRenderer->data)) {
+            $data = $contentObjectRenderer->data;
         }
 
         return $data;
