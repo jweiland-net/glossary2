@@ -88,8 +88,6 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginationClass = $this->fallbackPaginationClass;
         }
 
-        // Explicitly tell PHPStan that the result is an instance of PaginationInterface
-        /** @phpstan-ignore-next-line */
         return new $paginationClass($paginator);
     }
 }
