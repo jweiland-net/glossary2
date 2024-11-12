@@ -54,10 +54,7 @@ class GlossaryRepositoryTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        unset(
-            $this->subject,
-            $this->objectManager,
-        );
+        unset($this->subject);
         parent::tearDown();
     }
 
