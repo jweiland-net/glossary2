@@ -211,8 +211,6 @@ class GlossaryService
 
     /**
      * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
-     * @param string $column
-     * @param string $columnAlias
      * @return array<string, mixed>
      * @throws Exception
      */
