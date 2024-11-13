@@ -12,7 +12,6 @@ namespace JWeiland\Glossary2\Tests\Functional\Service;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
@@ -24,14 +23,15 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Test case
@@ -50,7 +50,9 @@ class GlossaryServiceTest extends FunctionalTestCase
 
     protected Request|MockObject $requestMock;
 
-    protected ViewFactoryInterface|MockObject $viewFactoryMock;
+    protected ViewFactoryInterface|MockObject $viewFactory;
+
+    protected TemplateView $view;
 
     /**
      * @var string[]
@@ -90,6 +92,9 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->requestMock = $this->createMock(Request::class);
 
         $this->viewFactory = $this->get(ViewFactoryInterface::class);
+
+        $renderingContext = $this->get(RenderingContextFactory::class)->create();
+        $this->view = new TemplateView($renderingContext);
     }
 
     protected function tearDown(): void
@@ -121,117 +126,6 @@ class GlossaryServiceTest extends FunctionalTestCase
         );
 
         $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
-    }
-
-    /**
-     * As we are working with "EXT:" and getFileAbsFileName() we can only use paths of existing extensions
-     * while testing. In that case just "glossary2"
-     */
-    public static function dataProviderForTemplatePath(): array
-    {
-        return [
-            'Default templatePath from ExtConf of glossary2' => [
-                [],
-                [],
-                'EXT:glossary2/Resources/Private/Templates/Glossary.html',
-            ],
-            'Default templatePath provided by foreign extension' => [
-                [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-                ],
-                [],
-                'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-            ],
-            'Default templatePath provided by TypoScript (string)' => [
-                [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-                ],
-                [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html',
-                ],
-                'EXT:glossary2/Resources/Private/Templates/GlossaryDefault.html',
-            ],
-            'Default templatePath provided by TypoScript (array)' => [
-                [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-                ],
-                [
-                    'templatePath' => [
-                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html',
-                    ],
-                ],
-                'EXT:glossary2/Resources/Private/Templates/Default.html',
-            ],
-            'ExtKey individual templatePath provided by TypoScript (array)' => [
-                [
-                    'templatePath' => 'EXT:glossary2/Resources/Private/Templates/Yellowpages2.html',
-                    'extensionName' => 'clubdirectory',
-                ],
-                [
-                    'templatePath' => [
-                        'default' => 'EXT:glossary2/Resources/Private/Templates/Default.html',
-                        'clubdirectory' => 'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html',
-                    ],
-                ],
-                'EXT:glossary2/Resources/Private/Templates/Clubdirectory.html',
-            ],
-        ];
-    }
-
-    #[DataProvider('dataProviderForTemplatePath')]
-    //#[Test]
-    public function buildGlossaryWillUseDefaultTemplatePath(array $options, array $settings, string $expectedPath): void
-    {
-        $this->configurationManager
-            ->expects(self::atLeastOnce())
-            ->method('getConfiguration')
-            ->with(
-                ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-                'Glossary2',
-                'Glossary',
-            )
-            ->willReturn($settings);
-
-        $this->viewFactory->expects(self::atLeastOnce())
-            ->method('assign')
-            ->with(
-                ['glossary', $this->getGlossary()],
-                ['settings', $options['settings'] ?? []],
-                ['variables', $options['variables'] ?? []],
-                ['options', $options],
-            );
-
-        $this->viewFactory->expects(self::once())
-            ->method('render')
-            ->willReturn('Rendered Content');
-
-        $this->viewFactory->expects(self::once())
-            ->method('create')
-            ->with(self::callback(static function (ViewFactoryData $viewFactoryData) use ($expectedPath) {
-                // Check if the template path is correctly set in ViewFactoryData
-                return $viewFactoryData->templatePathAndFilename === GeneralUtility::getFileAbsFileName($expectedPath);
-            }))
-            ->willReturn($viewMock);
-
-        // Create the QueryBuilder
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        // Instantiate the GlossaryService with the necessary dependencies
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->configurationManager,
-            $this->viewFactory,
-        );
-
-        // Call the method under test
-        $result = $this->subject->buildGlossary($queryBuilder, $options);
-
-        // Assert that the rendered content is returned
-        self::assertSame('Rendered Content', $result);
     }
 
     #[Test]
