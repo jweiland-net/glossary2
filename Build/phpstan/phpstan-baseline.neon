@@ -1,5 +1,3 @@
 parameters:
 		# Ignore specific errors:
 		ignoreErrors:
-			#-
-			#	message: '#^Access to an undefined property TYPO3\\\\CMS\\\\Scheduler\\\\Task\\\\AbstractTask$#'
