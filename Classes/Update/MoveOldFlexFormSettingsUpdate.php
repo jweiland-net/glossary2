@@ -26,7 +26,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * This Updater converts existing settings to new version.
  */
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
-class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
+class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
     /**
      * Return the speaking name of this wizard
