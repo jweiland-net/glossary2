@@ -17,8 +17,10 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
  * Main controller of glossary2 to list and show glossary records
@@ -48,9 +50,9 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView($view): void
+    protected function initializeView(ViewInterface $view): void
     {
-        $view->assign('data', $this->configurationManager->getContentObject()->data);
+        $view->assign('data', $this->getContentObjectData());
     }
 
     /**
@@ -63,7 +65,7 @@ class GlossaryController extends ActionController
             'letter' => $letter,
             'glossaries' => $this->glossaryRepository->searchGlossaries(
                 GeneralUtility::intExplode(',', $this->settings['categories'], true),
-                $letter
+                $letter,
             ),
         ]);
         return $this->htmlResponse();
@@ -78,17 +80,35 @@ class GlossaryController extends ActionController
         return $this->htmlResponse();
     }
 
+    /**
+     * @param array<string, mixed> $variables
+     */
     protected function postProcessAndAssignFluidVariables(array $variables = []): void
     {
         /** @var PostProcessFluidVariablesEvent $event */
         $event = $this->eventDispatcher->dispatch(
             new PostProcessFluidVariablesEvent(
+                /** @phpstan-ignore-next-line */
                 $this->request,
                 $this->settings,
-                $variables
-            )
+                $variables,
+            ),
         );
 
         $this->view->assignMultiple($event->getFluidVariables());
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getContentObjectData(): array
+    {
+        $data = [];
+        $contentObjectRenderer = $this->request->getAttribute('currentContentObject');
+        if ($contentObjectRenderer instanceof ContentObjectRenderer && is_array($contentObjectRenderer->data)) {
+            $data = $contentObjectRenderer->data;
+        }
+
+        return $data;
     }
 }

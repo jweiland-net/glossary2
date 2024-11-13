@@ -11,28 +11,24 @@ namespace JWeiland\Glossary2\Tests\Functional\Repository;
 
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case.
  */
 class GlossaryRepositoryTest extends FunctionalTestCase
 {
-    /**
-     * @var GlossaryRepository
-     */
-    protected $subject;
+    protected GlossaryRepository $subject;
 
-    /**
-     * @var QuerySettingsInterface
-     */
-    protected $querySettings;
+    protected QuerySettingsInterface $querySettings;
 
-    /**
-     * @var string[]
-     */
     protected array $testExtensionsToLoad = [
         'jweiland/glossary2',
     ];
@@ -40,6 +36,12 @@ class GlossaryRepositoryTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $frontendTypoScript = new FrontendTypoScript(new RootNode(), [], [], []);
+        $frontendTypoScript->setSetupArray([]);
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
+            ->withAttribute('frontend.typoscript', $frontendTypoScript);
 
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tx_glossary2_domain_model_glossary.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
@@ -52,16 +54,11 @@ class GlossaryRepositoryTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        unset(
-            $this->subject,
-            $this->objectManager
-        );
+        unset($this->subject);
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findAllWillFindGlossariesSorted(): void
     {
         $glossaries = [];
@@ -74,81 +71,69 @@ class GlossaryRepositoryTest extends FunctionalTestCase
 
         self::assertSame(
             $sortedGlossaries,
-            $glossaries
+            $glossaries,
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries(['0', 'a'])->toArray()
+            $this->subject->searchGlossaries(['0', 'a'])->toArray(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithGivenCategoryWillFindTwoEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             2,
-            $this->subject->searchGlossaries([1])->toArray()
+            $this->subject->searchGlossaries([1])->toArray(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithSomeInvalidCategoriesWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries(['0', 'a', 1])->toArray()
+            $this->subject->searchGlossaries(['0', 'a', 1])->toArray(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithLetterWillFindTwoEntries(): void
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             2,
-            $this->subject->searchGlossaries([], 'u')->toArray()
+            $this->subject->searchGlossaries([], 'u')->toArray(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithInvalidLetterWillFindAllEntries(): void
     {
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             7,
-            $this->subject->searchGlossaries([], '/')->toArray()
+            $this->subject->searchGlossaries([], '/')->toArray(),
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function searchGlossariesWithCategoryAndLetterWillFindOneEntry(): void
     {
         // "u" will find records with "u" and "ü"
         $this->subject->setDefaultQuerySettings($this->querySettings);
         self::assertCount(
             1,
-            $this->subject->searchGlossaries([2], 'u')->toArray()
+            $this->subject->searchGlossaries([2], 'u')->toArray(),
         );
     }
 }

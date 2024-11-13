@@ -47,6 +47,9 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
         return '';
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function getValidPluginArguments(): ?array
     {
         $gp = $this->getPluginArgumentsFromRequest($this->getRequest());
@@ -61,6 +64,8 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
     /**
      * This PageTitleProvider will only work on detail page of glossary2.
      * glossary have to be given. Else: Page title will not be overwritten.
+     *
+     * @param array<string, mixed> $gp
      */
     protected function isValidRequest(array $gp): bool
     {
@@ -71,7 +76,11 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
         return (int)$gp['glossary'] > 0;
     }
 
-    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject)
+    /**
+     * @param ServerRequestInterface $requestObject
+     * @return string|array<string, mixed>|null
+     */
+    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
     {
         $queryParams = $requestObject->getQueryParams();
 

@@ -15,7 +15,6 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use TYPO3\CMS\Core\Pagination\PaginationInterface;
 use TYPO3\CMS\Core\Pagination\PaginatorInterface;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
@@ -30,6 +29,9 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected string $fallbackPaginationClass = SimplePagination::class;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $allowedControllerActions = [
         'Glossary' => [
             'list',
@@ -42,7 +44,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginator = new QueryResultPaginator(
                 $event->getFluidVariables()[$this->fluidVariableForPaginatedRecords],
                 $this->getCurrentPage($event),
-                $this->getItemsPerPage($event)
+                $this->getItemsPerPage($event),
             );
 
             $event->addFluidVariable('actionName', $event->getActionName());
@@ -60,7 +62,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             // See: AbstractPaginator::setCurrentPageNumber()
             $currentPage = MathUtility::forceIntegerInRange(
                 (int)$event->getRequest()->getArgument('currentPage'),
-                1
+                1,
             );
         }
 
@@ -74,7 +76,7 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected function getPagination(
         PostProcessFluidVariablesEvent $event,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
     ): PaginationInterface {
         $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? $this->fallbackPaginationClass;
 
@@ -86,6 +88,6 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
             $paginationClass = $this->fallbackPaginationClass;
         }
 
-        return GeneralUtility::makeInstance($paginationClass, $paginator);
+        return new $paginationClass($paginator);
     }
 }

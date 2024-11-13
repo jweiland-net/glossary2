@@ -1,0 +1,2 @@
+# Add glossary2 content element configurations
+@import 'EXT:glossary2/Configuration/TSconfig/ContentElementWizard.tsconfig'

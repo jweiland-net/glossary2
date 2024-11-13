@@ -9,30 +9,25 @@ declare(strict_types=1);
  * LICENSE file that was distributed with this source code.
  */
 
-namespace JWeiland\Glossary2\Updater;
+namespace JWeiland\Glossary2\Update;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
+use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * With glossary2 3.0.0 we have changed some FlexForm Settings.
  * This Updater converts existing settings to new version.
  */
-class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
+#[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
+class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     */
-    public function getIdentifier(): string
-    {
-        return 'glossary2UpdateOldFlexFormFields';
-    }
-
     /**
      * Return the speaking name of this wizard
      */
@@ -69,11 +64,11 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
 
             return array_key_exists(
                 'switchableControllerActions',
-                    $valueFromDatabase['data']['sDEF']['lDEF'] ?? []
-                )
+                $valueFromDatabase['data']['sDEF']['lDEF'] ?? [],
+            )
                 || array_key_exists(
                     'switchableControllerActions',
-                        $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? []
+                    $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? [],
                 );
         }
 
@@ -91,6 +86,7 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
      * Performs the accordant updates.
      *
      * @return bool Whether everything went smoothly or not
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {
@@ -135,7 +131,7 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
                 ],
                 [
                     'pi_flexform' => Connection::PARAM_STR,
-                ]
+                ],
             );
         }
 
@@ -144,6 +140,9 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
 
     /**
      * Get all (incl. deleted/hidden) tt_content records with plugin glossary2_glossary
+     *
+     * @return array<int, mixed>
+     * @throws Exception
      */
     protected function getTtContentRecordsWithOutdatedFlexForm(): array
     {
@@ -159,12 +158,12 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
             ->andWhere(
                 $queryBuilder->expr()->eq(
                     'CType',
-                    $queryBuilder->createNamedParameter('list')
+                    $queryBuilder->createNamedParameter('list'),
                 ),
                 $queryBuilder->expr()->eq(
                     'list_type',
-                    $queryBuilder->createNamedParameter('glossary2_glossary')
-                )
+                    $queryBuilder->createNamedParameter('glossary2_glossary'),
+                ),
             )
             ->executeQuery()
             ->fetchAllAssociative();
@@ -172,6 +171,8 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
 
     /**
      * It's not a must-have, but sDEF seems to be more default than sDEFAULT as first sheet name in TYPO3
+     *
+     * @param array<string, mixed> &$valueFromDatabase
      */
     protected function moveSheetDefaultToDef(array &$valueFromDatabase): void
     {
@@ -187,12 +188,14 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
 
     /**
      * Move field from one sheet to another and remove field from old location
+     *
+     * @param array<string, mixed> &$valueFromDatabase
      */
     protected function moveFieldFromOldToNewSheet(
         array &$valueFromDatabase,
         string $field,
         string $oldSheet,
-        string $newSheet
+        string $newSheet,
     ): void {
         if (array_key_exists($field, $valueFromDatabase['data'][$oldSheet]['lDEF'])) {
             // Create base sheet, if not exist
@@ -215,13 +218,13 @@ class MoveOldFlexFormSettingsUpdater implements UpgradeWizardInterface
     /**
      * Converts an array to FlexForm XML
      *
-     * @param array $array Array with FlexForm data
+     * @param array<string, mixed> $array Array with FlexForm data
      * @return string Input array converted to XML
      */
     public function checkValue_flexArray2Xml(array $array): string
     {
         return GeneralUtility::makeInstance(FlexFormTools::class)
-            ->flexArray2Xml($array, true);
+            ->flexArray2Xml($array);
     }
 
     protected function getConnectionPool(): ConnectionPool

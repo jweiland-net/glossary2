@@ -18,14 +18,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 class ExtConfTest extends FunctionalTestCase
 {
-    /**
-     * @var ExtConf
-     */
-    protected $subject;
+    protected ExtConf $subject;
 
-    /**
-     * @var string[]
-     */
     protected array $testExtensionsToLoad = [
         'jweiland/glossary2',
     ];
@@ -40,7 +34,7 @@ class ExtConfTest extends FunctionalTestCase
     protected function tearDown(): void
     {
         unset(
-            $this->subject
+            $this->subject,
         );
         parent::tearDown();
     }
@@ -52,7 +46,7 @@ class ExtConfTest extends FunctionalTestCase
     {
         self::assertSame(
             '0-9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z',
-            $this->subject->getPossibleLetters()
+            $this->subject->getPossibleLetters(),
         );
     }
 
@@ -64,7 +58,7 @@ class ExtConfTest extends FunctionalTestCase
         $this->subject->setPossibleLetters('a,b,c');
         self::assertSame(
             'a,b,c',
-            $this->subject->getPossibleLetters()
+            $this->subject->getPossibleLetters(),
         );
     }
 }

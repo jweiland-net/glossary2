@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Service;
 
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
+use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,16 +22,16 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Mvc\Request;
-use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ComparisonInterface;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
-use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Public API to build your glossary (A-Z) for your own Extension
@@ -44,28 +46,38 @@ class GlossaryService
      * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
      * and NOT of the calling extension which uses this API!
      * We need that property to override templatePath on per page basis.
+     *
+     * @var array<string, mixed>
      */
     protected array $glossary2Settings;
 
     public function __construct(
         ExtConf $extConf,
         EventDispatcher $eventDispatcher,
-        ConfigurationManagerInterface $configurationManager
+        ConfigurationManagerInterface $configurationManager,
+        private readonly ViewFactoryInterface $viewFactory,
     ) {
         $this->extConf = $extConf;
         $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'Glossary2',
-            'Glossary'
+            'Glossary',
         ) ?: [];
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @param array<string, mixed> $options
+     * @param ServerRequestInterface|null $request
+     * @return string
+     * @throws Exception
      */
-    public function buildGlossary($queryBuilder, array $options = [], ServerRequestInterface $request = null): string
-    {
+    public function buildGlossary(
+        QueryResultInterface|QueryBuilder $queryBuilder,
+        array $options = [],
+        ServerRequestInterface $request = null,
+    ): string {
         $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
         $view->assign('settings', $options['settings'] ?? []);
@@ -77,18 +89,18 @@ class GlossaryService
 
     /**
      * Creates a constraint which you can use like that:
-     *
      * $query = $this->createQuery();
      * $constraints = [];
      * $constraints[] = $glossary2Service->getLetterConstraintForExtbaseQuery($query, 'title', $letter);
      * return $query->matching($query->logicalAnd($constraints))->execute();
      *
-     * @return OrInterface|ComparisonInterface
+     * @param QueryInterface<Glossary> $extbaseQuery
+     * @throws InvalidQueryException
      */
     public function getLetterConstraintForExtbaseQuery(
         QueryInterface $extbaseQuery,
         string $column,
-        string $letter
+        string $letter,
     ): ConstraintInterface {
         $letterConstraints = [];
         if ($letter === '0-9') {
@@ -98,7 +110,7 @@ class GlossaryService
         } else {
             $letterConstraints[] = $extbaseQuery->like(
                 $column,
-                addcslashes($letter, '_%') . '%'
+                addcslashes($letter, '_%') . '%',
             );
         }
 
@@ -114,22 +126,22 @@ class GlossaryService
     public function getLetterConstraintForDoctrineQuery(
         QueryBuilder $queryBuilder,
         string $column,
-        string $letter
+        string $letter,
     ): CompositeExpression {
         $letterConstraints = [];
         if ($letter === '0-9') {
             for ($i = 0; $i < 10; $i++) {
                 $letterConstraints[] = $queryBuilder->expr()->like(
                     $column,
-                    $queryBuilder->createNamedParameter($i . '%')
+                    $queryBuilder->createNamedParameter($i . '%'),
                 );
             }
         } else {
             $letterConstraints[] = $queryBuilder->expr()->like(
                 $column,
                 $queryBuilder->createNamedParameter(
-                    $queryBuilder->escapeLikeWildcards($letter) . '%'
-                )
+                    $queryBuilder->escapeLikeWildcards($letter) . '%',
+                ),
             );
         }
 
@@ -137,9 +149,12 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @param array<string, mixed> $options
+     * @return array<int, array<string, bool|string>>
+     * @throws Exception
      */
-    protected function getLinkedGlossary($queryBuilder, array $options): array
+    protected function getLinkedGlossary(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
     {
         // These are the available first letters from Database
         $availableLetters = $this->getAvailableLetters($queryBuilder, $options);
@@ -148,7 +163,7 @@ class GlossaryService
         $possibleLetters = GeneralUtility::trimExplode(
             ',',
             $options['possibleLetters'] ?? $this->extConf->getPossibleLetters(),
-            true
+            true,
         );
 
         // Mark letter as link (true) or not-linked (false)
@@ -165,9 +180,12 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     * @throws Exception
      */
-    protected function getAvailableLetters($queryBuilder, array $options): array
+    protected function getAvailableLetters(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
     {
         $mergeNumbers = (bool)($options['mergeNumbers'] ?? true);
 
@@ -175,7 +193,7 @@ class GlossaryService
         $availableChars = $this->getFirstLettersOfGlossaryRecords(
             $queryBuilder,
             $options['column'] ?? 'title',
-            $options['columnAlias'] ?? 'Letter'
+            $options['columnAlias'] ?? 'Letter',
         );
 
         $availableNumbers = array_filter($availableChars, static function ($letter) {
@@ -193,12 +211,14 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface $queryBuilder
+     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @return array<string, mixed>
+     * @throws Exception
      */
     protected function getFirstLettersOfGlossaryRecords(
-        $queryBuilder,
+        QueryResultInterface|QueryBuilder $queryBuilder,
         string $column,
-        string $columnAlias
+        string $columnAlias,
     ): array {
         $firstLetters = [];
 
@@ -211,11 +231,11 @@ class GlossaryService
                     $firstLetters[$firstLetter] = $firstLetter;
                 }
             }
-        } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySQLPlatform) {
             $queryResult = $queryBuilder
                 ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
+                ->groupBy($columnAlias)
+                ->orderBy($columnAlias)
                 ->executeQuery();
 
             while ($record = $queryResult->fetchAssociative()) {
@@ -227,8 +247,8 @@ class GlossaryService
             // performance issue, if you have a lot of records
             $queryResult = $queryBuilder
                 ->select($column . ' AS ' . $columnAlias)
-                ->add('groupBy', $columnAlias)
-                ->add('orderBy', $columnAlias)
+                ->groupBy($columnAlias)
+                ->orderBy($columnAlias)
                 ->executeQuery();
 
             while ($record = $queryResult->fetchAssociative()) {
@@ -248,6 +268,9 @@ class GlossaryService
     /**
      * GROUP BY of DB will group all "a" letters like a, á, â, à to ONE of them. If grouped letter
      * is "a", everything is fine, but in case of "á" we have to convert this letter to ASCII "a" representation.
+     *
+     * @param array<string, mixed> $firstLetters
+     * @return array<int, mixed>
      */
     protected function cleanUpFirstLetters(array $firstLetters): array
     {
@@ -259,7 +282,7 @@ class GlossaryService
 
         // Remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
         $firstLetters = str_split(
-            preg_replace('~([[:^alnum:]])~', '', implode('', $firstLetters))
+            preg_replace('~([[:^alnum:]])~', '', implode('', $firstLetters)),
         );
 
         // Sort and remove duplicate letters
@@ -268,26 +291,22 @@ class GlossaryService
         return array_unique($firstLetters);
     }
 
-    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): StandaloneView
+    /**
+     * @param array<string, mixed> $options
+     */
+    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): ViewInterface
     {
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->setTemplatePathAndFilename($this->getTemplatePath($options));
+        $viewFactoryData = new ViewFactoryData(
+            templatePathAndFilename: $this->getTemplatePath($options),
+            request: $request,
+        );
 
-        $extensionName = GeneralUtility::underscoredToUpperCamelCase($options['extensionName'] ?? 'glossary2');
-
-
-        if (version_compare($this->getTypo3Version()->getBranch(), '12.0', '>=')) {
-            $view->setRequest($request ?? $GLOBALS['TYPO3_REQUEST']);
-        } else {
-            $view->getRequest()->setControllerExtensionName($extensionName);
-            $view->getRequest()->setPluginName($options['pluginName'] ?? 'glossary');
-            $view->getRequest()->setControllerName(ucfirst($options['controllerName'] ?? 'Glossary'));
-            $view->getRequest()->setControllerActionName(strtolower($options['actionName'] ?? 'list'));
-        }
-
-        return $view;
+        return $this->viewFactory->create($viewFactoryData);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function getTemplatePath(array $options): string
     {
         // Priority 4. Use path from ExtConf of glossary2
@@ -339,13 +358,13 @@ class GlossaryService
         return GeneralUtility::getFileAbsFileName($templatePath);
     }
 
-    protected function getTypo3Version(): Typo3Version
-    {
-        return GeneralUtility::makeInstance(Typo3Version::class);
-    }
-
     protected function getConnectionPool(): ConnectionPool
     {
         return GeneralUtility::makeInstance(ConnectionPool::class);
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'] ?? ServerRequestFactory::fromGlobals();
     }
 }

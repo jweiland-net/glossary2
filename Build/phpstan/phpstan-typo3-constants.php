@@ -7,12 +7,6 @@
  * LICENSE file that was distributed with this source code.
  */
 
-if (!defined('TYPO3')) {
-    die('Access denied.');
-}
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
-    'glossary2',
-    'Configuration/TypoScript',
-    'Glossary 2',
-);
+defined('LF') ?: define('LF', chr(10));
+defined('CR') ?: define('CR', chr(13));
+defined('CRLF') ?: define('CRLF', CR . LF);

@@ -11,21 +11,22 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Domain\Repository;
 
+use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\ModifyQueryOfSearchGlossariesEvent;
-use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use Psr\EventDispatcher\EventDispatcherInterface as EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * This class contains all queries to get needed glossary entries from DB
+ *
+ * @extends Repository<Glossary>
  */
 class GlossaryRepository extends Repository
 {
-    /**
-     * @var array
-     */
     protected $defaultOrderings = [
         'title' => QueryInterface::ORDER_ASCENDING,
     ];
@@ -37,6 +38,11 @@ class GlossaryRepository extends Repository
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @param int[] $categories Array of category IDs
+     * @param string $letter The letter to filter glossaries by title
+     * @return QueryResultInterface<int, Glossary> Result set of glossaries matching the criteria
+     */
     public function searchGlossaries(array $categories = [], string $letter = ''): QueryResultInterface
     {
         $query = $this->createQuery();
@@ -67,7 +73,7 @@ class GlossaryRepository extends Repository
         }
 
         $this->eventDispatcher->dispatch(
-            new ModifyQueryOfSearchGlossariesEvent($queryResult, $categories, $letter)
+            new ModifyQueryOfSearchGlossariesEvent($queryResult, $categories, $letter),
         );
 
         return $queryResult;
@@ -75,7 +81,11 @@ class GlossaryRepository extends Repository
 
     /**
      * Prepare an Extbase QueryResult for GlossaryService (A-Z navigation)
+     *
+     * @param array $categories
+     * @throws InvalidQueryException
      */
+    /** @phpstan-ignore-next-line */
     public function getExtbaseQueryForGlossary(array $categories = []): QueryResultInterface
     {
         $query = $this->createQuery();
@@ -90,6 +100,9 @@ class GlossaryRepository extends Repository
         return $query->execute();
     }
 
+    /**
+     * @param array<int> $categories
+     */
     protected function checkArgumentsForSearchGlossaries(array $categories, string $letter): bool
     {
         // Check categories. Cast category UIDs to int and remove empty values
@@ -97,9 +110,9 @@ class GlossaryRepository extends Repository
             ',',
             implode(
                 ',',
-                $categories
+                $categories,
             ),
-            true
+            true,
         );
 
         if ($intCategories !== $categories) {

@@ -20,6 +20,8 @@ class AbstractControllerEventListener
 {
     /**
      * Only execute this EventListener if controller and action matches
+     *
+     * @var array<string, mixed>
      */
     protected array $allowedControllerActions = [];
 
@@ -28,12 +30,12 @@ class AbstractControllerEventListener
         return
             array_key_exists(
                 $event->getControllerName(),
-                $this->allowedControllerActions
+                $this->allowedControllerActions,
             )
             && in_array(
                 $event->getActionName(),
                 $this->allowedControllerActions[$event->getControllerName()],
-                true
+                true,
             );
     }
 }
