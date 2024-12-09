@@ -20,6 +20,8 @@ call_user_func(static function () {
         'Glossary',
         'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.title',
         'ext-glossary2-wizard-icon',
+        'plugins',
+        'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.description',
     );
 
     ExtensionManagementUtility::addToAllTCAtypes(
