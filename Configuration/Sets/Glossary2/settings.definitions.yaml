@@ -1,0 +1,47 @@
+categories:
+  glossary2:
+    label: 'glossary2'
+  glossary2.templates:
+    label: 'Templates'
+    parent: glossary2
+  glossary2.pages:
+    label: 'Pages'
+    parent: glossary2
+
+settings:
+  glossary2.templateRootPath:
+    label: 'Templates'
+    category: glossary2.templates
+    description: 'Path to template root'
+    type: string
+    default: 'EXT:glossary2/Resources/Private/Templates/'
+  glossary2.partialRootPath:
+    label: 'Partials'
+    category: glossary2.templates
+    description: 'Path to partial root'
+    type: string
+    default: 'EXT:glossary2/Resources/Private/Partials/'
+  glossary2.layoutRootPath:
+    label: 'Layouts'
+    category: glossary2.templates
+    description: 'Path to layout root'
+    type: string
+    default: 'EXT:glossary2/Resources/Private/Layouts/'
+  glossary2.storagePid:
+    label: 'Default storage PID'
+    category: glossary2.pages
+    description: 'Folder that stores all POIs'
+    type: int
+    default: 0
+  glossary2.pidOfDetailPage:
+    label: 'Pid of Detail Page'
+    category: glossary2.pages
+    description: 'Page with detail page plugin'
+    type: int
+    default: 0
+  glossary2.pageBrowser.itemsPerPage:
+    label: 'Items per page for pagination'
+    category: glossary2.pages
+    description: 'Number of results that needs to be shown on listing page'
+    type: int
+    default: 10
