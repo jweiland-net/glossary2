@@ -10,9 +10,9 @@ ChangeLog
 Version 7.0.1
 =============
 
-*   [TASK] Added Site Set Default for Glossary2
+*   [TASK] Added Glossary2 Site Set
 *   [TASK] Modified Update wizard for extending list plugins to CType
-*   [BUGFIX] Removed duplicate plugin wizard registered with page.ts config.
+*   [BUGFIX] Removed duplicate plugin wizard registered with page.tsconfig.
 
 Version 7.0.0
 =============
