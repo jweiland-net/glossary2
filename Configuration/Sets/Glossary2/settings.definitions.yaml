@@ -9,18 +9,6 @@ categories:
     parent: glossary2
 
 settings:
-  glossary2.pageBrowser.itemsPerPage:
-    label: 'Items per page for pagination'
-    category: glossary2.pages
-    description: 'Number of results that needs to be shown on listing page'
-    type: int
-    default: 10
-  glossary2.pidOfDetailPage:
-    label: 'Pid of Detail Page'
-    category: glossary2.pages
-    description: 'Page with detail page plugin'
-    type: int
-    default: 0
   glossary2.templateRootPath:
     label: 'Templates'
     category: glossary2.templates
@@ -45,3 +33,15 @@ settings:
     description: 'Folder that stores all POIs'
     type: int
     default: 0
+  glossary2.pidOfDetailPage:
+    label: 'Pid of Detail Page'
+    category: glossary2.pages
+    description: 'Page with detail page plugin'
+    type: int
+    default: 0
+  glossary2.pageBrowser.itemsPerPage:
+    label: 'Items per page for pagination'
+    category: glossary2.pages
+    description: 'Number of results that needs to be shown on listing page'
+    type: int
+    default: 10
