@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="de">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="da">
     <header/>
     <body>
       <trans-unit id="sheetGeneral" xml:space="preserve" approved="yes">
 				<source>General</source>
-			<target state="final">Allgemein</target></trans-unit>
+			<target state="final">Generelt</target></trans-unit>
       <trans-unit id="pidOfDetailPage" approved="yes">
         <source>PID of detail page</source>
-        <target state="final">PID der Detailseite</target>
+        <target state="final">PID for detaljeside</target>
       </trans-unit>
       <trans-unit id="pidOfListPage" approved="yes">
         <source>PID of list page</source>
-        <target state="final">PID der Listenseite</target>
+        <target state="final">PID på liste side</target>
       </trans-unit>
       <trans-unit id="showGlossar" xml:space="preserve" approved="yes">
 				<source>Show A-Z links</source>
-			<target state="final">A-Z Links anzeigen</target></trans-unit>
+			<target state="final">Vis A-Z links</target></trans-unit>
       <trans-unit id="showAllLink" xml:space="preserve" approved="yes">
 				<source>Add ALL Link</source>
-			<target state="final">ALLE Link hinzufügen</target></trans-unit>
+			<target state="final">Tilføj ALLE Link</target></trans-unit>
       <trans-unit id="categories" xml:space="preserve" approved="yes">
 				<source>Show all entries of a chosen category</source>
-			<target state="final">Alle Einträge einer ausgewählten Kategorie anzeigen</target></trans-unit>
+			<target state="final">Vis alle indgange i en valgt kategori</target></trans-unit>
     </body>
   </file>
 </xliff>
