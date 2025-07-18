@@ -2,10 +2,15 @@
 
 
 ..  _changelog:
-
+9PdjwVf,
 =========
 ChangeLog
 =========
+
+Version 7.0.2
+=============
+
+*   [BUGFIX] Backend plugin CType preview
 
 Version 7.0.1
 =============

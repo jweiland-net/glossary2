@@ -12,7 +12,7 @@
                typo3-core-preferred="stable"
                interlink-shortcode="jweiland/glossary2"
     />
-    <project title="Glossary 2" release="7.0" version="7.0.1" copyright="by jweiland.net"/>
+    <project title="Glossary 2" release="7.0" version="7.0.2" copyright="by jweiland.net"/>
     <inventory id="t3coreapi" url="https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/"/>
     <inventory id="t3install" url="https://docs.typo3.org/m/typo3/guide-installation/main/en-us/"/>
     <inventory id="t3sitepackage" url="https://docs.typo3.org/m/typo3/tutorial-sitepackage/main/en-us/"/>
