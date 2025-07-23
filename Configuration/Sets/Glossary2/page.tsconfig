@@ -1,0 +1,2 @@
+# Add CType Preview
+mod.web_layout.tt_content.preview.glossary2_glossary = EXT:glossary2/Resources/Private/Templates/PluginPreview/TableView.html
