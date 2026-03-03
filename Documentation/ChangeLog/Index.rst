@@ -7,6 +7,11 @@
 ChangeLog
 =========
 
+Version 7.0.4
+=============
+
+*   [BUGFIX] Pass glossary 'letter' argument to pagination links
+
 Version 7.0.3
 =============
 
