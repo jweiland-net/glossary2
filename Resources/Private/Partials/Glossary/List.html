@@ -19,7 +19,7 @@
             </f:for>
         </div>
         <f:render partial="Component/Pagination"
-                  arguments="{pagination: pagination, paginator: paginator, actionName: actionName}"/>
+                  arguments="{pagination: pagination, paginator: paginator, actionName: actionName, letter: letter}"/>
     </f:then>
     <f:else>
         <div class="noResults">{f:translate(key: "noResults")}</div>
