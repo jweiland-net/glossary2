@@ -16,27 +16,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get version from GitHub Release or Tag
-        id: get_version
+      - name: Get version and description
+        id: prep
         run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            # Using GITHUB_OUTPUT instead of GITHUB_ENV
-            echo "VERSION=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
-          fi
+          # 1. Clean the version tag (removes 'v' prefix if present, e.g., v1.0.0 -> 1.0.0)
+          RAW_VERSION="${{ github.event.release.tag_name }}"
+          VERSION=${RAW_VERSION#v}
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Extract commit message (Optional)
-        id: get_commit_message
-        run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            # Escape newlines for GitHub Actions output if needed, or pass release body directly
-            echo "COMMENT<<EOF" >> $GITHUB_ENV
-            echo "${{ github.event.release.name }} - ${{ github.event.release.body }}" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          else
-            echo "COMMENT=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-          fi
+          # 2. Safely capture the multi-line release body as an ENV variable
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.release.body }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -48,9 +39,10 @@ jobs:
       - name: Install TYPO3 Tailor Extension
         run: composer global require typo3/tailor --prefer-dist --no-progress --no-suggest
 
-      - name: Release EXT:${{ env.TYPO3_EXTENSION_KEY }} to TER
+      - name: Release to TER
         run: |
-          # Now ${{ steps.get_version.outputs.VERSION }} will actually contain data
-          php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.get_version.outputs.VERSION }} \
-            --artefact=${{ env.TYPO3_REPOSITORY_URL }}/archive/${{ steps.get_version.outputs.VERSION }}.zip \
-            --comment="Successfully released version ${{ steps.get_version.outputs.VERSION }}"
+          # Use the VERSION from steps and RELEASE_NOTES from env
+          # We use double quotes around env.RELEASE_NOTES to handle the multi-line content
+          php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.prep.outputs.VERSION }} \
+            --artefact=${{ env.TYPO3_REPOSITORY_URL }}/archive/${{ github.event.release.tag_name }}.zip \
+            --comment="${{ env.RELEASE_NOTES }}"
