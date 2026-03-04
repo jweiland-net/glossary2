@@ -1,0 +1,51 @@
+name: ter-release.yml
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    name: Publish Extension to TYPO3 Extension Repository (TER)
+    runs-on: ubuntu-latest
+    env:
+      TYPO3_EXTENSION_KEY: ${{ secrets.TYPO3_EXTENSION_KEY }}
+      TYPO3_REPOSITORY_URL: ${{ secrets.TYPO3_REPOSITORY_URL }}
+      TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
+      TYPO3_API_USERNAME: ${{ secrets.TYPO3_API_USERNAME }}
+      TYPO3_API_PASSWORD: ${{ secrets.TYPO3_API_PASSWORD }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version from GitHub Release or Tag
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          fi
+
+      - name: Extract commit message (Optional)
+        id: get_commit_message
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            # Escape newlines for GitHub Actions output if needed, or pass release body directly
+            echo "COMMENT<<EOF" >> $GITHUB_ENV
+            echo "${{ github.event.release.name }} - ${{ github.event.release.body }}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "COMMENT=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+          fi
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: intl, mbstring, json, libxml, xml, soap, zip, curl
+          tools: composer:v2
+
+      - name: Install TYPO3 Tailor Extension
+        run: composer global require typo3/tailor --prefer-dist --no-progress --no-suggest
+
+      - name: Release EXT:${{ env.TYPO3_EXTENSION_KEY }} as ${{ steps.get_version.outputs.VERSION }} to TER
+        run: php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.get_version.outputs.VERSION }} --artefact=${{ env.TYPO3_REPOSITORY_URL }}/archive/${{ steps.get_version.outputs.VERSION }}.zip --comment="Successfully release new version ${{ steps.get_version.outputs.VERSION }} - see changelog at ${{ env.TYPO3_REPOSITORY_URL }}"
