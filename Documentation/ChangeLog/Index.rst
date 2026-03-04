@@ -7,6 +7,11 @@
 ChangeLog
 =========
 
+Version 7.0.5
+=============
+
+*   [TASK] Tailor TER release configuration updates
+
 Version 7.0.4
 =============
 
