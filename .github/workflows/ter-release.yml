@@ -20,9 +20,10 @@ jobs:
         id: get_version
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+            # Using GITHUB_OUTPUT instead of GITHUB_ENV
+            echo "VERSION=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
           else
-            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Extract commit message (Optional)
@@ -47,5 +48,9 @@ jobs:
       - name: Install TYPO3 Tailor Extension
         run: composer global require typo3/tailor --prefer-dist --no-progress --no-suggest
 
-      - name: Release EXT:${{ env.TYPO3_EXTENSION_KEY }} as ${{ steps.get_version.outputs.VERSION }} to TER
-        run: php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.get_version.outputs.VERSION }} --artefact=${{ env.TYPO3_REPOSITORY_URL }}/archive/${{ steps.get_version.outputs.VERSION }}.zip --comment="Successfully release new version ${{ steps.get_version.outputs.VERSION }} - see changelog at ${{ env.TYPO3_REPOSITORY_URL }}"
+      - name: Release EXT:${{ env.TYPO3_EXTENSION_KEY }} to TER
+        run: |
+          # Now ${{ steps.get_version.outputs.VERSION }} will actually contain data
+          php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.get_version.outputs.VERSION }} \
+            --artefact=${{ env.TYPO3_REPOSITORY_URL }}/archive/${{ steps.get_version.outputs.VERSION }}.zip \
+            --comment="Successfully released version ${{ steps.get_version.outputs.VERSION }}"
