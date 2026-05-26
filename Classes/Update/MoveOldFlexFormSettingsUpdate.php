@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Update;
 
+use TYPO3\CMS\Core\Attribute\UpgradeWizard;
+use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
+use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\UpgradeWizard;
-use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
-use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * With glossary2 3.0.0 we have changed some FlexForm Settings.
@@ -28,6 +28,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
 class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
+    public function __construct(private readonly ConnectionPool $connectionPool)
+    {
+    }
     /**
      * Return the speaking name of this wizard
      */
@@ -54,7 +57,10 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     {
         foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
             $valueFromDatabase = (string)$record['pi_flexform'] !== '' ? GeneralUtility::xml2array($record['pi_flexform']) : [];
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
+            if (!is_array($valueFromDatabase)) {
+                continue;
+            }
+            if (in_array($valueFromDatabase, ['', '0', []], true)) {
                 continue;
             }
 
@@ -94,8 +100,10 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
             $valueFromDatabase = (string)$record['pi_flexform'] !== ''
                 ? GeneralUtility::xml2array($record['pi_flexform'])
                 : [];
-
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
+            if (!is_array($valueFromDatabase)) {
+                continue;
+            }
+            if (in_array($valueFromDatabase, ['', '0', []], true)) {
                 continue;
             }
 
@@ -229,6 +237,6 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 
     protected function getConnectionPool(): ConnectionPool
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
+        return $this->connectionPool;
     }
 }
