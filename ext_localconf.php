@@ -14,14 +14,12 @@ if (!defined('TYPO3')) {
 use JWeiland\Glossary2\Controller\GlossaryController;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
-call_user_func(static function (): void {
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'Glossary2',
-        'Glossary',
-        [
-            GlossaryController::class => 'list, listWithoutGlossar, show',
-        ],
-        [],
-        ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
-    );
-});
+ExtensionUtility::configurePlugin(
+    'Glossary2',
+    'Glossary',
+    [
+        GlossaryController::class => 'list, listWithoutGlossar, show',
+    ],
+    [],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
+);
