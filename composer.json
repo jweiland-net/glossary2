@@ -41,7 +41,7 @@
 		"roave/security-advisories": "dev-latest",
 		"ssch/typo3-rector": "^3.6",
 		"typo3/coding-standards": "^0.8",
-		"typo3/testing-framework": "^10.0"
+		"typo3/testing-framework": "^9.0.1"
 	},
 	"replace": {
 		"typo3-ter/glossary2": "self.version"
