@@ -25,11 +25,8 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  */
 class Glossary2PageTitleProvider implements PageTitleProviderInterface
 {
-    protected GlossaryRepository $glossaryRepository;
-
-    public function __construct(GlossaryRepository $glossaryRepository)
+    public function __construct(protected GlossaryRepository $glossaryRepository)
     {
-        $this->glossaryRepository = $glossaryRepository;
     }
 
     public function getTitle(): string
@@ -77,7 +74,6 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
     }
 
     /**
-     * @param ServerRequestInterface $requestObject
      * @return string|array<string, mixed>|null
      */
     protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
