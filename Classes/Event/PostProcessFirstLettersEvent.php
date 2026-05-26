@@ -17,16 +17,10 @@ namespace JWeiland\Glossary2\Event;
 class PostProcessFirstLettersEvent
 {
     /**
-     * @var array<string, mixed>
-     */
-    protected array $firstLetters = [];
-
-    /**
      * @param array<string> $firstLetters
      */
-    public function __construct(array $firstLetters)
+    public function __construct(protected array $firstLetters)
     {
-        $this->firstLetters = $firstLetters;
     }
 
     /**
