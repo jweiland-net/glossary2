@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Update;
 
+use TYPO3\CMS\Core\Attribute\UpgradeWizard;
+use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
+use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -18,9 +21,6 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\SlugHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\UpgradeWizard;
-use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
-use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Updater to fill empty slug columns of glossary records
@@ -33,6 +33,9 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
     protected string $fieldName = 'path_segment';
 
     protected ?SlugHelper $slugHelper = null;
+    public function __construct(private readonly ConnectionPool $connectionPool)
+    {
+    }
 
     public function getTitle(): string
     {
@@ -161,7 +164,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     protected function getSlugHelper(): SlugHelper
     {
-        if ($this->slugHelper === null) {
+        if (!$this->slugHelper instanceof SlugHelper) {
             $this->slugHelper = GeneralUtility::makeInstance(
                 SlugHelper::class,
                 $this->tableName,
@@ -185,6 +188,6 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     protected function getConnectionPool(): ConnectionPool
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
+        return $this->connectionPool;
     }
 }
