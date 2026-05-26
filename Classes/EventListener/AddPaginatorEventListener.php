@@ -56,17 +56,13 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected function getCurrentPage(PostProcessFluidVariablesEvent $event): int
     {
-        $currentPage = 1;
         if ($event->getRequest()->hasArgument('currentPage')) {
-            // $currentPage have to be positive and greater than 0
-            // See: AbstractPaginator::setCurrentPageNumber()
-            $currentPage = MathUtility::forceIntegerInRange(
+            return MathUtility::forceIntegerInRange(
                 (int)$event->getRequest()->getArgument('currentPage'),
                 1,
             );
         }
-
-        return $currentPage;
+        return 1;
     }
 
     protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
