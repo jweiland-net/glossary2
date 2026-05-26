@@ -18,10 +18,6 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 class AddGlossaryEventListener extends AbstractControllerEventListener
 {
-    protected GlossaryService $glossaryService;
-
-    protected GlossaryRepository $glossaryRepository;
-
     /**
      * @var array<string, mixed>
      */
@@ -31,10 +27,8 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
         ],
     ];
 
-    public function __construct(GlossaryService $glossaryService, GlossaryRepository $glossaryRepository)
+    public function __construct(protected GlossaryService $glossaryService, protected GlossaryRepository $glossaryRepository)
     {
-        $this->glossaryService = $glossaryService;
-        $this->glossaryRepository = $glossaryRepository;
     }
 
     public function __invoke(PostProcessFluidVariablesEvent $event): void
