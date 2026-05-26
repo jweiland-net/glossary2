@@ -20,29 +20,11 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ModifyQueryOfSearchGlossariesEvent
 {
     /**
-     * @var QueryResultInterface<int, Glossary>
-     */
-    protected QueryResultInterface $queryResult;
-
-    /**
-     * @var array<int>
-     */
-    protected array $categories = [];
-
-    protected string $letter = '';
-
-    /**
-     * @param QueryResultInterface<int, Glossary> $extbaseQuery
+     * @param QueryResultInterface<int, Glossary> $queryResult
      * @param array<int> $categories
      */
-    public function __construct(
-        QueryResultInterface $extbaseQuery,
-        array $categories,
-        string $letter,
-    ) {
-        $this->queryResult = $extbaseQuery;
-        $this->categories = $categories;
-        $this->letter = $letter;
+    public function __construct(protected QueryResultInterface $queryResult, protected array $categories, protected string $letter)
+    {
     }
 
     /**
