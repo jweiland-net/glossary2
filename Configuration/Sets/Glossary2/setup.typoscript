@@ -1,15 +1,15 @@
 plugin.tx_glossary2 {
   view {
     templateRootPaths {
-      0 = EXT:tx_glossary2/Resources/Private/Templates/
+      0 = EXT:glossary2/Resources/Private/Templates/
       1 = {$glossary2.templateRootPath}
     }
     partialRootPaths {
-      0 = EXT:tx_glossary2/Resources/Private/Partials/
+      0 = EXT:glossary2/Resources/Private/Partials/
       1 = {$glossary2.partialRootPath}
     }
     layoutRootPaths {
-      0 = EXT:tx_glossary2/Resources/Private/Layouts/
+      0 = EXT:glossary2/Resources/Private/Layouts/
       1 = {$glossary2.layoutRootPath}
     }
   }
