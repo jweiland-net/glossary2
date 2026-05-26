@@ -38,10 +38,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class GlossaryService
 {
-    protected ExtConf $extConf;
-
-    protected EventDispatcher $eventDispatcher;
-
     /**
      * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
      * and NOT of the calling extension which uses this API!
@@ -52,25 +48,23 @@ class GlossaryService
     protected array $glossary2Settings;
 
     public function __construct(
-        ExtConf $extConf,
-        EventDispatcher $eventDispatcher,
+        protected ExtConf $extConf,
+        protected EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager,
         private readonly ViewFactoryInterface $viewFactory,
+        private readonly ConnectionPool $connectionPool,
     ) {
-        $this->extConf = $extConf;
-        $this->eventDispatcher = $eventDispatcher;
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'Glossary2',
             'Glossary',
-        ) ?: [];
+        );
     }
 
     /**
      * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
      * @param array<string, mixed> $options
      * @param ServerRequestInterface|null $request
-     * @return string
      * @throws Exception
      */
     public function buildGlossary(
@@ -196,9 +190,7 @@ class GlossaryService
             $options['columnAlias'] ?? 'Letter',
         );
 
-        $availableNumbers = array_filter($availableChars, static function ($letter) {
-            return is_numeric($letter);
-        });
+        $availableNumbers = array_filter($availableChars, static fn($letter): bool => is_numeric($letter));
 
         $availableLetters = array_diff($availableChars, $availableNumbers);
 
@@ -322,7 +314,7 @@ class GlossaryService
         if (
             array_key_exists('templatePath', $this->glossary2Settings)
             && is_string($this->glossary2Settings['templatePath'])
-            && !empty($this->glossary2Settings['templatePath'])
+            && (isset($this->glossary2Settings['templatePath']) && ($this->glossary2Settings['templatePath'] !== '' && $this->glossary2Settings['templatePath'] !== '0'))
         ) {
             $templatePath = $this->glossary2Settings['templatePath'];
         }
@@ -334,7 +326,7 @@ class GlossaryService
         if (
             array_key_exists('templatePath', $this->glossary2Settings)
             && is_array($this->glossary2Settings['templatePath'])
-            && !empty($this->glossary2Settings['templatePath'])
+            && (isset($this->glossary2Settings['templatePath']) && $this->glossary2Settings['templatePath'] !== [])
         ) {
             $extKey = GeneralUtility::camelCaseToLowerCaseUnderscored($options['extensionName'] ?? 'glossary2');
 
@@ -360,7 +352,7 @@ class GlossaryService
 
     protected function getConnectionPool(): ConnectionPool
     {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
+        return $this->connectionPool;
     }
 
     protected function getRequest(): ServerRequestInterface
