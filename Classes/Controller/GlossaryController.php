@@ -17,7 +17,6 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -27,20 +26,9 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  */
 class GlossaryController extends ActionController
 {
-    protected GlossaryRepository $glossaryRepository;
-
-    protected GlossaryService $glossaryService;
-
-    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
+    public function __construct(protected GlossaryRepository $glossaryRepository, protected GlossaryService $glossaryService)
     {
-        $this->glossaryRepository = $glossaryRepository;
     }
-
-    public function injectGlossaryService(GlossaryService $glossaryService): void
-    {
-        $this->glossaryService = $glossaryService;
-    }
-
     public function initializeAction(): void
     {
         // If this value was not set, then it will be filled with 0, but this is bad as
@@ -50,15 +38,15 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(ViewInterface $view): void
+    protected function initializeView(): void
     {
-        $view->assign('data', $this->getContentObjectData());
+        $this->view->assign('data', $this->getContentObjectData());
     }
 
     /**
      * @param string $letter Show only records starting with this letter
-     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
+    #[Extbase\Validate(validator: 'StringLength', param: 'letter', options: ['minimum' => 1, 'maximum' => 3])]
     public function listAction(string $letter = ''): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
@@ -106,7 +94,7 @@ class GlossaryController extends ActionController
         $data = [];
         $contentObjectRenderer = $this->request->getAttribute('currentContentObject');
         if ($contentObjectRenderer instanceof ContentObjectRenderer && is_array($contentObjectRenderer->data)) {
-            $data = $contentObjectRenderer->data;
+            return $contentObjectRenderer->data;
         }
 
         return $data;
