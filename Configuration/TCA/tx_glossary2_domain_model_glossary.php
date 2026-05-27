@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the package jweiland/glossary2.
  *
  * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
  */
-
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:tx_glossary2_domain_model_glossary',
@@ -14,7 +15,6 @@ return [
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'versioningWS' => true,
-        'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
@@ -24,14 +24,13 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'title,description',
         'iconfile' => 'EXT:glossary2/Resources/Public/Icons/tx_glossary2_domain_model_glossary.svg',
     ],
     'types' => [
         '1' => [
             'showitem' => '--palette--;;language, --palette--;;titleHidden,
             path_segment, description, images, categories,
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.tabs.access,
+            --div--;core.form.tabs:access,
             --palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.access;access',
         ],
     ],
@@ -39,7 +38,7 @@ return [
         'language' => ['showitem' => 'sys_language_uid, l10n_parent'],
         'titleHidden' => ['showitem' => 'title, hidden'],
         'access' => [
-            'showitem' => 'starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
+            'showitem' => 'starttime;core.db.general:starttime,endtime;core.db.general:endtime',
         ],
     ],
     'columns' => [
@@ -74,37 +73,9 @@ return [
                 'items' => [
                     [
                         'label' => '',
-                        'value' => '0',
-                    ],
-                    [
-                        'label' => '',
-                        'value' => '1',
+                        'invertStateDisplay' => true,
                     ],
                 ],
-            ],
-        ],
-        'cruser_id' => [
-            'label' => 'cruser_id',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'pid' => [
-            'label' => 'pid',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'crdate' => [
-            'label' => 'crdate',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'tstamp' => [
-            'label' => 'tstamp',
-            'config' => [
-                'type' => 'passthrough',
             ],
         ],
         'starttime' => [
@@ -114,10 +85,10 @@ return [
                 'type' => 'datetime',
                 'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'datetime,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'endtime' => [
@@ -127,10 +98,10 @@ return [
                 'type' => 'datetime',
                 'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'datetime,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
+                'searchable' => false,
             ],
         ],
         'title' => [
@@ -139,7 +110,6 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim',
             ],
         ],
         'path_segment' => [
@@ -159,6 +129,7 @@ return [
                 'fallbackCharacter' => '-',
                 'eval' => 'unique',
                 'default' => '',
+                'searchable' => false,
             ],
         ],
         'description' => [
