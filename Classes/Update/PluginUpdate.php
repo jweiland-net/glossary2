@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Upgrades\AbstractListTypeToCTypeUpdate;
  * Updater to fill empty slug columns of glossary records
  */
 #[UpgradeWizard('glossaryPluginUpdate')]
-class PluginUpdate extends AbstractListTypeToCTypeUpdate
+final class PluginUpdate extends AbstractListTypeToCTypeUpdate
 {
     protected function getListTypeToCTypeMapping(): array
     {
