@@ -26,11 +26,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * This Updater converts existing settings to new version.
  */
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
-class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
+final class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
-    public function __construct(private readonly ConnectionPool $connectionPool)
-    {
-    }
+    public function __construct(private readonly ConnectionPool $connectionPool) {}
+
     /**
      * Return the speaking name of this wizard
      */
@@ -128,7 +127,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
                 $valueFromDatabase['data']['sDEF']['lDEF']['settings.showAllLink']['vDEF'] = '0';
             }
 
-            $connection = $this->getConnectionPool()->getConnectionForTable('tt_content');
+            $connection = $this->connectionPool->getConnectionForTable('tt_content');
             $connection->update(
                 'tt_content',
                 [
@@ -152,9 +151,9 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      * @return array<int, mixed>
      * @throws Exception
      */
-    protected function getTtContentRecordsWithOutdatedFlexForm(): array
+    private function getTtContentRecordsWithOutdatedFlexForm(): array
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tt_content');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tt_content');
         $queryBuilder
             ->getRestrictions()
             ->removeAll()
@@ -182,7 +181,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      *
      * @param array<string, mixed> &$valueFromDatabase
      */
-    protected function moveSheetDefaultToDef(array &$valueFromDatabase): void
+    private function moveSheetDefaultToDef(array &$valueFromDatabase): void
     {
         if (array_key_exists('sDEFAULT', $valueFromDatabase['data'])) {
             foreach ($valueFromDatabase['data']['sDEFAULT']['lDEF'] as $field => $value) {
@@ -199,7 +198,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      *
      * @param array<string, mixed> &$valueFromDatabase
      */
-    protected function moveFieldFromOldToNewSheet(
+    private function moveFieldFromOldToNewSheet(
         array &$valueFromDatabase,
         string $field,
         string $oldSheet,
@@ -233,10 +232,5 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     {
         return GeneralUtility::makeInstance(FlexFormTools::class)
             ->flexArray2Xml($array);
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return $this->connectionPool;
     }
 }
