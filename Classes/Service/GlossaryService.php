@@ -18,11 +18,9 @@ use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
@@ -36,7 +34,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 /**
  * Public API to build your glossary (A-Z) for your own Extension
  */
-class GlossaryService
+final readonly class GlossaryService
 {
     /**
      * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
@@ -45,20 +43,20 @@ class GlossaryService
      *
      * @var array<string, mixed>
      */
-    protected array $glossary2Settings;
+    private array $glossary2Settings;
 
     public function __construct(
-        protected ExtConf $extConf,
-        protected EventDispatcher $eventDispatcher,
+        private ExtConf $extConf,
+        private EventDispatcher $eventDispatcher,
         ConfigurationManagerInterface $configurationManager,
-        private readonly ViewFactoryInterface $viewFactory,
-        private readonly ConnectionPool $connectionPool,
+        private ViewFactoryInterface $viewFactory,
+        private CharsetHelper $charsetHelper,
     ) {
         $this->glossary2Settings = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'Glossary2',
             'Glossary',
-        );
+        ) ?? [];
     }
 
     /**
@@ -148,7 +146,7 @@ class GlossaryService
      * @return array<int, array<string, bool|string>>
      * @throws Exception
      */
-    protected function getLinkedGlossary(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
+    private function getLinkedGlossary(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
     {
         // These are the available first letters from Database
         $availableLetters = $this->getAvailableLetters($queryBuilder, $options);
@@ -179,7 +177,7 @@ class GlossaryService
      * @return array<string, mixed>
      * @throws Exception
      */
-    protected function getAvailableLetters(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
+    private function getAvailableLetters(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
     {
         $mergeNumbers = (bool)($options['mergeNumbers'] ?? true);
 
@@ -207,7 +205,7 @@ class GlossaryService
      * @return array<string, mixed>
      * @throws Exception
      */
-    protected function getFirstLettersOfGlossaryRecords(
+    private function getFirstLettersOfGlossaryRecords(
         QueryResultInterface|QueryBuilder $queryBuilder,
         string $column,
         string $columnAlias,
@@ -264,12 +262,11 @@ class GlossaryService
      * @param array<string, mixed> $firstLetters
      * @return array<int, mixed>
      */
-    protected function cleanUpFirstLetters(array $firstLetters): array
+    private function cleanUpFirstLetters(array $firstLetters): array
     {
         // Map special chars like Ä => a
-        $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
         foreach ($firstLetters as $key => $firstLetter) {
-            $firstLetters[$key] = $charsetHelper->sanitize($firstLetter);
+            $firstLetters[$key] = $this->charsetHelper->sanitize($firstLetter);
         }
 
         // Remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
@@ -286,7 +283,7 @@ class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    protected function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): ViewInterface
+    private function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
             templatePathAndFilename: $this->getTemplatePath($options),
@@ -299,7 +296,7 @@ class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    protected function getTemplatePath(array $options): string
+    private function getTemplatePath(array $options): string
     {
         // Priority 4. Use path from ExtConf of glossary2
         $templatePath = $this->extConf->getTemplatePath();
@@ -348,15 +345,5 @@ class GlossaryService
         }
 
         return GeneralUtility::getFileAbsFileName($templatePath);
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return $this->connectionPool;
-    }
-
-    protected function getRequest(): ServerRequestInterface
-    {
-        return $GLOBALS['TYPO3_REQUEST'] ?? ServerRequestFactory::fromGlobals();
     }
 }
