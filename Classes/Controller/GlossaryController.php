@@ -26,9 +26,11 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  */
 class GlossaryController extends ActionController
 {
-    public function __construct(protected GlossaryRepository $glossaryRepository, protected GlossaryService $glossaryService)
-    {
-    }
+    public function __construct(
+        protected GlossaryRepository $glossaryRepository,
+        protected GlossaryService $glossaryService
+    ) {}
+
     public function initializeAction(): void
     {
         // If this value was not set, then it will be filled with 0, but this is bad as
