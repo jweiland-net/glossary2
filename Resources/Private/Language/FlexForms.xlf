@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2">
-		<header/>
-		<body>
-			<trans-unit id="sheetGeneral" xml:space="preserve">
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z"
+        product-name="glossary2">
+    <header/>
+    <body>
+      <trans-unit id="sheetGeneral" xml:space="preserve">
 				<source>General</source>
 			</trans-unit>
-			<trans-unit id="pidOfDetailPage">
-				<source>PID of detail page</source>
-			</trans-unit>
-			<trans-unit id="pidOfListPage">
-				<source>PID of list page</source>
-			</trans-unit>
-			<trans-unit id="showGlossar" xml:space="preserve">
+      <trans-unit id="pidOfDetailPage">
+        <source>PID of detail page</source>
+      </trans-unit>
+      <trans-unit id="pidOfListPage">
+        <source>PID of list page</source>
+      </trans-unit>
+      <trans-unit id="showGlossar" xml:space="preserve">
 				<source>Show A-Z links</source>
 			</trans-unit>
-			<trans-unit id="showAllLink" xml:space="preserve">
+      <trans-unit id="showAllLink" xml:space="preserve">
 				<source>Add ALL Link</source>
 			</trans-unit>
-			<trans-unit id="categories" xml:space="preserve">
+      <trans-unit id="categories" xml:space="preserve">
 				<source>Show all entries of a chosen category</source>
 			</trans-unit>
-		</body>
-	</file>
+    </body>
+  </file>
 </xliff>
