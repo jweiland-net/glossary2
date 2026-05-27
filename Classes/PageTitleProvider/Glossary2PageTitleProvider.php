@@ -22,11 +22,9 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  * we think it would be much cooler to see the Glossary title in Browser-Tab.
  * Please use config.pageTitleProviders.* to use our PageTitleProvider.
  */
-final class Glossary2PageTitleProvider implements AbstractPageTitleProvider
+final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
 {
     public function __construct(protected GlossaryRepository $glossaryRepository) {}
-
-    protected ?ServerRequestInterface $request = null;
 
     public function getTitle(): string
     {
