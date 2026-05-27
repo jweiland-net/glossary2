@@ -23,9 +23,11 @@ class ModifyQueryOfSearchGlossariesEvent
      * @param QueryResultInterface<int, Glossary> $queryResult
      * @param array<int> $categories
      */
-    public function __construct(protected QueryResultInterface $queryResult, protected array $categories, protected string $letter)
-    {
-    }
+    public function __construct(
+        protected QueryResultInterface $queryResult,
+        protected array $categories,
+        protected string $letter
+    ) {}
 
     /**
      * @return QueryResultInterface<int, Glossary>
