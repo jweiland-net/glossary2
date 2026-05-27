@@ -20,14 +20,13 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 /**
  * Instead of just setting the PageTitle to DetailView on Detail Page,
  * we think it would be much cooler to see the Glossary title in Browser-Tab.
- *
  * Please use config.pageTitleProviders.* to use our PageTitleProvider.
  */
 class Glossary2PageTitleProvider implements PageTitleProviderInterface
 {
-    public function __construct(protected GlossaryRepository $glossaryRepository)
-    {
-    }
+    public function __construct(protected GlossaryRepository $glossaryRepository) {}
+
+    protected ?ServerRequestInterface $request = null;
 
     public function getTitle(): string
     {
@@ -88,5 +87,10 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
     protected function getRequest(): ServerRequestInterface
     {
         return $GLOBALS['TYPO3_REQUEST'];
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
     }
 }
