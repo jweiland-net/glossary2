@@ -42,6 +42,8 @@ class GlossaryServiceTest extends FunctionalTestCase
 
     protected ExtConf $extConf;
 
+    protected CharsetHelper $charsetHelper;
+
     protected ListenerProvider $listenerProvider;
 
     protected EventDispatcher $eventDispatcher;
@@ -79,12 +81,9 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->listenerProvider = $this->createMock(ListenerProvider::class);
         $this->eventDispatcher = new EventDispatcher($this->listenerProvider);
 
-        GeneralUtility::addInstance(
-            CharsetHelper::class,
-            new CharsetHelper(
-                new CharsetConverter(),
-                $this->eventDispatcher,
-            ),
+        $this->charsetHelper = new CharsetHelper(
+            $this->get(CharsetConverter::class),
+            $this->eventDispatcher,
         );
 
         $this->configurationManager = $this->createMock(ConfigurationManager::class);
@@ -102,6 +101,7 @@ class GlossaryServiceTest extends FunctionalTestCase
         unset(
             $this->subject,
             $this->extConf,
+            $this->charsetHelper,
             $this->eventDispatcher,
             $this->configurationManager,
             $this->requestMock,
@@ -123,6 +123,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
@@ -146,6 +147,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
@@ -170,6 +172,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
@@ -188,6 +191,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary(
@@ -213,6 +217,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary(
@@ -239,6 +244,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary(
@@ -290,6 +296,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary(
@@ -315,6 +322,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
@@ -333,6 +341,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->eventDispatcher,
             $this->configurationManager,
             $this->viewFactory,
+            $this->charsetHelper,
         );
 
         $this->subject->buildGlossary(
