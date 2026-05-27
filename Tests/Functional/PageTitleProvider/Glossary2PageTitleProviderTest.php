@@ -77,14 +77,13 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        unset($this->pageTitleProvider);
         parent::tearDown();
     }
 
     #[Test]
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
+        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('https://www.example.com/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withQueryParams(
                 [
