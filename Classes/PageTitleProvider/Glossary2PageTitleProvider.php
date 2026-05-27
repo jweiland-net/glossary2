@@ -14,7 +14,7 @@ namespace JWeiland\Glossary2\PageTitleProvider;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\PageTitle\PageTitleProviderInterface;
+use TYPO3\CMS\Core\PageTitle\AbstractPageTitleProvider;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  * we think it would be much cooler to see the Glossary title in Browser-Tab.
  * Please use config.pageTitleProviders.* to use our PageTitleProvider.
  */
-class Glossary2PageTitleProvider implements PageTitleProviderInterface
+final class Glossary2PageTitleProvider implements AbstractPageTitleProvider
 {
     public function __construct(protected GlossaryRepository $glossaryRepository) {}
 
