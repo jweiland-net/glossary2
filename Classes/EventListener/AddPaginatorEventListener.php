@@ -12,13 +12,17 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\EventListener;
 
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Pagination\PaginationInterface;
 use TYPO3\CMS\Core\Pagination\PaginatorInterface;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
-class AddPaginatorEventListener extends AbstractControllerEventListener
+#[AsEventListener(
+    identifier: 'glossary2/add-paginator-event-listener',
+)]
+final class AddPaginatorEventListener extends AbstractControllerEventListener
 {
     protected int $itemsPerPage = 15;
 
