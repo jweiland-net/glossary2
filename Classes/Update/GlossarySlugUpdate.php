@@ -26,16 +26,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Updater to fill empty slug columns of glossary records
  */
 #[UpgradeWizard('glossary2UpdateSlug')]
-class GlossarySlugUpdate implements UpgradeWizardInterface
+final class GlossarySlugUpdate implements UpgradeWizardInterface
 {
-    protected string $tableName = 'tx_glossary2_domain_model_glossary';
+    private string $tableName = 'tx_glossary2_domain_model_glossary';
 
-    protected string $fieldName = 'path_segment';
+    private string $fieldName = 'path_segment';
 
-    protected ?SlugHelper $slugHelper = null;
-    public function __construct(private readonly ConnectionPool $connectionPool)
-    {
-    }
+    private ?SlugHelper $slugHelper = null;
+    public function __construct(private readonly ConnectionPool $connectionPool) {}
 
     public function getTitle(): string
     {
@@ -49,7 +47,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     public function updateNecessary(): bool
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $amountOfRecordsWithEmptySlug = $queryBuilder
             ->count('*')
             ->from($this->tableName)
@@ -78,7 +76,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
      */
     public function executeUpdate(): bool
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $recordsToUpdate = $queryBuilder
             ->select('uid', 'title', 'path_segment')
             ->from($this->tableName)
@@ -96,7 +94,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $connection = $this->getConnectionPool()->getConnectionForTable($this->tableName);
+        $connection = $this->connectionPool->getConnectionForTable($this->tableName);
         foreach ($recordsToUpdate as $recordToUpdate) {
             if ((string)$recordToUpdate['title'] !== '') {
                 $slug = $this->getSlugHelper()->sanitize((string)$recordToUpdate['title']);
@@ -118,7 +116,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
         return true;
     }
 
-    protected function getUniqueValue(int $uid, string $slug): string
+    private function getUniqueValue(int $uid, string $slug): string
     {
         $queryBuilder = $this->getUniqueCountQueryBuilder($uid, $slug);
         $statement = $queryBuilder->prepare();
@@ -139,9 +137,9 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
         return $newSlug ?? $slug;
     }
 
-    protected function getUniqueCountQueryBuilder(int $uid, string $slug): QueryBuilder
+    private function getUniqueCountQueryBuilder(int $uid, string $slug): QueryBuilder
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $queryBuilder
             ->getRestrictions()
             ->removeAll()
@@ -162,14 +160,28 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
             );
     }
 
-    protected function getSlugHelper(): SlugHelper
+    private function getSlugHelper(): SlugHelper
     {
         if (!$this->slugHelper instanceof SlugHelper) {
+            $fieldConfig = $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config'] ?? [];
+
+            // Safe fallback configuration if the wizard runs during a deployment cold cache state
+            if (empty($fieldConfig)) {
+                $fieldConfig = [
+                    'type' => 'slug',
+                    'generatorOptions' => [
+                        'fields' => ['title'],
+                        'replacements' => ['/' => '-'],
+                    ],
+                    'fallbackCharacter' => '-',
+                ];
+            }
+
             $this->slugHelper = GeneralUtility::makeInstance(
                 SlugHelper::class,
                 $this->tableName,
                 $this->fieldName,
-                $GLOBALS['TCA'][$this->tableName]['columns']['path_segment']['config'] ?? [],
+                $fieldConfig,
             );
         }
 
@@ -184,10 +196,5 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
         return [
             DatabaseUpdatedPrerequisite::class,
         ];
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return $this->connectionPool;
     }
 }
