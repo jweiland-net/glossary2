@@ -18,11 +18,12 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 /**
  * Helper to convert chars like ä, á, ß to its ASCII representation a, a, s
  */
-class CharsetHelper
+final readonly class CharsetHelper
 {
-    public function __construct(protected CharsetConverter $charsetConverter, protected EventDispatcher $eventDispatcher)
-    {
-    }
+    public function __construct(
+        protected CharsetConverter $charsetConverter,
+        protected EventDispatcher $eventDispatcher
+    ) {}
 
     /**
      * Sanitize value by an automatism.
