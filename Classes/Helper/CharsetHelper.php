@@ -32,8 +32,7 @@ final readonly class CharsetHelper
     public function sanitize(string $value): string
     {
         // This should sanitize the most values to ASCII
-        $preSanitizedValue = $this->charsetConverter->specCharsToASCII(
-            'utf-8',
+        $preSanitizedValue = $this->charsetConverter->utf8_char_mapping(
             mb_strtolower($value, 'utf-8'),
         );
 
