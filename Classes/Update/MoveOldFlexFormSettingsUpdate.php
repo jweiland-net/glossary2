@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Update;
 
-use TYPO3\CMS\Core\Attribute\UpgradeWizard;
-use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
-use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
 use Doctrine\DBAL\Exception;
+use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
+use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -43,8 +43,8 @@ final class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      */
     public function getDescription(): string
     {
-        return 'It seems that some FlexForm fields of glossary2 are using old SwitchableControllerActions. ' .
-            'As these fields are outdated you should update them to new FlexForm fields.';
+        return 'It seems that some FlexForm fields of glossary2 are using old SwitchableControllerActions. '
+            . 'As these fields are outdated you should update them to new FlexForm fields.';
     }
 
     /**

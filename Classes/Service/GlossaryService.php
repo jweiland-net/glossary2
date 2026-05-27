@@ -68,7 +68,7 @@ final readonly class GlossaryService
     public function buildGlossary(
         QueryResultInterface|QueryBuilder $queryBuilder,
         array $options = [],
-        ServerRequestInterface $request = null,
+        ?ServerRequestInterface $request = null,
     ): string {
         $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
@@ -283,7 +283,7 @@ final readonly class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    private function getFluidTemplateObject(array $options, ServerRequestInterface $request = null): ViewInterface
+    private function getFluidTemplateObject(array $options, ?ServerRequestInterface $request = null): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
             templatePathAndFilename: $this->getTemplatePath($options),

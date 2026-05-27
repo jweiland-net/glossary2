@@ -21,8 +21,8 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 final readonly class CharsetHelper
 {
     public function __construct(
-        protected CharsetConverter $charsetConverter,
-        protected EventDispatcher $eventDispatcher
+        private CharsetConverter $charsetConverter,
+        private EventDispatcher $eventDispatcher,
     ) {}
 
     /**

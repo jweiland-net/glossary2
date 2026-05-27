@@ -26,7 +26,7 @@ class ModifyQueryOfSearchGlossariesEvent
     public function __construct(
         protected QueryResultInterface $queryResult,
         protected array $categories,
-        protected string $letter
+        protected string $letter,
     ) {}
 
     /**

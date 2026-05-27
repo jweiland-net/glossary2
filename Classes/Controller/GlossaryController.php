@@ -28,7 +28,7 @@ class GlossaryController extends ActionController
 {
     public function __construct(
         protected GlossaryRepository $glossaryRepository,
-        protected GlossaryService $glossaryService
+        protected GlossaryService $glossaryService,
     ) {}
 
     public function initializeAction(): void

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Event;
 
-
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 
 /**
@@ -27,7 +26,7 @@ class PostProcessFluidVariablesEvent implements ControllerActionEventInterface
     public function __construct(
         protected RequestInterface $request,
         protected array $settings,
-        protected array $fluidVariables
+        protected array $fluidVariables,
     ) {}
 
     public function getRequest(): RequestInterface
