@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  */
 final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
 {
-    public function __construct(protected GlossaryRepository $glossaryRepository) {}
+    public function __construct(private readonly GlossaryRepository $glossaryRepository) {}
 
     public function getTitle(): string
     {
@@ -61,7 +61,7 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
      *
      * @param array<string, mixed> $gp
      */
-    protected function isValidRequest(array $gp): bool
+    private function isValidRequest(array $gp): bool
     {
         if (!isset($gp['action'], $gp['glossary'])) {
             return false;
@@ -73,7 +73,7 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
     /**
      * @return string|array<string, mixed>|null
      */
-    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
+    private function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
     {
         $queryParams = $requestObject->getQueryParams();
 
@@ -82,7 +82,7 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
             : false;
     }
 
-    protected function getRequest(): ServerRequestInterface
+    private function getRequest(): ServerRequestInterface
     {
         return $GLOBALS['TYPO3_REQUEST'];
     }
