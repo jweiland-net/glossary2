@@ -12,8 +12,9 @@ namespace JWeiland\Glossary2\Backend\Preview;
 
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
-use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
-use TYPO3\CMS\Core\Domain\Record;
+use TYPO3\CMS\Core\Collection\LazyRecordCollection;
+use TYPO3\CMS\Core\Collection\RecordCollectionInterface;
+use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Core\View\ViewInterface;
@@ -28,8 +29,7 @@ final class PluginPreview extends StandardContentPreviewRenderer
     ];
 
     public function __construct(
-        protected FlexFormTools $flexFormTools,
-        protected ViewFactoryInterface $viewFactory,
+        private readonly ViewFactoryInterface $viewFactory,
     ) {}
 
     public function renderPageModulePreviewContent(GridColumnItem $item): string
@@ -57,25 +57,20 @@ final class PluginPreview extends StandardContentPreviewRenderer
         return $view->render();
     }
 
-    protected function isValidPlugin(Record $ttContentRecord): bool
+    private function isValidPlugin(RecordInterface $ttContentRecord): bool
     {
         $rawRecord = $ttContentRecord->toArray();
 
         if (!isset($rawRecord['CType'])) {
             return false;
         }
-
-        if (!in_array($rawRecord['CType'], self::ALLOWED_PLUGINS, true)) {
-            return false;
-        }
-
-        return true;
+        return in_array($rawRecord['CType'], self::ALLOWED_PLUGINS, true);
     }
 
     /**
      * @param array<string, mixed> $ttContentRecord
      */
-    protected function addPluginName(ViewInterface $view, array $ttContentRecord): void
+    private function addPluginName(ViewInterface $view, array $ttContentRecord): void
     {
         $langKey = sprintf(
             'plugin.%s.title',
@@ -92,7 +87,7 @@ final class PluginPreview extends StandardContentPreviewRenderer
      * @param array<string, mixed> $ttContentRecord
      * @return array<string, mixed>
      */
-    protected function getPiFlexformData(array $ttContentRecord): array
+    private function getPiFlexformData(array $ttContentRecord): array
     {
         $data = [];
 
@@ -108,14 +103,14 @@ final class PluginPreview extends StandardContentPreviewRenderer
 
         if ($rawSettings !== []) {
             foreach ($rawSettings as $key => $value) {
-                if ($value instanceof \TYPO3\CMS\Core\Collection\LazyRecordCollection || $value instanceof \TYPO3\CMS\Core\Collection\RecordCollectionInterface) {
+                if ($value instanceof LazyRecordCollection || $value instanceof RecordCollectionInterface) {
                     $uids = [];
                     foreach ($value as $record) {
                         if (method_exists($record, 'getUid')) {
                             $uids[] = $record->getUid();
                         }
                     }
-                    $cleanedSettings[$key] = !empty($uids) ? implode(',', $uids) : $this->extractFieldValueFromCollection($value);
+                    $cleanedSettings[$key] = $uids === [] ? $this->extractFieldValueFromCollection($value) : implode(',', $uids);
                 } else {
                     $cleanedSettings[$key] = $value;
                 }
