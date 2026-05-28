@@ -62,7 +62,6 @@ final readonly class GlossaryService
     /**
      * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
      * @param array<string, mixed> $options
-     * @param ServerRequestInterface|null $request
      * @throws Exception
      */
     public function buildGlossary(
@@ -188,7 +187,7 @@ final readonly class GlossaryService
             $options['columnAlias'] ?? 'Letter',
         );
 
-        $availableNumbers = array_filter($availableChars, static fn($letter): bool => is_numeric($letter));
+        $availableNumbers = array_filter($availableChars, is_numeric(...));
 
         $availableLetters = array_diff($availableChars, $availableNumbers);
 
