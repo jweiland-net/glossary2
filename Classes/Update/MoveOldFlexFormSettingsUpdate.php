@@ -26,9 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * This Updater converts existing settings to new version.
  */
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
-final class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
+final readonly class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
-    public function __construct(private readonly ConnectionPool $connectionPool) {}
+    public function __construct(private ConnectionPool $connectionPool) {}
 
     /**
      * Return the speaking name of this wizard
@@ -51,6 +51,7 @@ final class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      * Checks whether updates are required.
      *
      * @return bool Whether an update is required (TRUE) or not (FALSE)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
