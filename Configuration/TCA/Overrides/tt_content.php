@@ -9,11 +9,7 @@ declare(strict_types=1);
  * LICENSE file that was distributed with this source code.
  */
 
-if (!defined('TYPO3')) {
-    die('Access denied.');
-}
-
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use JWeiland\Glossary2\Backend\Preview\PluginPreview;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 $pluginSignature = ExtensionUtility::registerPlugin(
@@ -25,20 +21,9 @@ $pluginSignature = ExtensionUtility::registerPlugin(
     'LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:plugin.glossary.description',
 );
 
-ExtensionManagementUtility::addToAllTCAtypes(
-    'tt_content',
-    '--div--;Configuration,pi_flexform,',
-    $pluginSignature,
-    'after:subheader',
-);
+$GLOBALS['TCA']['tt_content']['types'][$pluginSignature]['columnsOverrides']['pi_flexform']['config']['ds'] = 'FILE:EXT:glossary2/Configuration/FlexForms/Glossary.xml';
 
-ExtensionManagementUtility::addPiFlexFormValue(
-    '*',
-    'FILE:EXT:glossary2/Configuration/FlexForms/Glossary.xml',
-    $pluginSignature,
-);
-
-$GLOBALS['TCA']['tt_content']['types']['glossary2_glossary']['showitem'] = '
+$GLOBALS['TCA']['tt_content']['types'][$pluginSignature]['showitem'] = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
         --palette--;;general,
         --palette--;;headers,
@@ -60,3 +45,5 @@ $GLOBALS['TCA']['tt_content']['types']['glossary2_glossary']['showitem'] = '
         rowDescription,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended,
 ';
+
+$GLOBALS['TCA']['tt_content']['types']['glossary2_glossary']['previewRenderer'] = PluginPreview::class;
