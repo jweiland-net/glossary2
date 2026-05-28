@@ -9,10 +9,6 @@ declare(strict_types=1);
  * LICENSE file that was distributed with this source code.
  */
 
-if (!defined('TYPO3')) {
-    die('Access denied.');
-}
-
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 $GLOBALS['TCA']['tx_glossary2_domain_model_glossary']['columns']['categories'] = [
