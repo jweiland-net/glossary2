@@ -24,14 +24,14 @@ use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 )]
 final class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    protected int $itemsPerPage = 15;
+    private int $itemsPerPage = 15;
 
     /**
      * Fluid variable name for paginated records
      */
-    protected string $fluidVariableForPaginatedRecords = 'glossaries';
+    private string $fluidVariableForPaginatedRecords = 'glossaries';
 
-    protected string $fallbackPaginationClass = SimplePagination::class;
+    private string $fallbackPaginationClass = SimplePagination::class;
 
     /**
      * @var array<string, mixed>
@@ -58,7 +58,7 @@ final class AddPaginatorEventListener extends AbstractControllerEventListener
         }
     }
 
-    protected function getCurrentPage(PostProcessFluidVariablesEvent $event): int
+    private function getCurrentPage(PostProcessFluidVariablesEvent $event): int
     {
         if ($event->getRequest()->hasArgument('currentPage')) {
             return MathUtility::forceIntegerInRange(
@@ -69,12 +69,12 @@ final class AddPaginatorEventListener extends AbstractControllerEventListener
         return 1;
     }
 
-    protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
+    private function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
         return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
     }
 
-    protected function getPagination(
+    private function getPagination(
         PostProcessFluidVariablesEvent $event,
         PaginatorInterface $paginator,
     ): PaginationInterface {
