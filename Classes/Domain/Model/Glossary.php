@@ -29,16 +29,16 @@ class Glossary extends AbstractEntity
     protected string $description = '';
 
     /**
-     * @var ObjectStorage<FileReference>
+     * @var ObjectStorage<FileReference>|null
      */
     #[Lazy]
-    protected ObjectStorage $images;
+    protected ?ObjectStorage $images = null;
 
     /**
-     * @var ObjectStorage<Category>
+     * @var ObjectStorage<Category>|null
      */
     #[Lazy]
-    protected ObjectStorage $categories;
+    protected ?ObjectStorage $categories = null;
 
     public function __construct()
     {
@@ -51,8 +51,8 @@ class Glossary extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->images = $this->images ?? new ObjectStorage();
-        $this->categories = $this->categories ?? new ObjectStorage();
+        $this->images ??= new ObjectStorage();
+        $this->categories ??= new ObjectStorage();
     }
 
     public function getTitle(): string
@@ -80,7 +80,7 @@ class Glossary extends AbstractEntity
      */
     public function getImages(): ObjectStorage
     {
-        return $this->images;
+        return $this->images ??= new ObjectStorage();
     }
 
     /**
@@ -106,7 +106,7 @@ class Glossary extends AbstractEntity
      */
     public function getCategories(): ObjectStorage
     {
-        return $this->categories;
+        return $this->categories ??= new ObjectStorage();
     }
 
     /**

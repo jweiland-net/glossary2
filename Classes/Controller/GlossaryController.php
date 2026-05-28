@@ -78,7 +78,6 @@ class GlossaryController extends ActionController
         /** @var PostProcessFluidVariablesEvent $event */
         $event = $this->eventDispatcher->dispatch(
             new PostProcessFluidVariablesEvent(
-                /** @phpstan-ignore-next-line */
                 $this->request,
                 $this->settings,
                 $variables,

@@ -56,7 +56,7 @@ final readonly class GlossaryService
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'Glossary2',
             'Glossary',
-        ) ?? [];
+        );
     }
 
     /**
