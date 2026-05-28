@@ -33,8 +33,8 @@ final class AddGlossaryEventListener extends AbstractControllerEventListener
     ];
 
     public function __construct(
-        protected readonly GlossaryService $glossaryService,
-        protected readonly GlossaryRepository $glossaryRepository,
+        private readonly GlossaryService $glossaryService,
+        private readonly GlossaryRepository $glossaryRepository,
     ) {}
 
     public function __invoke(PostProcessFluidVariablesEvent $event): void
@@ -54,7 +54,7 @@ final class AddGlossaryEventListener extends AbstractControllerEventListener
     /**
      * @return array<string, mixed>
      */
-    protected function getOptions(PostProcessFluidVariablesEvent $event): array
+    private function getOptions(PostProcessFluidVariablesEvent $event): array
     {
         $options = [
             'extensionName' => 'glossary2',
