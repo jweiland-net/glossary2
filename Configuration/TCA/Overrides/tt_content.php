@@ -9,7 +9,6 @@ declare(strict_types=1);
  * LICENSE file that was distributed with this source code.
  */
 
-use JWeiland\Glossary2\Backend\Preview\PluginPreview;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 $pluginSignature = ExtensionUtility::registerPlugin(
@@ -45,5 +44,3 @@ $GLOBALS['TCA']['tt_content']['types'][$pluginSignature]['showitem'] = '
         rowDescription,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended,
 ';
-
-$GLOBALS['TCA']['tt_content']['types']['glossary2_glossary']['previewRenderer'] = PluginPreview::class;
