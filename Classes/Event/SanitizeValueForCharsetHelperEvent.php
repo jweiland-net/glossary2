@@ -15,7 +15,7 @@ namespace JWeiland\Glossary2\Event;
  * By default we only map a hand full of letters like ä => a.
  * If you need to sanitize more letters like á => a you have to use this event.
  */
-class SanitizeValueForCharsetHelperEvent
+final class SanitizeValueForCharsetHelperEvent
 {
     public function __construct(protected string $value) {}
 

@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Event;
 
-/*
- * Use this event, if you want to modify the query of GlossaryRepository::findEntries.
+/**
+ * This is an event that allows post-processing of the first letters.
+ * This class is designed to handle a collection of first letters, providing
+ * mechanisms to manipulate or retrieve them as needed in the context of
+ * post-processing operations.
  */
-class PostProcessFirstLettersEvent
+final class PostProcessFirstLettersEvent
 {
     /**
      * @param array<string> $firstLetters
@@ -27,5 +30,10 @@ class PostProcessFirstLettersEvent
     public function getFirstLetters(): array
     {
         return $this->firstLetters;
+    }
+
+    public function setFirstLetters(array $firstLetters): void
+    {
+        $this->firstLetters = $firstLetters;
     }
 }
