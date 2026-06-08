@@ -31,7 +31,7 @@ final readonly class AddPaginatorEventListener extends AbstractControllerEventLi
     /**
      * @var array<string, mixed>
      */
-    private const array ALLOWED_CONTROLLER_ACTIONS = [
+    public const array ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],
@@ -41,14 +41,14 @@ final readonly class AddPaginatorEventListener extends AbstractControllerEventLi
     {
         if ($this->isValidRequest($event)) {
             $paginator = new QueryResultPaginator(
-                $event->getFluidVariables()[static::FLUID_VARIABLE],
+                $event->getFluidVariables()[self::FLUID_VARIABLE],
                 $this->getCurrentPage($event),
                 $this->getItemsPerPage($event),
             );
 
             $event->addFluidVariable('actionName', $event->getActionName());
             $event->addFluidVariable('paginator', $paginator);
-            $event->addFluidVariable(static::FLUID_VARIABLE, $paginator->getPaginatedItems());
+            $event->addFluidVariable(self::FLUID_VARIABLE, $paginator->getPaginatedItems());
             $event->addFluidVariable('pagination', $this->getPagination($event, $paginator));
         }
     }
@@ -66,21 +66,21 @@ final readonly class AddPaginatorEventListener extends AbstractControllerEventLi
 
     private function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
-        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? static::DEFAULT_ITEMS_PER_PAGE);
+        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? self::DEFAULT_ITEMS_PER_PAGE);
     }
 
     private function getPagination(
         PostProcessFluidVariablesEvent $event,
         PaginatorInterface $paginator,
     ): PaginationInterface {
-        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? static::FALLBACK_PAGINATION;
+        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? self::FALLBACK_PAGINATION;
 
         if (!class_exists($paginationClass)) {
-            $paginationClass = static::FALLBACK_PAGINATION;
+            $paginationClass = self::FALLBACK_PAGINATION;
         }
 
         if (!is_subclass_of($paginationClass, PaginationInterface::class)) {
-            $paginationClass = static::FALLBACK_PAGINATION;
+            $paginationClass = self::FALLBACK_PAGINATION;
         }
 
         return new $paginationClass($paginator);

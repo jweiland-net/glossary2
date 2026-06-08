@@ -23,7 +23,7 @@ readonly class AbstractControllerEventListener
      *
      * @var array<string, mixed>
      */
-    private const array ALLOWED_CONTROLLER_ACTIONS = [];
+    public const array ALLOWED_CONTROLLER_ACTIONS = [];
 
     protected function isValidRequest(ControllerActionEventInterface $event): bool
     {
