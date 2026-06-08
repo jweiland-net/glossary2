@@ -100,5 +100,11 @@ return [
                 ],
             ],
         ],
+        'categories' => [
+            'exclude' => true,
+            'config' => [
+                'type' => 'category',
+            ],
+        ],
     ],
 ];
