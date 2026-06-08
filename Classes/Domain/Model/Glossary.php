@@ -80,7 +80,7 @@ class Glossary extends AbstractEntity
      */
     public function getImages(): ObjectStorage
     {
-        return $this->images = new ObjectStorage();
+        return $this->images;
     }
 
     /**
@@ -106,7 +106,7 @@ class Glossary extends AbstractEntity
      */
     public function getCategories(): ObjectStorage
     {
-        return $this->categories = new ObjectStorage();
+        return $this->categories;
     }
 
     /**
