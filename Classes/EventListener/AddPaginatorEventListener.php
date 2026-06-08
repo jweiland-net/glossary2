@@ -12,27 +12,26 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\EventListener;
 
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Pagination\PaginationInterface;
 use TYPO3\CMS\Core\Pagination\PaginatorInterface;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
-class AddPaginatorEventListener extends AbstractControllerEventListener
+#[AsEventListener(
+    identifier: 'glossary2/add-paginator-event-listener',
+)]
+final readonly class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    protected int $itemsPerPage = 15;
-
-    /**
-     * Fluid variable name for paginated records
-     */
-    protected string $fluidVariableForPaginatedRecords = 'glossaries';
-
-    protected string $fallbackPaginationClass = SimplePagination::class;
+    private const DEFAULT_ITEMS_PER_PAGE = 15;
+    private const FLUID_VARIABLE = 'glossaries';
+    private const FALLBACK_PAGINATION = SimplePagination::class;
 
     /**
      * @var array<string, mixed>
      */
-    protected array $allowedControllerActions = [
+    public const ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],
@@ -42,50 +41,46 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
     {
         if ($this->isValidRequest($event)) {
             $paginator = new QueryResultPaginator(
-                $event->getFluidVariables()[$this->fluidVariableForPaginatedRecords],
+                $event->getFluidVariables()[self::FLUID_VARIABLE],
                 $this->getCurrentPage($event),
                 $this->getItemsPerPage($event),
             );
 
             $event->addFluidVariable('actionName', $event->getActionName());
             $event->addFluidVariable('paginator', $paginator);
-            $event->addFluidVariable($this->fluidVariableForPaginatedRecords, $paginator->getPaginatedItems());
+            $event->addFluidVariable(self::FLUID_VARIABLE, $paginator->getPaginatedItems());
             $event->addFluidVariable('pagination', $this->getPagination($event, $paginator));
         }
     }
 
-    protected function getCurrentPage(PostProcessFluidVariablesEvent $event): int
+    private function getCurrentPage(PostProcessFluidVariablesEvent $event): int
     {
-        $currentPage = 1;
         if ($event->getRequest()->hasArgument('currentPage')) {
-            // $currentPage have to be positive and greater than 0
-            // See: AbstractPaginator::setCurrentPageNumber()
-            $currentPage = MathUtility::forceIntegerInRange(
+            return MathUtility::forceIntegerInRange(
                 (int)$event->getRequest()->getArgument('currentPage'),
                 1,
             );
         }
-
-        return $currentPage;
+        return 1;
     }
 
-    protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
+    private function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
-        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
+        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? self::DEFAULT_ITEMS_PER_PAGE);
     }
 
-    protected function getPagination(
+    private function getPagination(
         PostProcessFluidVariablesEvent $event,
         PaginatorInterface $paginator,
     ): PaginationInterface {
-        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? $this->fallbackPaginationClass;
+        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? self::FALLBACK_PAGINATION;
 
         if (!class_exists($paginationClass)) {
-            $paginationClass = $this->fallbackPaginationClass;
+            $paginationClass = self::FALLBACK_PAGINATION;
         }
 
         if (!is_subclass_of($paginationClass, PaginationInterface::class)) {
-            $paginationClass = $this->fallbackPaginationClass;
+            $paginationClass = self::FALLBACK_PAGINATION;
         }
 
         return new $paginationClass($paginator);

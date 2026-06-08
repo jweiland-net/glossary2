@@ -14,28 +14,28 @@ namespace JWeiland\Glossary2\EventListener;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 
-class AddGlossaryEventListener extends AbstractControllerEventListener
+#[AsEventListener(
+    identifier: 'glossary2/add-glossary-event-listener',
+    after: 'glossary2/add-paginator-event-listener',
+)]
+final readonly class AddGlossaryEventListener extends AbstractControllerEventListener
 {
-    protected GlossaryService $glossaryService;
-
-    protected GlossaryRepository $glossaryRepository;
-
     /**
      * @var array<string, mixed>
      */
-    protected array $allowedControllerActions = [
+    public const ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],
     ];
 
-    public function __construct(GlossaryService $glossaryService, GlossaryRepository $glossaryRepository)
-    {
-        $this->glossaryService = $glossaryService;
-        $this->glossaryRepository = $glossaryRepository;
-    }
+    public function __construct(
+        private GlossaryService $glossaryService,
+        private GlossaryRepository $glossaryRepository,
+    ) {}
 
     public function __invoke(PostProcessFluidVariablesEvent $event): void
     {
@@ -54,7 +54,7 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
     /**
      * @return array<string, mixed>
      */
-    protected function getOptions(PostProcessFluidVariablesEvent $event): array
+    private function getOptions(PostProcessFluidVariablesEvent $event): array
     {
         $options = [
             'extensionName' => 'glossary2',

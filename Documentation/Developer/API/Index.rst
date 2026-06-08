@@ -79,7 +79,9 @@ Within your controller you can call our API that way:
         $this->view->assign(
             'glossar',
             $this->glossaryService->buildGlossary(
-                $this->myRepository->getQueryBuilderToFindAllEntries()
+                $this->myRepository->getQueryBuilderToFindAllEntries(),
+                [],
+                $request,
             )
         );
     }
@@ -95,7 +97,7 @@ Use `f:format.raw()` in Fluid Template:
 Configure Glossary API
 ======================
 
-If you want, you can configure our API with second `options` argument:
+If you want, you can configure our API with the required `options` argument (pass an empty array if no options are needed):
 
 ..  code-block:: php
 
@@ -106,7 +108,8 @@ If you want, you can configure our API with second `options` argument:
             [
                 'settings' => $this->settings,
                 'templatePath' => 'EXT:myext:/Resources/Private/Templates/Glossary.html',
-            ]
+            ],
+            $request,
         )
     );
 

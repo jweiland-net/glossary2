@@ -38,7 +38,7 @@ class ExtConf implements SingletonInterface
                     }
                 }
             }
-        } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException $e) {
+        } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
             // Use default values of this class
         }
     }
@@ -59,7 +59,7 @@ class ExtConf implements SingletonInterface
     public function getTemplatePath(): string
     {
         if ($this->templatePath === '') {
-            return 'EXT:glossary2/Resources/Private/Templates/Glossary.html';
+            return 'EXT:glossary2/Resources/Private/Templates/Glossary.fluid.html';
         }
         return $this->templatePath;
     }

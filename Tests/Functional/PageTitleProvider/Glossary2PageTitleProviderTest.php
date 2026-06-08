@@ -23,7 +23,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -49,13 +48,8 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
         $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
         $configurationManager->setConfiguration([
-            'foo' => 'bar',  // Example configuration
+            'foo' => 'bar',
         ]);
-
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            $GLOBALS['TYPO3_REQUEST'],
-        );
 
         $pageId = 15;
         $persistenceManager = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
@@ -77,14 +71,13 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        unset($this->pageTitleProvider);
         parent::tearDown();
     }
 
     #[Test]
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
+        $request = (new ServerRequest('https://www.example.com/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withQueryParams(
                 [
@@ -94,6 +87,8 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
                     ],
                 ],
             );
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+        $this->subject->setRequest($request);
 
         self::assertSame(
             'Nice title for detail page',

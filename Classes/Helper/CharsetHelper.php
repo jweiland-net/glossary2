@@ -18,17 +18,12 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 /**
  * Helper to convert chars like ä, á, ß to its ASCII representation a, a, s
  */
-class CharsetHelper
+final readonly class CharsetHelper
 {
-    protected CharsetConverter $charsetConverter;
-
-    protected EventDispatcher $eventDispatcher;
-
-    public function __construct(CharsetConverter $charsetConverter, EventDispatcher $eventDispatcher)
-    {
-        $this->charsetConverter = $charsetConverter;
-        $this->eventDispatcher = $eventDispatcher;
-    }
+    public function __construct(
+        private CharsetConverter $charsetConverter,
+        private EventDispatcher $eventDispatcher,
+    ) {}
 
     /**
      * Sanitize value by an automatism.
@@ -37,8 +32,7 @@ class CharsetHelper
     public function sanitize(string $value): string
     {
         // This should sanitize the most values to ASCII
-        $preSanitizedValue = $this->charsetConverter->specCharsToASCII(
-            'utf-8',
+        $preSanitizedValue = $this->charsetConverter->utf8_char_mapping(
             mb_strtolower($value, 'utf-8'),
         );
 

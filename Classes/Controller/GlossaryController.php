@@ -17,29 +17,20 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewInterface;
-use TYPO3\CMS\Extbase\Annotation as Extbase;
+use TYPO3\CMS\Extbase\Attribute as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Main controller of glossary2 to list and show glossary records
  */
 class GlossaryController extends ActionController
 {
-    protected GlossaryRepository $glossaryRepository;
-
-    protected GlossaryService $glossaryService;
-
-    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
-    {
-        $this->glossaryRepository = $glossaryRepository;
-    }
-
-    public function injectGlossaryService(GlossaryService $glossaryService): void
-    {
-        $this->glossaryService = $glossaryService;
-    }
+    public function __construct(
+        protected GlossaryRepository $glossaryRepository,
+        protected GlossaryService $glossaryService,
+    ) {}
 
     public function initializeAction(): void
     {
@@ -50,17 +41,20 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(ViewInterface $view): void
+    /**
+     * @param ViewInterface $view
+     */
+    protected function initializeView($view): void
     {
-        $view->assign('data', $this->getContentObjectData());
+        $this->view->assign('data', $this->getContentObjectData());
     }
 
     /**
      * @param string $letter Show only records starting with this letter
-     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
-    public function listAction(string $letter = ''): ResponseInterface
-    {
+    public function listAction(
+        #[Extbase\Validate(validator: 'StringLength', options: ['minimum' => 1, 'maximum' => 3])] string $letter = '',
+    ): ResponseInterface {
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,
             'glossaries' => $this->glossaryRepository->searchGlossaries(
@@ -88,7 +82,6 @@ class GlossaryController extends ActionController
         /** @var PostProcessFluidVariablesEvent $event */
         $event = $this->eventDispatcher->dispatch(
             new PostProcessFluidVariablesEvent(
-                /** @phpstan-ignore-next-line */
                 $this->request,
                 $this->settings,
                 $variables,
@@ -103,12 +96,11 @@ class GlossaryController extends ActionController
      */
     protected function getContentObjectData(): array
     {
-        $data = [];
         $contentObjectRenderer = $this->request->getAttribute('currentContentObject');
         if ($contentObjectRenderer instanceof ContentObjectRenderer && is_array($contentObjectRenderer->data)) {
-            $data = $contentObjectRenderer->data;
+            return $contentObjectRenderer->data;
         }
 
-        return $data;
+        return [];
     }
 }

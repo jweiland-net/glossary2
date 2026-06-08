@@ -12,22 +12,24 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Update;
 
 use Doctrine\DBAL\Exception;
+use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
+use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\UpgradeWizard;
-use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
-use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * With glossary2 3.0.0 we have changed some FlexForm Settings.
  * This Updater converts existing settings to new version.
  */
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
-class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
+final readonly class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
+    public function __construct(private ConnectionPool $connectionPool) {}
+
     /**
      * Return the speaking name of this wizard
      */
@@ -41,20 +43,24 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      */
     public function getDescription(): string
     {
-        return 'It seems that some FlexForm fields of glossary2 are using old SwitchableControllerActions. ' .
-            'As these fields are outdated you should update them to new FlexForm fields.';
+        return 'It seems that some FlexForm fields of glossary2 are using old SwitchableControllerActions. '
+            . 'As these fields are outdated you should update them to new FlexForm fields.';
     }
 
     /**
      * Checks whether updates are required.
      *
      * @return bool Whether an update is required (TRUE) or not (FALSE)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
         foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
             $valueFromDatabase = (string)$record['pi_flexform'] !== '' ? GeneralUtility::xml2array($record['pi_flexform']) : [];
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
+            if (!is_array($valueFromDatabase)) {
+                continue;
+            }
+            if (in_array($valueFromDatabase, ['', '0', []], true)) {
                 continue;
             }
 
@@ -94,8 +100,10 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
             $valueFromDatabase = (string)$record['pi_flexform'] !== ''
                 ? GeneralUtility::xml2array($record['pi_flexform'])
                 : [];
-
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
+            if (!is_array($valueFromDatabase)) {
+                continue;
+            }
+            if (in_array($valueFromDatabase, ['', '0', []], true)) {
                 continue;
             }
 
@@ -120,7 +128,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
                 $valueFromDatabase['data']['sDEF']['lDEF']['settings.showAllLink']['vDEF'] = '0';
             }
 
-            $connection = $this->getConnectionPool()->getConnectionForTable('tt_content');
+            $connection = $this->connectionPool->getConnectionForTable('tt_content');
             $connection->update(
                 'tt_content',
                 [
@@ -144,9 +152,9 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      * @return array<int, mixed>
      * @throws Exception
      */
-    protected function getTtContentRecordsWithOutdatedFlexForm(): array
+    private function getTtContentRecordsWithOutdatedFlexForm(): array
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tt_content');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tt_content');
         $queryBuilder
             ->getRestrictions()
             ->removeAll()
@@ -174,7 +182,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      *
      * @param array<string, mixed> &$valueFromDatabase
      */
-    protected function moveSheetDefaultToDef(array &$valueFromDatabase): void
+    private function moveSheetDefaultToDef(array &$valueFromDatabase): void
     {
         if (array_key_exists('sDEFAULT', $valueFromDatabase['data'])) {
             foreach ($valueFromDatabase['data']['sDEFAULT']['lDEF'] as $field => $value) {
@@ -191,7 +199,7 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
      *
      * @param array<string, mixed> &$valueFromDatabase
      */
-    protected function moveFieldFromOldToNewSheet(
+    private function moveFieldFromOldToNewSheet(
         array &$valueFromDatabase,
         string $field,
         string $oldSheet,
@@ -225,10 +233,5 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     {
         return GeneralUtility::makeInstance(FlexFormTools::class)
             ->flexArray2Xml($array);
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

@@ -13,7 +13,7 @@ namespace JWeiland\Glossary2\Domain\Model;
 
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
+use TYPO3\CMS\Extbase\Attribute\ORM\Lazy;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -30,14 +30,14 @@ class Glossary extends AbstractEntity
 
     /**
      * @var ObjectStorage<FileReference>
-     * @Lazy
      */
+    #[Lazy()]
     protected ObjectStorage $images;
 
     /**
      * @var ObjectStorage<Category>
-     * @Lazy
      */
+    #[Lazy()]
     protected ObjectStorage $categories;
 
     public function __construct()
@@ -51,8 +51,8 @@ class Glossary extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->images = $this->images ?? new ObjectStorage();
-        $this->categories = $this->categories ?? new ObjectStorage();
+        $this->images = new ObjectStorage();
+        $this->categories = new ObjectStorage();
     }
 
     public function getTitle(): string

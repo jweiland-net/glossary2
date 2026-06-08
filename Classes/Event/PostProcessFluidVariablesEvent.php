@@ -11,41 +11,25 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Event;
 
-use TYPO3\CMS\Extbase\Mvc\Request;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 
 /**
  * Post process controller actions which assign fluid variables to view.
  * Often used by controller actions like "show" or "list". No redirects possible here.
  */
-class PostProcessFluidVariablesEvent implements ControllerActionEventInterface
+final class PostProcessFluidVariablesEvent implements ControllerActionEventInterface
 {
-    protected Request $request;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected array $settings = [];
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected array $fluidVariables = [];
-
     /**
      * @param array<string, mixed> $settings
      * @param array<string, mixed> $fluidVariables
      */
     public function __construct(
-        Request $request,
-        array $settings,
-        array $fluidVariables,
-    ) {
-        $this->request = $request;
-        $this->settings = $settings;
-        $this->fluidVariables = $fluidVariables;
-    }
+        private readonly RequestInterface $request,
+        private readonly array $settings,
+        private array $fluidVariables,
+    ) {}
 
-    public function getRequest(): Request
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }

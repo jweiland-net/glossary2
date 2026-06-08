@@ -16,25 +16,25 @@ use JWeiland\Glossary2\Event\ControllerActionEventInterface;
 /**
  * Abstract EventListener just for action controllers.
  */
-class AbstractControllerEventListener
+readonly class AbstractControllerEventListener
 {
     /**
      * Only execute this EventListener if controller and action matches
      *
      * @var array<string, mixed>
      */
-    protected array $allowedControllerActions = [];
+    public const ALLOWED_CONTROLLER_ACTIONS = [];
 
     protected function isValidRequest(ControllerActionEventInterface $event): bool
     {
         return
             array_key_exists(
                 $event->getControllerName(),
-                $this->allowedControllerActions,
+                static::ALLOWED_CONTROLLER_ACTIONS,
             )
             && in_array(
                 $event->getActionName(),
-                $this->allowedControllerActions[$event->getControllerName()],
+                static::ALLOWED_CONTROLLER_ACTIONS[$event->getControllerName()],
                 true,
             );
     }

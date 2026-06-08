@@ -1,0 +1,80 @@
+<html lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:variable name="path" value="sDEF/settings"/>
+<f:variable name="ll" value="LLL:EXT:glossary2/Resources/Private/Language/locallang_db.xlf:"/>
+<table class="table">
+    <thead>
+    <tr>
+        <th><f:translate key="{ll}plugin.preview.header.config"/></th>
+        <th><f:translate key="{ll}plugin.preview.header.value"/></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><strong><f:translate key="{ll}plugin.preview.detailPageUid"/></strong></td>
+        <td>
+            <f:if condition="{record.pi_flexform.{path}.pidOfDetailPage}">
+                <f:then>
+                    <core:icon identifier="apps-pagetree-page-default"/>
+                    {record.pi_flexform.{path}.pidOfDetailPage}
+                </f:then>
+                <f:else>
+                    <core:icon identifier="actions-message-ok-close"/>
+                    <f:translate key="{ll}plugin.preview.pageNotConfigured"/>
+                </f:else>
+            </f:if>
+        </td>
+    </tr>
+    <tr>
+        <td><strong><f:translate key="{ll}plugin.preview.listPageUid"/></strong></td>
+        <td>
+            <f:if condition="{record.pi_flexform.{path}.pidOfListPage}">
+                <f:then>
+                    <core:icon identifier="apps-pagetree-page-default"/>
+                    {record.pi_flexform.{path}.pidOfListPage}
+                </f:then>
+                <f:else>
+                    <core:icon identifier="actions-message-ok-close"/>
+                    <f:translate key="{ll}plugin.preview.pageNotConfigured"/>
+                </f:else>
+            </f:if>
+        </td>
+    </tr>
+    <tr>
+        <td><strong><f:translate key="{ll}plugin.preview.showAZLinks"/></strong></td>
+        <td>
+            <f:if condition="{record.pi_flexform.{path}.showGlossar}">
+                <f:then>
+                    <core:icon identifier="actions-check"/>
+                </f:then>
+                <f:else>
+                    <core:icon identifier="actions-message-ok-close"/>
+                </f:else>
+            </f:if>
+        </td>
+    </tr>
+    <tr>
+        <td><strong><f:translate key="{ll}plugin.preview.addAllLink"/></strong></td>
+        <td>
+            <f:if condition="{record.pi_flexform.{path}.showAllLink}">
+                <f:then>
+                    <core:icon identifier="actions-check"/>
+                </f:then>
+                <f:else>
+                    <core:icon identifier="actions-message-ok-close"/>
+                </f:else>
+            </f:if>
+        </td>
+    </tr>
+    <f:if condition="{record.pi_flexform.{path}.categories}">
+        <tr>
+            <td><strong><f:translate key="{ll}plugin.preview.categories"/></strong></td>
+            <td>{record.pi_flexform_transformed.settings.categories}</td>
+        </tr>
+    </f:if>
+    </tbody>
+</table>
+</html>

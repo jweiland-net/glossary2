@@ -28,17 +28,16 @@
 		"source": "https://github.com/jweiland-net/glossary2"
 	},
 	"require": {
+		"php": "^8.2",
 		"ext-pdo": "*",
-		"typo3/cms-core": "^13.4.0",
-		"typo3/cms-install": "^13.4.0"
+		"typo3/cms-core": "^14.0.0",
+		"typo3/cms-install": "^14.0.0"
 	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.44",
-		"friendsofphp/php-cs-fixer": "^3.14",
 		"phpstan/phpdoc-parser": "^1.33",
-		"phpstan/phpstan": "1.10",
 		"phpunit/phpunit": "^11.2.5",
-		"roave/security-advisories": "dev-latest",
+		"ssch/typo3-rector": "^3.6",
 		"typo3/coding-standards": "^0.8",
 		"typo3/testing-framework": "^9.0.1"
 	},
@@ -67,8 +66,12 @@
 	},
 	"extra": {
 		"typo3/cms": {
+			"Package": {
+				"providesPackages": {}
+			},
 			"app-dir": ".Build",
 			"extension-key": "glossary2",
+			"version": "8.0.0",
 			"web-dir": ".Build/public"
 		}
 	}

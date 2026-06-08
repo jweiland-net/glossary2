@@ -1,37 +1,63 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2">
-		<header/>
-		<body>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z"
+        product-name="glossary2">
+    <header/>
+    <body>
+      <trans-unit id="plugin.glossary.title">
+        <source>Glossary</source>
+      </trans-unit>
+      <trans-unit id="plugin.glossary.description">
+        <source>Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly
+          to an entry.
+        </source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary">
+        <source>Glossary</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+        <source>Letter</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
+        <source>Segment for URL</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+        <source>Description</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+        <source>Images</source>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images.add">
+        <source>Add image</source>
+      </trans-unit>
 
-			<trans-unit id="plugin.glossary.title">
-				<source>Glossary</source>
-			</trans-unit>
-			<trans-unit id="plugin.glossary.description">
-				<source>Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly to an entry.</source>
-			</trans-unit>
-
-			<trans-unit id="tx_glossary2_domain_model_glossary">
-				<source>Glossary</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.letter">
-				<source>Letter</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.title">
-				<source>Title</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
-				<source>Segment for URL</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.description">
-				<source>Description</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.images">
-				<source>Images</source>
-			</trans-unit>
-			<trans-unit id="tx_glossary2_domain_model_glossary.images.add">
-				<source>Add image</source>
-			</trans-unit>
-		</body>
-	</file>
+      <trans-unit id="plugin.preview.header.config">
+        <source>Config</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.header.value">
+        <source>Value</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.detailPageUid">
+        <source>Detail Page Uid</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.listPageUid">
+        <source>List Page Uid</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.showAZLinks">
+        <source>Show A-Z links</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.addAllLink">
+        <source>Add All-link</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.categories">
+        <source>Categories</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.pageNotConfigured">
+        <source>Page not configured</source>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

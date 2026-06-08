@@ -14,23 +14,17 @@ namespace JWeiland\Glossary2\PageTitleProvider;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\PageTitle\PageTitleProviderInterface;
+use TYPO3\CMS\Core\PageTitle\AbstractPageTitleProvider;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
  * Instead of just setting the PageTitle to DetailView on Detail Page,
  * we think it would be much cooler to see the Glossary title in Browser-Tab.
- *
  * Please use config.pageTitleProviders.* to use our PageTitleProvider.
  */
-class Glossary2PageTitleProvider implements PageTitleProviderInterface
+final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
 {
-    protected GlossaryRepository $glossaryRepository;
-
-    public function __construct(GlossaryRepository $glossaryRepository)
-    {
-        $this->glossaryRepository = $glossaryRepository;
-    }
+    public function __construct(private readonly GlossaryRepository $glossaryRepository) {}
 
     public function getTitle(): string
     {
@@ -52,7 +46,7 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
      */
     private function getValidPluginArguments(): ?array
     {
-        $gp = $this->getPluginArgumentsFromRequest($this->getRequest());
+        $gp = $this->getPluginArgumentsFromRequest($this->request);
 
         if (is_array($gp) && $this->isValidRequest($gp)) {
             return $gp;
@@ -67,7 +61,7 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
      *
      * @param array<string, mixed> $gp
      */
-    protected function isValidRequest(array $gp): bool
+    private function isValidRequest(array $gp): bool
     {
         if (!isset($gp['action'], $gp['glossary'])) {
             return false;
@@ -77,20 +71,14 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
     }
 
     /**
-     * @param ServerRequestInterface $requestObject
-     * @return string|array<string, mixed>|null
+     * @return string|array<string, mixed>|bool|null
      */
-    protected function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|null
+    private function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|bool|null
     {
         $queryParams = $requestObject->getQueryParams();
 
         return ArrayUtility::isValidPath($queryParams, 'tx_glossary2_glossary')
             ? ArrayUtility::getValueByPath($queryParams, 'tx_glossary2_glossary')
             : false;
-    }
-
-    protected function getRequest(): ServerRequestInterface
-    {
-        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
