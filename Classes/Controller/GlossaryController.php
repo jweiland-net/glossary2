@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Controller;
 
-use TYPO3Fluid\Fluid\View\ViewInterface;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
@@ -21,6 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Attribute as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Main controller of glossary2 to list and show glossary records
@@ -44,7 +44,7 @@ class GlossaryController extends ActionController
     /**
      * @param ViewInterface $view
      */
-    protected function initializeView($view): void
+    protected function initializeView(ViewInterface $view): void
     {
         $this->view->assign('data', $this->getContentObjectData());
     }
@@ -53,10 +53,8 @@ class GlossaryController extends ActionController
      * @param string $letter Show only records starting with this letter
      */
     public function listAction(
-        #[Extbase\Validate(validator: 'StringLength', options: ['minimum' => 1, 'maximum' => 3])]
-        string $letter = ''
-    ): ResponseInterface
-    {
+        #[Extbase\Validate(validator: 'StringLength', options: ['minimum' => 1, 'maximum' => 3])] string $letter = '',
+    ): ResponseInterface {
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,
             'glossaries' => $this->glossaryRepository->searchGlossaries(
