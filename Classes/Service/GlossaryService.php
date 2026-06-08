@@ -48,6 +48,12 @@ final readonly class GlossaryService
         private TypoScriptService $typoScriptService,
     ) {}
 
+    /**
+     * @param QueryResultInterface<int, Glossary>|QueryBuilder $queryBuilder
+     * @param array<string, mixed> $options
+     * @param ServerRequestInterface $request
+     * @throws Exception
+     */
     public function buildGlossary(
         QueryResultInterface|QueryBuilder $queryBuilder,
         array $options,
@@ -345,6 +351,9 @@ final readonly class GlossaryService
         return GeneralUtility::getFileAbsFileName($templatePath);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getSiteSettings(ServerRequestInterface $request): array
     {
         $siteSettings = $this->getCurrentSite($request)->getSettings();
@@ -361,6 +370,9 @@ final readonly class GlossaryService
         return $request->getAttribute('site');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getTypoScriptByPath(string $path, ServerRequestInterface $request): array
     {
         try {
@@ -374,6 +386,9 @@ final readonly class GlossaryService
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getTypoScriptSetup(ServerRequestInterface $request): array
     {
         return $this->getFrontendTypoScript($request)->getSetupArray();

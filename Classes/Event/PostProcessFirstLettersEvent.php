@@ -32,6 +32,9 @@ final class PostProcessFirstLettersEvent
         return $this->firstLetters;
     }
 
+    /**
+     * @param array<string, mixed> $firstLetters
+     */
     public function setFirstLetters(array $firstLetters): void
     {
         $this->firstLetters = $firstLetters;
