@@ -28,9 +28,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 #[UpgradeWizard('glossary2UpdateSlug')]
 final readonly class GlossarySlugUpdate implements UpgradeWizardInterface
 {
-    private const string TABLE_NAME = 'tx_glossary2_domain_model_glossary';
+    private const TABLE_NAME = 'tx_glossary2_domain_model_glossary';
 
-    private const string FIELD_NAME = 'path_segment';
+    private const FIELD_NAME = 'path_segment';
 
     public function __construct(private readonly ConnectionPool $connectionPool) {}
 

@@ -26,7 +26,7 @@ final readonly class AddGlossaryEventListener extends AbstractControllerEventLis
     /**
      * @var array<string, mixed>
      */
-    public const array ALLOWED_CONTROLLER_ACTIONS = [
+    public const ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],

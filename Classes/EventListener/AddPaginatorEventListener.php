@@ -24,14 +24,14 @@ use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 )]
 final readonly class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    private const int DEFAULT_ITEMS_PER_PAGE = 15;
-    private const string FLUID_VARIABLE = 'glossaries';
-    private const string FALLBACK_PAGINATION = SimplePagination::class;
+    private const DEFAULT_ITEMS_PER_PAGE = 15;
+    private const FLUID_VARIABLE = 'glossaries';
+    private const FALLBACK_PAGINATION = SimplePagination::class;
 
     /**
      * @var array<string, mixed>
      */
-    public const array ALLOWED_CONTROLLER_ACTIONS = [
+    public const ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],
