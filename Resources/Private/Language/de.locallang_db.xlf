@@ -45,6 +45,39 @@
         <source>Add image</source>
         <target>Bild hinzufügen</target>
       </trans-unit>
+
+      <trans-unit id="plugin.preview.header.config">
+        <source>Config</source>
+        <target>Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.header.value">
+        <source>Value</source>
+        <target>Wert</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.detailPageUid">
+        <source>Detail Page Uid</source>
+        <target>Detail-Seiten-UID</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.listPageUid">
+        <source>List Page Uid</source>
+        <target>Listen-Seiten-UID</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.showAZLinks">
+        <source>Show A-Z links</source>
+        <target>A-Z Links anzeigen</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.addAllLink">
+        <source>Add All-link</source>
+        <target>Alle-Link hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.categories">
+        <source>Categories</source>
+        <target>Kategorien</target>
+      </trans-unit>
+      <trans-unit id="plugin.preview.pageNotConfigured">
+        <source>Page not configured</source>
+        <target>Seite nicht konfiguriert</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

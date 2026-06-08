@@ -33,6 +33,31 @@
       <trans-unit id="tx_glossary2_domain_model_glossary.images.add">
         <source>Add image</source>
       </trans-unit>
+
+      <trans-unit id="plugin.preview.header.config">
+        <source>Config</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.header.value">
+        <source>Value</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.detailPageUid">
+        <source>Detail Page Uid</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.listPageUid">
+        <source>List Page Uid</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.showAZLinks">
+        <source>Show A-Z links</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.addAllLink">
+        <source>Add All-link</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.categories">
+        <source>Categories</source>
+      </trans-unit>
+      <trans-unit id="plugin.preview.pageNotConfigured">
+        <source>Page not configured</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
