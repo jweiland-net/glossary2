@@ -17,6 +17,7 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Attribute as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -40,7 +41,7 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(): void
+    protected function initializeView(ViewInterface $view): void
     {
         $this->view->assign('data', $this->getContentObjectData());
     }
@@ -92,12 +93,11 @@ class GlossaryController extends ActionController
      */
     protected function getContentObjectData(): array
     {
-        $data = [];
         $contentObjectRenderer = $this->request->getAttribute('currentContentObject');
         if ($contentObjectRenderer instanceof ContentObjectRenderer && is_array($contentObjectRenderer->data)) {
             return $contentObjectRenderer->data;
         }
 
-        return $data;
+        return [];
     }
 }
