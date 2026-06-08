@@ -45,3 +45,9 @@ settings:
     description: 'Number of results that needs to be shown on listing page'
     type: int
     default: 10
+  glossary2.templatePath:
+    label: 'Template paths for A-Z Glossary Pagination'
+    category: glossary2.templates
+    description: 'Template Path: Which template should be used to render the A-Z list. EXT: as prefix is possible.'
+    type: string
+    default: ''

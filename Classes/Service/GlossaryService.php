@@ -21,11 +21,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Core\View\ViewInterface;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -36,38 +40,18 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 final readonly class GlossaryService
 {
-    /**
-     * This property contains the settings of the page related TypoScript of plugin.tx_glossary.settings
-     * and NOT of the calling extension which uses this API!
-     * We need that property to override templatePath on per page basis.
-     *
-     * @var array<string, mixed>
-     */
-    private array $glossary2Settings;
-
     public function __construct(
         private ExtConf $extConf,
         private EventDispatcher $eventDispatcher,
-        ConfigurationManagerInterface $configurationManager,
         private ViewFactoryInterface $viewFactory,
         private CharsetHelper $charsetHelper,
-    ) {
-        $this->glossary2Settings = $configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'Glossary2',
-            'Glossary',
-        );
-    }
+        private TypoScriptService $typoScriptService,
+    ) {}
 
-    /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
-     * @param array<string, mixed> $options
-     * @throws Exception
-     */
     public function buildGlossary(
         QueryResultInterface|QueryBuilder $queryBuilder,
+        ServerRequestInterface $request,
         array $options = [],
-        ?ServerRequestInterface $request = null,
     ): string {
         $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
@@ -282,10 +266,10 @@ final readonly class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    private function getFluidTemplateObject(array $options, ?ServerRequestInterface $request = null): ViewInterface
+    private function getFluidTemplateObject(array $options, ServerRequestInterface $request): ViewInterface
     {
         $viewFactoryData = new ViewFactoryData(
-            templatePathAndFilename: $this->getTemplatePath($options),
+            templatePathAndFilename: $this->getTemplatePath($options, $request),
             request: $request,
         );
 
@@ -295,8 +279,23 @@ final readonly class GlossaryService
     /**
      * @param array<string, mixed> $options
      */
-    private function getTemplatePath(array $options): string
+    private function getTemplatePath(array $options, ServerRequestInterface $request): string
     {
+        $glossary2TypoScriptSettings = $this->getTypoScriptByPath('plugin./tx_glossary2.', $request);
+        if ($glossary2TypoScriptSettings === []) {
+            return 'ERROR: Path at plugin.tx_glossary2 not found. Missing TypoScript include? Cached request?';
+        }
+
+        $settings = $glossary2TypoScriptSettings['settings'] ?? [];
+        if ($settings === []) {
+            return 'ERROR: Cannot find any plugin settings!';
+        }
+
+        $siteSettings = $this->getSiteSettings($request);
+        if ($siteSettings === []) {
+            return 'Error: Missing site settings. Missing glossary2 Site Set dependencies?';
+        }
+
         // Priority 4. Use path from ExtConf of glossary2
         $templatePath = $this->extConf->getTemplatePath();
 
@@ -308,11 +307,12 @@ final readonly class GlossaryService
         // Priority 2. Use path from TypoScript of glossary2
         // plugin.tx_glossary2.settings.templatePath = EXT:site_package/.../Glossary2.html
         if (
-            array_key_exists('templatePath', $this->glossary2Settings)
-            && is_string($this->glossary2Settings['templatePath'])
-            && (isset($this->glossary2Settings['templatePath']) && ($this->glossary2Settings['templatePath'] !== '' && $this->glossary2Settings['templatePath'] !== '0'))
+            isset($settings['templatePath'])
+            && is_string($settings['templatePath'])
+            && $settings['templatePath'] !== ''
+            && $settings['templatePath'] !== '0'
         ) {
-            $templatePath = $this->glossary2Settings['templatePath'];
+            $templatePath = $settings['templatePath'];
         }
 
         // Priority 1. Use extKey individual path from TypoScript of glossary2
@@ -320,29 +320,70 @@ final readonly class GlossaryService
         // plugin.tx_glossary2.settings.templatePath.yellowpages2 = EXT:site_package/.../GlossaryForYellowpages.html
         // plugin.tx_glossary2.settings.templatePath.clubdirectory = EXT:site_package/.../GlossaryForClubdirectory.html
         if (
-            array_key_exists('templatePath', $this->glossary2Settings)
-            && is_array($this->glossary2Settings['templatePath'])
-            && (isset($this->glossary2Settings['templatePath']) && $this->glossary2Settings['templatePath'] !== [])
+            isset($settings['templatePath'])
+            && is_array($settings['templatePath'])
+            && $settings['templatePath'] !== []
         ) {
             $extKey = GeneralUtility::camelCaseToLowerCaseUnderscored($options['extensionName'] ?? 'glossary2');
 
             // Override with default template path for all extensions
-            if (
-                array_key_exists('default', $this->glossary2Settings['templatePath'])
-                && !empty($this->glossary2Settings['templatePath']['default'])
-            ) {
-                $templatePath = $this->glossary2Settings['templatePath']['default'];
+            if (!empty($settings['templatePath']['default'])) {
+                $templatePath = $settings['templatePath']['default'];
             }
 
             // Override with extKey specific template path
-            if (
-                array_key_exists($extKey, $this->glossary2Settings['templatePath'])
-                && !empty($this->glossary2Settings['templatePath'][$extKey])
-            ) {
-                $templatePath = $this->glossary2Settings['templatePath'][$extKey];
+            if (!empty($settings['templatePath'][$extKey])) {
+                $templatePath = $settings['templatePath'][$extKey];
             }
         }
 
+        // Main Priority from SiteSettings
+        if (!empty($siteSettings['templatePath'])) {
+            $templatePath = $siteSettings['templatePath'];
+        }
+
         return GeneralUtility::getFileAbsFileName($templatePath);
+    }
+
+    private function getSiteSettings(ServerRequestInterface $request): array
+    {
+        $siteSettings = $this->getCurrentSite($request)->getSettings();
+
+        if (!$siteSettings->has('glossary2')) {
+            return [];
+        }
+
+        return $siteSettings->get('glossary2');
+    }
+
+    private function getCurrentSite(ServerRequestInterface $request): Site
+    {
+        return $request->getAttribute('site');
+    }
+
+    private function getTypoScriptByPath(string $path, ServerRequestInterface $request): array
+    {
+        try {
+            $rawTypoScriptSetup = $this->getTypoScriptSetup($request);
+            $rawPluginSettingsByPath = ArrayUtility::getValueByPath($this->getTypoScriptSetup($request), $path);
+
+            return $this->typoScriptService->convertTypoScriptArrayToPlainArray($rawPluginSettingsByPath);
+        } catch (\RuntimeException|MissingArrayPathException) {
+        }
+
+        return [];
+    }
+
+    private function getTypoScriptSetup(ServerRequestInterface $request): array
+    {
+        return $this->getFrontendTypoScript($request)->getSetupArray();
+    }
+
+    /**
+     * The middleware calling this service is loaded after prepare TSFE, so TypoScript is defined at that point.
+     */
+    private function getFrontendTypoScript(ServerRequestInterface $request): FrontendTypoScript
+    {
+        return $request->getAttribute('frontend.typoscript');
     }
 }
