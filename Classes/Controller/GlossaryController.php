@@ -44,7 +44,7 @@ class GlossaryController extends ActionController
     /**
      * @param ViewInterface $view
      */
-    protected function initializeView(ViewInterface $view): void
+    protected function initializeView($view): void
     {
         $this->view->assign('data', $this->getContentObjectData());
     }
