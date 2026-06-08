@@ -77,7 +77,7 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
     #[Test]
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest('https://www.example.com/'))
+        $request = (new ServerRequest('https://www.example.com/'))
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
             ->withQueryParams(
                 [
@@ -87,6 +87,8 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
                     ],
                 ],
             );
+        $GLOBALS['TYPO3_REQUEST'] = $request;
+        $this->subject->setRequest($request);
 
         self::assertSame(
             'Nice title for detail page',
