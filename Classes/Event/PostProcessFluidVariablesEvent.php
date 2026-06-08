@@ -24,9 +24,9 @@ final readonly class PostProcessFluidVariablesEvent implements ControllerActionE
      * @param array<string, mixed> $fluidVariables
      */
     public function __construct(
-        protected RequestInterface $request,
-        protected array $settings,
-        protected array $fluidVariables,
+        private RequestInterface $request,
+        private array $settings,
+        private array $fluidVariables,
     ) {}
 
     public function getRequest(): RequestInterface
