@@ -32,7 +32,7 @@ final readonly class GlossarySlugUpdate implements UpgradeWizardInterface
 
     private const FIELD_NAME = 'path_segment';
 
-    public function __construct(private readonly ConnectionPool $connectionPool) {}
+    public function __construct(private ConnectionPool $connectionPool) {}
 
     public function getTitle(): string
     {

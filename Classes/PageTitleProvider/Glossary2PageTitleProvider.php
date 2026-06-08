@@ -70,10 +70,6 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
         return (int)$gp['glossary'] > 0;
     }
 
-    /**
-     * @param ServerRequestInterface $requestObject
-     * @return string|array|bool|null
-     */
     private function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|bool|null
     {
         $queryParams = $requestObject->getQueryParams();

@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace JWeiland\Glossary2\Controller;
 
+use TYPO3Fluid\Fluid\View\ViewInterface;
 use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Attribute as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -41,7 +41,10 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(ViewInterface $view): void
+    /**
+     * @param ViewInterface $view
+     */
+    protected function initializeView($view): void
     {
         $this->view->assign('data', $this->getContentObjectData());
     }
@@ -49,8 +52,10 @@ class GlossaryController extends ActionController
     /**
      * @param string $letter Show only records starting with this letter
      */
-    #[Extbase\Validate(validator: 'StringLength', param: 'letter', options: ['minimum' => 1, 'maximum' => 3])]
-    public function listAction(string $letter = ''): ResponseInterface
+    public function listAction(
+        #[Extbase\Validate(validator: 'StringLength', options: ['minimum' => 1, 'maximum' => 3])]
+        string $letter = ''
+    ): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,

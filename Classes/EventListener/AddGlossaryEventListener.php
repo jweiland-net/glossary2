@@ -33,8 +33,8 @@ final readonly class AddGlossaryEventListener extends AbstractControllerEventLis
     ];
 
     public function __construct(
-        private readonly GlossaryService $glossaryService,
-        private readonly GlossaryRepository $glossaryRepository,
+        private GlossaryService $glossaryService,
+        private GlossaryRepository $glossaryRepository,
     ) {}
 
     public function __invoke(PostProcessFluidVariablesEvent $event): void

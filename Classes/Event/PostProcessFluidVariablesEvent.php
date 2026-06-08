@@ -24,8 +24,8 @@ final class PostProcessFluidVariablesEvent implements ControllerActionEventInter
      * @param array<string, mixed> $fluidVariables
      */
     public function __construct(
-        private RequestInterface $request,
-        private array $settings,
+        private readonly RequestInterface $request,
+        private readonly array $settings,
         private array $fluidVariables,
     ) {}
 
