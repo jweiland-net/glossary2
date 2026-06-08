@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Mvc\RequestInterface;
  * Post process controller actions which assign fluid variables to view.
  * Often used by controller actions like "show" or "list". No redirects possible here.
  */
-final readonly class PostProcessFluidVariablesEvent implements ControllerActionEventInterface
+final class PostProcessFluidVariablesEvent implements ControllerActionEventInterface
 {
     /**
      * @param array<string, mixed> $settings
