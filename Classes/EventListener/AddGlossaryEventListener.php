@@ -21,12 +21,12 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
     identifier: 'glossary2/add-glossary-event-listener',
     after: 'glossary2/add-paginator-event-listener',
 )]
-final class AddGlossaryEventListener extends AbstractControllerEventListener
+final readonly class AddGlossaryEventListener extends AbstractControllerEventListener
 {
     /**
      * @var array<string, mixed>
      */
-    protected array $allowedControllerActions = [
+    private const array ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],

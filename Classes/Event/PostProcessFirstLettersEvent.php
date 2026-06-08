@@ -22,7 +22,7 @@ final class PostProcessFirstLettersEvent
     /**
      * @param array<string> $firstLetters
      */
-    public function __construct(protected array $firstLetters) {}
+    public function __construct(private array $firstLetters) {}
 
     /**
      * @return array<string, mixed>

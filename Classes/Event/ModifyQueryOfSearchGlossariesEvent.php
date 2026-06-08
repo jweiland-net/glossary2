@@ -24,9 +24,9 @@ final class ModifyQueryOfSearchGlossariesEvent
      * @param array<int> $categories
      */
     public function __construct(
-        protected QueryResultInterface $queryResult,
-        protected array $categories,
-        protected string $letter,
+        private QueryResultInterface $queryResult,
+        private array $categories,
+        private string $letter,
     ) {}
 
     /**

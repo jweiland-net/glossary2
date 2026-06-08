@@ -22,21 +22,16 @@ use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 #[AsEventListener(
     identifier: 'glossary2/add-paginator-event-listener',
 )]
-final class AddPaginatorEventListener extends AbstractControllerEventListener
+final readonly class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    private int $itemsPerPage = 15;
-
-    /**
-     * Fluid variable name for paginated records
-     */
-    private string $fluidVariableForPaginatedRecords = 'glossaries';
-
-    private string $fallbackPaginationClass = SimplePagination::class;
+    private const int DEFAULT_ITEMS_PER_PAGE = 15;
+    private const string FLUID_VARIABLE = 'glossaries';
+    private const string FALLBACK_PAGINATION = SimplePagination::class;
 
     /**
      * @var array<string, mixed>
      */
-    protected array $allowedControllerActions = [
+    private const array ALLOWED_CONTROLLER_ACTIONS = [
         'Glossary' => [
             'list',
         ],
@@ -46,14 +41,14 @@ final class AddPaginatorEventListener extends AbstractControllerEventListener
     {
         if ($this->isValidRequest($event)) {
             $paginator = new QueryResultPaginator(
-                $event->getFluidVariables()[$this->fluidVariableForPaginatedRecords],
+                $event->getFluidVariables()[static::FLUID_VARIABLE],
                 $this->getCurrentPage($event),
                 $this->getItemsPerPage($event),
             );
 
             $event->addFluidVariable('actionName', $event->getActionName());
             $event->addFluidVariable('paginator', $paginator);
-            $event->addFluidVariable($this->fluidVariableForPaginatedRecords, $paginator->getPaginatedItems());
+            $event->addFluidVariable(static::FLUID_VARIABLE, $paginator->getPaginatedItems());
             $event->addFluidVariable('pagination', $this->getPagination($event, $paginator));
         }
     }
@@ -71,21 +66,21 @@ final class AddPaginatorEventListener extends AbstractControllerEventListener
 
     private function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
-        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
+        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? static::DEFAULT_ITEMS_PER_PAGE);
     }
 
     private function getPagination(
         PostProcessFluidVariablesEvent $event,
         PaginatorInterface $paginator,
     ): PaginationInterface {
-        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? $this->fallbackPaginationClass;
+        $paginationClass = $event->getSettings()['pageBrowser']['class'] ?? static::FALLBACK_PAGINATION;
 
         if (!class_exists($paginationClass)) {
-            $paginationClass = $this->fallbackPaginationClass;
+            $paginationClass = static::FALLBACK_PAGINATION;
         }
 
         if (!is_subclass_of($paginationClass, PaginationInterface::class)) {
-            $paginationClass = $this->fallbackPaginationClass;
+            $paginationClass = static::FALLBACK_PAGINATION;
         }
 
         return new $paginationClass($paginator);
