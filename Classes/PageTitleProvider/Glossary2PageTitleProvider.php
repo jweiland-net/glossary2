@@ -46,7 +46,7 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
      */
     private function getValidPluginArguments(): ?array
     {
-        $gp = $this->getPluginArgumentsFromRequest($this->getRequest());
+        $gp = $this->getPluginArgumentsFromRequest($this->request);
 
         if (is_array($gp) && $this->isValidRequest($gp)) {
             return $gp;
@@ -71,7 +71,8 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
     }
 
     /**
-     * @return string|array<string, mixed>|null
+     * @param ServerRequestInterface $requestObject
+     * @return string|array|bool|null
      */
     private function getPluginArgumentsFromRequest(ServerRequestInterface $requestObject): string|array|bool|null
     {
@@ -80,15 +81,5 @@ final class Glossary2PageTitleProvider extends AbstractPageTitleProvider
         return ArrayUtility::isValidPath($queryParams, 'tx_glossary2_glossary')
             ? ArrayUtility::getValueByPath($queryParams, 'tx_glossary2_glossary')
             : false;
-    }
-
-    private function getRequest(): ServerRequestInterface
-    {
-        return $GLOBALS['TYPO3_REQUEST'];
-    }
-
-    public function setRequest(ServerRequestInterface $request): void
-    {
-        $this->request = $request;
     }
 }
