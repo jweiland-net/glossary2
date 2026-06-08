@@ -21,5 +21,4 @@ ExtensionUtility::configurePlugin(
         GlossaryController::class => 'list, listWithoutGlossar, show',
     ],
     [],
-    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT,
 );
