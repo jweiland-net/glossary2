@@ -51,7 +51,6 @@ final readonly class GlossaryService
     /**
      * @param QueryResultInterface<int, Glossary>|QueryBuilder $queryBuilder
      * @param array<string, mixed> $options
-     * @param ServerRequestInterface $request
      * @throws Exception
      */
     public function buildGlossary(
