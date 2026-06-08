@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 #[AsEventListener(
-    identifier: 'glossary2/add-glossary-event-listener  ',
+    identifier: 'glossary2/add-glossary-event-listener',
     after: 'glossary2/add-paginator-event-listener',
 )]
 final class AddGlossaryEventListener extends AbstractControllerEventListener
