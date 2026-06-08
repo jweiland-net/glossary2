@@ -120,7 +120,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->typoScriptService,
         );
 
-        $this->subject->buildGlossary($queryBuilder, $this->serverRequest);
+        $this->subject->buildGlossary($queryBuilder, [], $this->serverRequest);
     }
 
     #[Test]
@@ -139,7 +139,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->typoScriptService,
         );
 
-        $this->subject->buildGlossary($queryBuilder, $this->serverRequest);
+        $this->subject->buildGlossary($queryBuilder, [], $this->serverRequest);
     }
 
     #[Test]
@@ -158,7 +158,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->typoScriptService,
         );
 
-        $this->subject->buildGlossary($queryBuilder, $this->serverRequest);
+        $this->subject->buildGlossary($queryBuilder, [], $this->serverRequest);
     }
 
     #[Test]
@@ -179,11 +179,11 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject->buildGlossary(
             $queryBuilder,
-            $this->serverRequest,
             [
                 'column' => 'title',
                 'columnAlias' => 'Buchstaben',
             ],
+            $this->serverRequest,
         );
     }
 
@@ -205,12 +205,12 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject->buildGlossary(
             $queryBuilder,
-            $this->serverRequest,
             [
                 'settings' => [
                     'foo' => 'bar',
                 ],
             ],
+            $this->serverRequest,
         );
     }
 
@@ -232,10 +232,10 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject->buildGlossary(
             $queryBuilder,
-            $this->serverRequest,
             [
                 'mergeNumbers' => false,
             ],
+            $this->serverRequest,
         );
     }
 
@@ -257,11 +257,11 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject->buildGlossary(
             $queryBuilder,
-            $this->serverRequest,
             [
                 'mergeNumbers' => false,
                 'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
             ],
+            $this->serverRequest,
         );
     }
 
@@ -281,7 +281,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->typoScriptService,
         );
 
-        $this->subject->buildGlossary($queryBuilder, $this->serverRequest);
+        $this->subject->buildGlossary($queryBuilder, [], $this->serverRequest);
     }
 
     #[Test]
@@ -302,13 +302,13 @@ class GlossaryServiceTest extends FunctionalTestCase
 
         $this->subject->buildGlossary(
             $queryBuilder,
-            $this->serverRequest,
             [
                 'extensionName' => 'sync_crop_areas',
                 'pluginName' => 'crop',
                 'controllerName' => 'Cropping',
                 'actionName' => 'view',
             ],
+            $this->serverRequest,
         );
     }
 

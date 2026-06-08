@@ -50,8 +50,8 @@ final readonly class GlossaryService
 
     public function buildGlossary(
         QueryResultInterface|QueryBuilder $queryBuilder,
+        array $options,
         ServerRequestInterface $request,
-        array $options = [],
     ): string {
         $view = $this->getFluidTemplateObject($options, $request);
         $view->assign('glossary', $this->getLinkedGlossary($queryBuilder, $options));
