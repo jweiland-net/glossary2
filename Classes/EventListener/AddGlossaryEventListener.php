@@ -15,6 +15,7 @@ use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AddGlossaryEventListener extends AbstractControllerEventListener
 {
@@ -43,7 +44,13 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
             $event->addFluidVariable(
                 'glossary',
                 $this->glossaryService->buildGlossary(
-                    $this->glossaryRepository->getExtbaseQueryForGlossary(),
+                    $this->glossaryRepository->getExtbaseQueryForGlossary(
+                        GeneralUtility::intExplode(
+                            ',',
+                            (string)($event->getSettings()['categories'] ?? ''),
+                            true,
+                        ),
+                    ),
                     $this->getOptions($event),
                     $event->getRequest(),
                 ),
