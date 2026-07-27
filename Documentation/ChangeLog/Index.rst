@@ -7,6 +7,11 @@
 ChangeLog
 =========
 
+Version 7.0.6
+=============
+
+*   [BUGFIX] Filter glossary items by categories in AddGlossaryEventListener
+
 Version 7.0.5
 =============
 
