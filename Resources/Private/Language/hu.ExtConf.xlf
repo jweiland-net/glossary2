@@ -4,11 +4,11 @@
     <body>
       <trans-unit id="possibleLetters">
         <source>Possible Letters: Type in each single letter lower cased and comma separated. Only for numbers you can use 0-9 as special keyword, but something like 2-7 is not possible.</source>
-        <target state="needs-translation">Possible Letters: Type in each single letter lower cased and comma separated. Only for numbers you can use 0-9 as special keyword, but something like 2-7 is not possible.</target>
+        <target state="translated">Lehetséges betűk: Írjon be minden egyes betűt kisbetűvel, vesszővel elválasztva. Csak számoknál használhatja a 0-9 speciális kulcsszót, de a 2-7 formátum nem lehetséges.</target>
       </trans-unit>
       <trans-unit id="templatePath">
         <source>Template Path: Which template should be used to render the A-Z list. EXT: as prefix is possible.</source>
-        <target state="needs-translation">Template Path: Which template should be used to render the A-Z list. EXT: as prefix is possible.</target>
+        <target state="translated">Sablon elérési út: Melyik sablont használjuk az A-Z lista megjelenítéséhez. Az EXT: előtag is lehetséges.</target>
       </trans-unit>
     </body>
   </file>
