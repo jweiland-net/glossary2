@@ -5,47 +5,47 @@
     <body>
       <trans-unit id="all">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="translated">Összes</target>
       </trans-unit>
       <trans-unit id="backToList">
         <source>Back to list</source>
-        <target state="needs-translation">Back to list</target>
+        <target state="translated">Vissza a listához</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary">
         <source>Glossary</source>
-        <target state="needs-translation">Glossary</target>
+        <target state="translated">Szószedet</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.letter">
         <source>Letter</source>
-        <target state="needs-translation">Letter</target>
+        <target state="translated">Betű</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">Cím</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.description">
         <source>Description</source>
-        <target state="needs-translation">Description</target>
+        <target state="translated">Leírás</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.images">
         <source>Images</source>
-        <target state="needs-translation">Images</target>
+        <target state="translated">Képek</target>
       </trans-unit>
       <trans-unit id="pageBrowser.first">
         <source>First</source>
-        <target state="needs-translation">First</target>
+        <target state="translated">Első</target>
       </trans-unit>
       <trans-unit id="pageBrowser.previous">
         <source>Previous</source>
-        <target state="needs-translation">Previous</target>
+        <target state="translated">Előző</target>
       </trans-unit>
       <trans-unit id="pageBrowser.next">
         <source>Next</source>
-        <target state="needs-translation">Next</target>
+        <target state="translated">Következő</target>
       </trans-unit>
       <trans-unit id="pageBrowser.last">
         <source>Last</source>
-        <target state="needs-translation">Last</target>
+        <target state="translated">Utolsó</target>
       </trans-unit>
     </body>
   </file>
