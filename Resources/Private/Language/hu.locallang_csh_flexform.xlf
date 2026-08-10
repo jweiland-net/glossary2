@@ -5,16 +5,16 @@
     <body>
       <trans-unit id="settings.showGlossar.description" xml:space="preserve">
 				<source>Activate this option to show A-Z links on top of the glossary list.</source>
-			<target state="needs-translation">Activate this option to show A-Z links on top of the glossary list.</target></trans-unit>
+			<target state="translated">Jelölje be ezt a beállítást az A-Z hivatkozások megjelenítéséhez a szószedet lista tetején.</target></trans-unit>
       <trans-unit id="settings.showAllLink.description" xml:space="preserve">
 				<source>Add an ALL link to A-Z links.</source>
-			<target state="needs-translation">Add an ALL link to A-Z links.</target></trans-unit>
+			<target state="translated">ALL hivatkozás hozzáadása az A-Z hivatkozásokhoz.</target></trans-unit>
       <trans-unit id="settings.showAllLink.details" xml:space="preserve">
 				<source>Activate this option to add an ALL link to the A-Z links. This helps to show all glossary entries again. Of cause this option is only useful, if you also activate the show A-Z links option, too.</source>
-			<target state="needs-translation">Activate this option to add an ALL link to the A-Z links. This helps to show all glossary entries again. Of cause this option is only useful, if you also activate the show A-Z links option, too.</target></trans-unit>
+			<target state="translated">Jelölje be ezt a beállítást egy ALL hivatkozás hozzáadásához az A-Z hivatkozásokhoz. Ez segít az összes szószedet-bejegyzés újbóli megjelenítésében. Természetesen ez a beállítás csak akkor hasznos, ha az A-Z hivatkozások megjelenítése beállítást is aktiválja.</target></trans-unit>
       <trans-unit id="settings.categories" xml:space="preserve">
 				<source>Show all entries of a chosen category</source>
-			<target state="needs-translation">Show all entries of a chosen category</target></trans-unit>
+			<target state="translated">Egy kiválasztott kategória összes bejegyzésének megjelenítése</target></trans-unit>
     </body>
   </file>
 </xliff>
