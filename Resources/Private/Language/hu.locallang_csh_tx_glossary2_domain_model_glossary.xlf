@@ -5,19 +5,19 @@
     <body>
       <trans-unit id="letter.description">
         <source>Letter</source>
-        <target state="needs-translation">Letter</target>
+        <target state="translated">Betű</target>
       </trans-unit>
       <trans-unit id="title.description">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">Cím</target>
       </trans-unit>
       <trans-unit id="description.description">
         <source>Description</source>
-        <target state="needs-translation">Description</target>
+        <target state="translated">Leírás</target>
       </trans-unit>
       <trans-unit id="images.description">
         <source>Images</source>
-        <target state="needs-translation">Images</target>
+        <target state="translated">Képek</target>
       </trans-unit>
     </body>
   </file>
