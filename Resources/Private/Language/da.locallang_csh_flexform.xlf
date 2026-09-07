@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="messages" date="2020-01-20T15:03:04Z" product-name="glossary2" target-language="de">
+  <file source-language="en" datatype="plaintext" original="messages" date="2020-01-20T15:03:04Z" product-name="glossary2" target-language="da">
     <header/>
     <body>
       <trans-unit id="settings.showGlossar.description" xml:space="preserve" approved="yes">
 				<source>Activate this option to show A-Z links on top of the glossary list.</source>
-			<target state="final">Aktivieren Sie diese Option, um A-Z-Links oben auf der Glossarliste anzuzeigen.</target></trans-unit>
+			<target state="final">Aktivér denne indstilling for at vise A-Z links øverst på ordlisten.</target></trans-unit>
       <trans-unit id="settings.showAllLink.description" xml:space="preserve" approved="yes">
 				<source>Add an ALL link to A-Z links.</source>
-			<target state="final">Fügen Sie einen ALLE Link zu A-Z Links hinzu.</target></trans-unit>
+			<target state="final">Tilføj et ALLE link til A-Z links.</target></trans-unit>
       <trans-unit id="settings.showAllLink.details" xml:space="preserve" approved="yes">
 				<source>Activate this option to add an ALL link to the A-Z links. This helps to show all glossary entries again. Of cause this option is only useful, if you also activate the show A-Z links option, too.</source>
-			<target state="final">Aktivieren Sie diese Option, um einen ALLE Link zu den A-Z Links hinzuzufügen. Dies hilft, alle Wörterbucheinträge erneut anzuzeigen. Deshalb ist diese Option nur dann nützlich, wenn Sie auch die Option A-Z Links anzeigen aktivieren.</target></trans-unit>
+			<target state="final">Aktivér denne indstilling for at tilføje et ALLE link til A-Z links. Dette hjælper med at vise alle ordlister igen. Denne indstilling er naturligvis kun nyttig, hvis du også aktiverer vis A-Z links.</target></trans-unit>
       <trans-unit id="settings.categories" xml:space="preserve" approved="yes">
 				<source>Show all entries of a chosen category</source>
-			<target state="final">Alle Einträge einer ausgewählten Kategorie anzeigen</target></trans-unit>
+			<target state="final">Vis alle indgange i en valgt kategori</target></trans-unit>
     </body>
   </file>
 </xliff>

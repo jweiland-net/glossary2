@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="de">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="da">
     <header/>
     <body>
       <trans-unit id="all" approved="yes">
@@ -9,15 +9,15 @@
       </trans-unit>
       <trans-unit id="backToList" approved="yes">
         <source>Back to list</source>
-        <target state="final">Zurück zur Listenansicht</target>
+        <target state="final">Tilbage til liste</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary" approved="yes">
         <source>Glossary</source>
-        <target state="final">Glossar</target>
+        <target state="final">Ordbog</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.letter" approved="yes">
         <source>Letter</source>
-        <target state="final">Buchstabe</target>
+        <target state="final">Bogstav</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.title" approved="yes">
         <source>Title</source>
@@ -25,27 +25,27 @@
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.description" approved="yes">
         <source>Description</source>
-        <target state="final">Beschreibung</target>
+        <target state="final">Beskrivelse</target>
       </trans-unit>
       <trans-unit id="tx_glossary2_domain_model_glossary.images" approved="yes">
         <source>Images</source>
-        <target state="final">Bilder</target>
+        <target state="final">Billeder</target>
       </trans-unit>
       <trans-unit id="pageBrowser.first" approved="yes">
         <source>First</source>
-        <target state="final">Erste</target>
+        <target state="final">Første</target>
       </trans-unit>
       <trans-unit id="pageBrowser.previous" approved="yes">
         <source>Previous</source>
-        <target state="final">Vorherige</target>
+        <target state="final">Forrige</target>
       </trans-unit>
       <trans-unit id="pageBrowser.next" approved="yes">
         <source>Next</source>
-        <target state="final">Nächste</target>
+        <target state="final">Næste</target>
       </trans-unit>
       <trans-unit id="pageBrowser.last" approved="yes">
         <source>Last</source>
-        <target state="final">Letzte</target>
+        <target state="final">Sidste</target>
       </trans-unit>
     </body>
   </file>

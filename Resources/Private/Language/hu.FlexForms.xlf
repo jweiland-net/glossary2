@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="hu">
+    <header/>
+    <body>
+      <trans-unit id="sheetGeneral" xml:space="preserve">
+				<source>General</source>
+			<target state="translated">Általános</target></trans-unit>
+      <trans-unit id="pidOfDetailPage">
+        <source>PID of detail page</source>
+        <target state="translated">Részletoldal PID-je</target>
+      </trans-unit>
+      <trans-unit id="pidOfListPage">
+        <source>PID of list page</source>
+        <target state="translated">Listaoldal PID-je</target>
+      </trans-unit>
+      <trans-unit id="showGlossar" xml:space="preserve">
+				<source>Show A-Z links</source>
+			<target state="translated">A-Z hivatkozások megjelenítése</target></trans-unit>
+      <trans-unit id="showAllLink" xml:space="preserve">
+				<source>Add ALL Link</source>
+			<target state="translated">ALL hivatkozás hozzáadása</target></trans-unit>
+      <trans-unit id="categories" xml:space="preserve">
+				<source>Show all entries of a chosen category</source>
+			<target state="translated">Egy kiválasztott kategória összes bejegyzésének megjelenítése</target></trans-unit>
+    </body>
+  </file>
+</xliff>
