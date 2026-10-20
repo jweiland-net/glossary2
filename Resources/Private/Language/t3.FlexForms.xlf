@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-02-18T15:03:04Z" product-name="glossary2" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="sheetGeneral" xml:space="preserve">
+				<source>General</source>
+			<target>crwdns307150:0crwdne307150:0</target></trans-unit>
+      <trans-unit id="pidOfDetailPage">
+        <source>PID of detail page</source>
+        <target>crwdns307152:0crwdne307152:0</target>
+      </trans-unit>
+      <trans-unit id="pidOfListPage">
+        <source>PID of list page</source>
+        <target>crwdns307154:0crwdne307154:0</target>
+      </trans-unit>
+      <trans-unit id="showGlossar" xml:space="preserve">
+				<source>Show A-Z links</source>
+			<target>crwdns307156:0crwdne307156:0</target></trans-unit>
+      <trans-unit id="showAllLink" xml:space="preserve">
+				<source>Add ALL Link</source>
+			<target>crwdns307158:0crwdne307158:0</target></trans-unit>
+      <trans-unit id="categories" xml:space="preserve">
+				<source>Show all entries of a chosen category</source>
+			<target>crwdns307160:0crwdne307160:0</target></trans-unit>
+    </body>
+  </file>
+</xliff>
