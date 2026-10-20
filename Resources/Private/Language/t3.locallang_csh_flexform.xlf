@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2020-01-20T15:03:04Z" product-name="glossary2" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="settings.showGlossar.description" xml:space="preserve">
+				<source>Activate this option to show A-Z links on top of the glossary list.</source>
+			<target>crwdns307184:0crwdne307184:0</target></trans-unit>
+      <trans-unit id="settings.showAllLink.description" xml:space="preserve">
+				<source>Add an ALL link to A-Z links.</source>
+			<target>crwdns307186:0crwdne307186:0</target></trans-unit>
+      <trans-unit id="settings.showAllLink.details" xml:space="preserve">
+				<source>Activate this option to add an ALL link to the A-Z links. This helps to show all glossary entries again. Of cause this option is only useful, if you also activate the show A-Z links option, too.</source>
+			<target>crwdns307188:0crwdne307188:0</target></trans-unit>
+      <trans-unit id="settings.categories" xml:space="preserve">
+				<source>Show all entries of a chosen category</source>
+			<target>crwdns307190:0crwdne307190:0</target></trans-unit>
+    </body>
+  </file>
+</xliff>

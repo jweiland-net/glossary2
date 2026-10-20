@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="all">
+        <source>All</source>
+        <target>crwdns307162:0crwdne307162:0</target>
+      </trans-unit>
+      <trans-unit id="backToList">
+        <source>Back to list</source>
+        <target>crwdns307164:0crwdne307164:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary">
+        <source>Glossary</source>
+        <target>crwdns307166:0crwdne307166:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+        <source>Letter</source>
+        <target>crwdns307168:0crwdne307168:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+        <source>Title</source>
+        <target>crwdns307170:0crwdne307170:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+        <source>Description</source>
+        <target>crwdns307172:0crwdne307172:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+        <source>Images</source>
+        <target>crwdns307174:0crwdne307174:0</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.first">
+        <source>First</source>
+        <target>crwdns307176:0crwdne307176:0</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.previous">
+        <source>Previous</source>
+        <target>crwdns307178:0crwdne307178:0</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.next">
+        <source>Next</source>
+        <target>crwdns307180:0crwdne307180:0</target>
+      </trans-unit>
+      <trans-unit id="pageBrowser.last">
+        <source>Last</source>
+        <target>crwdns307182:0crwdne307182:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

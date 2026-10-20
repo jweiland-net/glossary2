@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="plugin.glossary.title">
+        <source>Glossary</source>
+        <target>crwdns307200:0crwdne307200:0</target>
+      </trans-unit>
+      <trans-unit id="plugin.glossary.description">
+        <source>Shows a list of glossary entries. Above all entries you can configure an A-Z navigation to jump directly to an entry.</source>
+        <target>crwdns307202:0crwdne307202:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary">
+        <source>Glossary</source>
+        <target>crwdns307204:0crwdne307204:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.letter">
+        <source>Letter</source>
+        <target>crwdns307206:0crwdne307206:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.title">
+        <source>Title</source>
+        <target>crwdns307208:0crwdne307208:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.path_segment">
+        <source>Segment for URL</source>
+        <target>crwdns307210:0crwdne307210:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.description">
+        <source>Description</source>
+        <target>crwdns307212:0crwdne307212:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images">
+        <source>Images</source>
+        <target>crwdns307214:0crwdne307214:0</target>
+      </trans-unit>
+      <trans-unit id="tx_glossary2_domain_model_glossary.images.add">
+        <source>Add image</source>
+        <target>crwdns307216:0crwdne307216:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
