@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2013-07-07T11:14:07Z" product-name="glossary2" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="letter.description">
+        <source>Letter</source>
+        <target>crwdns307192:0crwdne307192:0</target>
+      </trans-unit>
+      <trans-unit id="title.description">
+        <source>Title</source>
+        <target>crwdns307194:0crwdne307194:0</target>
+      </trans-unit>
+      <trans-unit id="description.description">
+        <source>Description</source>
+        <target>crwdns307196:0crwdne307196:0</target>
+      </trans-unit>
+      <trans-unit id="images.description">
+        <source>Images</source>
+        <target>crwdns307198:0crwdne307198:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
