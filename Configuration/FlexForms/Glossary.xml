@@ -12,7 +12,6 @@
                         <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfDetailPage</label>
                         <config>
                             <type>group</type>
-                            <internal_type>db</internal_type>
                             <allowed>pages</allowed>
                             <size>1</size>
                             <maxitems>1</maxitems>
@@ -23,7 +22,6 @@
                         <label>LLL:EXT:glossary2/Resources/Private/Language/FlexForms.xlf:pidOfListPage</label>
                         <config>
                             <type>group</type>
-                            <internal_type>db</internal_type>
                             <allowed>pages</allowed>
                             <size>1</size>
                             <maxitems>1</maxitems>

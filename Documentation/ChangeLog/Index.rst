@@ -7,6 +7,15 @@
 ChangeLog
 =========
 
+Version 7.0.7
+=============
+
+*   [BUGFIX] Remove obsolete internal_type from FlexForm group fields
+*   [BUGFIX] Use explicit nullable request parameters in GlossaryService
+*   [BUGFIX] Do not access request or ConfigurationManager in constructor
+    of GlossaryService. TypoScript settings of glossary2 are now read
+    from the request given to `buildGlossary()`.
+
 Version 7.0.6
 =============
 
