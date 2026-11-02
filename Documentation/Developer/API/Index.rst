@@ -79,12 +79,18 @@ Within your controller you can call our API that way:
         $this->view->assign(
             'glossar',
             $this->glossaryService->buildGlossary(
-                $this->myRepository->getQueryBuilderToFindAllEntries()
+                $this->myRepository->getQueryBuilderToFindAllEntries(),
+                [],
+                $this->request,
             )
         );
     }
 
 This will transfer the fully rendered HTML Glossar to View.
+
+Please always pass the current Extbase request as third argument. It is
+needed to build the A-Z links and to read the TypoScript settings of
+glossary2 (`plugin.tx_glossary2.settings.templatePath`).
 Use `f:format.raw()` in Fluid Template:
 
 ..  code-block:: html
@@ -106,7 +112,8 @@ If you want, you can configure our API with second `options` argument:
             [
                 'settings' => $this->settings,
                 'templatePath' => 'EXT:myext:/Resources/Private/Templates/Glossary.html',
-            ]
+            ],
+            $this->request,
         )
     );
 

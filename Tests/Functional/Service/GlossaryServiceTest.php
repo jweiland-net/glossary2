@@ -12,6 +12,7 @@ namespace JWeiland\Glossary2\Tests\Functional\Service;
 use JWeiland\Glossary2\Configuration\ExtConf;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
@@ -22,10 +23,9 @@ use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
+use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
@@ -46,7 +46,7 @@ class GlossaryServiceTest extends FunctionalTestCase
 
     protected EventDispatcher $eventDispatcher;
 
-    protected ConfigurationManagerInterface $configurationManager;
+    protected TypoScriptService $typoScriptService;
 
     protected Request|MockObject $requestMock;
 
@@ -87,7 +87,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             ),
         );
 
-        $this->configurationManager = $this->createMock(ConfigurationManager::class);
+        $this->typoScriptService = new TypoScriptService();
 
         $this->requestMock = $this->createMock(Request::class);
 
@@ -103,7 +103,7 @@ class GlossaryServiceTest extends FunctionalTestCase
             $this->subject,
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
+            $this->typoScriptService,
             $this->requestMock,
             $this->viewFactory,
         );
@@ -121,8 +121,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
@@ -144,8 +144,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
@@ -168,8 +168,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
@@ -186,8 +186,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary(
@@ -211,8 +211,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary(
@@ -237,8 +237,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary(
@@ -288,8 +288,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary(
@@ -313,8 +313,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
@@ -331,8 +331,8 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->subject = new GlossaryService(
             $this->extConf,
             $this->eventDispatcher,
-            $this->configurationManager,
             $this->viewFactory,
+            $this->typoScriptService,
         );
 
         $this->subject->buildGlossary(
@@ -344,6 +344,77 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'actionName' => 'view',
             ],
             $this->getExtbaseRequest(),
+        );
+    }
+
+    #[Test]
+    public function serviceCanBeBuiltWithoutRequest(): void
+    {
+        unset($GLOBALS['TYPO3_REQUEST']);
+
+        self::assertInstanceOf(
+            GlossaryService::class,
+            $this->get(GlossaryService::class),
+        );
+    }
+
+    /**
+     * @return array<string, array<int, mixed>>
+     */
+    public static function templatePathTypoScriptDataProvider(): array
+    {
+        $fixture = 'EXT:glossary2/Tests/Functional/Fixtures/Templates/Glossary.html';
+
+        return [
+            'No TypoScript uses default template' => [[], 'clubdirectory', 'class="nav"'],
+            'String template path' => [['templatePath' => $fixture], 'clubdirectory', 'Fixture template'],
+            'Default template path' => [['templatePath.' => ['default' => $fixture]], 'clubdirectory', 'Fixture template'],
+            'Extension specific template path' => [
+                ['templatePath.' => ['default' => 'EXT:foo/bar.html', 'clubdirectory' => $fixture]],
+                'clubdirectory',
+                'Fixture template clubdirectory',
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    #[Test]
+    #[DataProvider('templatePathTypoScriptDataProvider')]
+    public function buildGlossaryUsesTemplatePathFromTypoScriptOfGivenRequest(
+        array $settings,
+        string $extensionName,
+        string $expectedContent,
+    ): void {
+        $frontendTypoScript = new FrontendTypoScript(new RootNode(), [], [], []);
+        $frontendTypoScript->setSetupArray([
+            'plugin.' => [
+                'tx_glossary2.' => [
+                    'settings.' => $settings,
+                ],
+            ],
+        ]);
+
+        $queryBuilder = $this
+            ->getConnectionPool()
+            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        $this->subject = new GlossaryService(
+            $this->extConf,
+            $this->eventDispatcher,
+            $this->viewFactory,
+            $this->typoScriptService,
+        );
+
+        self::assertStringContainsString(
+            $expectedContent,
+            $this->subject->buildGlossary(
+                $queryBuilder,
+                ['extensionName' => $extensionName],
+                $this->getExtbaseRequest()->withAttribute('frontend.typoscript', $frontendTypoScript),
+            ),
         );
     }
 
