@@ -7,6 +7,32 @@
 Changelog
 =========
 
+..  _changelog-7-1-0:
+
+Version 7.1.0
+=============
+
+*   [TASK] Add assertions to functional tests of glossary
+*   [BUGFIX] Allow to modify first letters by event
+*   [TASK] Remove unused CSH language files
+*   [TASK] Declare all required packages and PHP version
+*   [TASK] Use generic types in public API of glossary
+*   [TASK] Use constructor injection and PHP attributes
+*   [BUGFIX] Find plugins with CType in FlexForm wizard
+*   [BUGFIX] Remove system fields from showitem of plugin
+*   [TASK] Rely on TCA columns and schema created by core
+*   [BUGFIX] Use request given to the page title provider
+*   [BUGFIX] Determine first letters with portable SQL. The first letter
+    of a glossary title is reduced to one character ("ä" is "a", no longer
+    "ae"), which changes the `letter` argument of show-to-list links.
+*   [BUGFIX] Repair TypoScript of static template and site set
+*   [TASK] Test PHP 8.4 and 8.5 in CI
+*   [BUGFIX] Allow PHPStan 1.12 to run on PHP 8.5
+*   [TASK] Support PHP 8.5 in runTests.sh
+*   [DOCS] Update documentation to TYPO3 13 and render-guides
+
+See :ref:`upgrade-7-1-0` for the required upgrade steps.
+
 ..  _changelog-7-0-7:
 
 Version 7.0.7
