@@ -127,9 +127,15 @@ class Glossary extends AbstractEntity
         $this->categories->detach($category);
     }
 
+    /**
+     * A special char may be sanitized into multiple ASCII chars (ä => ae),
+     * so only the first char of the sanitized value is returned.
+     */
     public function getSanitizedFirstLetterOfTitle(): string
     {
-        return GeneralUtility::makeInstance(CharsetHelper::class)
+        $sanitizedFirstLetter = GeneralUtility::makeInstance(CharsetHelper::class)
             ->sanitize(mb_substr($this->getTitle(), 0, 1));
+
+        return mb_substr($sanitizedFirstLetter, 0, 1);
     }
 }
