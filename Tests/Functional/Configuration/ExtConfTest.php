@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the package jweiland/glossary2.
  *
@@ -10,6 +12,7 @@
 namespace JWeiland\Glossary2\Tests\Functional\Configuration;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -39,9 +42,7 @@ class ExtConfTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getPossibleLettersWillReturnDefaultLetters(): void
     {
         self::assertSame(
@@ -50,9 +51,7 @@ class ExtConfTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setPossibleLettersWillSetPossibleLetters(): void
     {
         $this->subject->setPossibleLetters('a,b,c');
