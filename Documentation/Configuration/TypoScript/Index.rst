@@ -7,6 +7,11 @@
 TypoScript
 ==========
 
+The TypoScript setup of `glossary2` is located below `plugin.tx_glossary2`.
+Most values are filled from the
+:ref:`site settings or TypoScript constants <site-settings>`. Prefer to
+change these settings instead of overriding the TypoScript setup.
+
 ..  confval-menu::
     :display: table
     :type:
@@ -20,26 +25,26 @@ View
 ..  confval:: view.templateRootPaths
     :name: typoscript-view-templateRootPaths
     :type: array
-    :default: Value from Constants `EXT:glossary2/Resources/Private/Templates/`
+    :default: Value of setting `glossary2.templateRootPath`
 
     You can override our Templates with your own SitePackage extension. We
-    prefer to change this value in TS Constants.
+    prefer to change the setting :confval:`site-settings-templateRootPath`.
 
 ..  confval:: view.partialRootPaths
     :name: typoscript-view-partialRootPaths
     :type: array
-    :default: Value from Constants `EXT:glossary2/Resources/Private/Partials/`
+    :default: Value of setting `glossary2.partialRootPath`
 
     You can override our Partials with your own SitePackage extension. We
-    prefer to change this value in TS Constants.
+    prefer to change the setting :confval:`site-settings-partialRootPath`.
 
-..  confval:: view.layoutsRootPaths
+..  confval:: view.layoutRootPaths
     :name: typoscript-view-layoutRootPaths
     :type: array
-    :default: Value from Constants `EXT:glossary2/Resources/Layouts/Templates/`
+    :default: Value of setting `glossary2.layoutRootPath`
 
     You can override our Layouts with your own SitePackage extension. We
-    prefer to change this value in TS Constants.
+    prefer to change the setting :confval:`site-settings-layoutRootPath`.
 
 ..  _typoscript-persistence:
 
@@ -49,9 +54,11 @@ Persistence
 ..  confval:: persistence.storagePid
     :name: typoscript-persistence-storagePid
     :type: string
+    :default: Value of setting `glossary2.storagePid`
 
     Set this value to a Storage Folder (PID) where you have stored the
-    records.
+    records. A comma-separated list of folders is possible. We prefer to
+    change the setting :confval:`site-settings-storagePid`.
 
     Example: `plugin.tx_glossary2.persistence.storagePid = 21,45,3234`
 
@@ -60,23 +67,27 @@ Persistence
 Settings
 ========
 
-..  confval:: setting.pidOfDetailPage
+..  confval:: settings.pidOfDetailPage
     :name: typoscript-settings-pidOfDetailPage
     :type: int
-    :default: 0
+    :default: Value of setting `glossary2.pidOfDetailPage`
 
     Example: `plugin.tx_glossary2.settings.pidOfDetailPage = 84`
 
     Often it is useful to move the detail view onto a separate page
     for design/layout reasons.
 
-..  confval:: setting.templatePath
+..  confval:: settings.templatePath
     :name: typoscript-settings-templatePath
     :type: string or array
     :default: empty (Use value of Extension Settings as fallback)
 
     Example:
-    `plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html`
+
+    ..  code-block:: typoscript
+        :caption: TypoScript setup
+
+        plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html
 
     With this setting you can override the default templatePath of glossary2
     and defined templatePaths coming from foreign extensions. So TypoScript
@@ -112,14 +123,22 @@ Settings
 
     Example: `plugin.tx_glossary2.settings.glossary.showAllLink = 0`
 
-    Prepend an additional button in front of the glossary to show all records
-    again.
+    Prepend an additional button in front of the glossary to show all
+    records again.
 
 ..  confval:: settings.pageBrowser.itemsPerPage
     :name: typoscript-settings-pageBrowser-itemsPerPage
     :type: int
-    :default: 15
+    :default: Value of setting `glossary2.pageBrowser.itemsPerPage` (`10`)
 
     Example: `plugin.tx_glossary2.settings.pageBrowser.itemsPerPage = 20`
 
     Reduce result of records to this value for a page
+
+..  confval:: settings.pageBrowser.class
+    :name: typoscript-settings-pageBrowser-class
+    :type: string
+    :default: `TYPO3\CMS\Core\Pagination\SimplePagination`
+
+    Class name of the pagination used in the list view. See
+    :ref:`pagination` for an example how to use another pagination.

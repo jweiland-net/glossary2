@@ -28,16 +28,18 @@ of Georg Ringers.
     ..  code-block:: typoscript
         :caption: TypoScript setup
 
-        plugin.tx_glossary2.pageBrowser.class = GeorgRinger\NumberedPagination\NumberedPagination
+        plugin.tx_glossary2.settings.pageBrowser.class = GeorgRinger\NumberedPagination\NumberedPagination
 
 3.  Change path to glossary2 partials
 
-    Set constant `partialRootPath` to a location within your SitePackage:
+    Set the site setting or TypoScript constant `glossary2.partialRootPath`
+    to a location within your SitePackage:
 
-    ..  code-block:: typoscript
-        :caption: TypoScript constants
+    ..  code-block:: yaml
+        :caption: config/sites/<identifier>/settings.yaml
 
-        plugin.tx_glossary2.view.partialRootPath = EXT:site_package/Resources/Private/Extensions/Glossary2/Partials/
+        glossary2:
+          partialRootPath: 'EXT:site_package/Resources/Private/Extensions/Glossary2/Partials/'
 
 4.  Create Pagination template
 

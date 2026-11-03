@@ -13,4 +13,5 @@ This chapter describes the various configuration settings of `glossary2`.
     :maxdepth: 2
 
     Extension/Index
+    SiteSettings/Index
     TypoScript/Index
