@@ -98,8 +98,10 @@ If your site does not use site sets, edit your TypoScript record in module
 :guilabel:`Site Management > TypoScript` and include the static template
 :guilabel:`Glossary 2 (glossary2)`.
 
-The constants of the static template have the same names as the settings of
-the site set and can be adjusted in the :guilabel:`Constant Editor`.
+The static template provides its constants under the names used before
+version 7.0.1 (for example `plugin.tx_glossary2.persistence.storagePid`).
+Adjust them in the :guilabel:`Constant Editor`. Constants with the names of
+the site settings (for example `glossary2.storagePid`) take precedence.
 
 ..  _installation-next-step:
 

@@ -90,11 +90,12 @@ Changes for integrators
     back to the list view. Check your templates and route enhancers, if you
     rely on the old value.
 
-7.  Remove the old TypoScript constants
+7.  Migrate the old TypoScript constants
 
-    The constant names used before version 7.0.1 work again as a migration
-    aid. If set, they take precedence over the `glossary2.*` constants and
-    the site settings. See :ref:`upgrade-7-0-1`.
+    The constant names used before version 7.0.1 work again as a fallback
+    for installations using the static template. The `glossary2.*`
+    constants and the site settings take precedence. See
+    :ref:`upgrade-7-0-1`.
 
 8.  Check the items per page
 
@@ -160,11 +161,11 @@ listed below or move the values to the
         -   `glossary2.pageBrowser.itemsPerPage`
 
 ..  versionchanged:: 7.1.0
-    The old constants are evaluated again as a migration aid. If an old
-    constant is set, it wins over the new constant and the site setting.
-    An old constant with an empty value counts as set, too. Remove the old
-    constants when migrating, otherwise your site settings seem to be
-    ignored.
+    The old constants are evaluated again as a fallback. The static
+    template defines its defaults under the old names, so old constants in
+    your TypoScript record keep working. A new `glossary2.*` constant takes
+    precedence over the old one. With the site set, the site settings
+    always apply and old constants are ignored.
 
 ..  _upgrade-6-0-0:
 

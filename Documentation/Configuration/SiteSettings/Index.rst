@@ -11,16 +11,22 @@ The site set `jweiland/glossary2` provides the following settings. Adjust
 them in module :guilabel:`Site Management > Settings` or in the file
 :file:`config/sites/<identifier>/settings.yaml` of your site.
 
-If you include the static template instead of the site set, the same
-settings are available as TypoScript constants with identical names (for
-example `glossary2.storagePid`) and can be adjusted in the
-:guilabel:`Constant Editor`.
+If you include the static template instead of the site set, set the
+values as TypoScript constants with the names listed below (for example
+`glossary2.storagePid`). The :guilabel:`Constant Editor` lists the
+constants under their names used before version 7.0.1 (for example
+`plugin.tx_glossary2.persistence.storagePid`). A constant with the new
+name takes precedence over the old one.
 
 ..  versionchanged:: 7.0.1
     The TypoScript constants were renamed. They do not start with
     `plugin.tx_glossary2` anymore, for example
     `plugin.tx_glossary2.persistence.storagePid` is now
     `glossary2.storagePid`.
+
+..  versionchanged:: 7.1.0
+    The old constant names work again as a fallback, see
+    :ref:`upgrade-7-0-1`.
 
 ..  confval-menu::
     :display: table
