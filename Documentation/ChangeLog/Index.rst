@@ -29,6 +29,10 @@ Version 7.1.0
 *   [TASK] Test PHP 8.4 and 8.5 in CI
 *   [BUGFIX] Allow PHPStan 1.12 to run on PHP 8.5
 *   [TASK] Support PHP 8.5 in runTests.sh
+*   [BUGFIX] Keep renamed TypoScript constants as fallback. Constants
+    used before version 7.0.1 win over the `glossary2.*` constants and
+    site settings, if set.
+*   [BUGFIX] Force at least one item per page in paginator
 *   [DOCS] Update documentation to TYPO3 13 and render-guides
 
 See :ref:`upgrade-7-1-0` for the required upgrade steps.

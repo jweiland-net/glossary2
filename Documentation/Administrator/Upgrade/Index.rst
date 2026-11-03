@@ -90,6 +90,17 @@ Changes for integrators
     back to the list view. Check your templates and route enhancers, if you
     rely on the old value.
 
+7.  Remove the old TypoScript constants
+
+    The constant names used before version 7.0.1 work again as a migration
+    aid. If set, they take precedence over the `glossary2.*` constants and
+    the site settings. See :ref:`upgrade-7-0-1`.
+
+8.  Check the items per page
+
+    A value of `itemsPerPage` below `1` shows one item per page instead of
+    throwing an exception. A missing value falls back to `10`.
+
 ..  _upgrade-7-1-0-developers:
 
 Changes for developers
@@ -128,8 +139,7 @@ Version 7.0.1 introduced the site set `jweiland/glossary2`. The TypoScript
 constants were renamed and the default for items per page was reduced from
 `15` to `10`. Rename the constants in your site package to the new names
 listed below or move the values to the
-:ref:`site settings <site-settings>`. Values must be set with the new names
-to take effect:
+:ref:`site settings <site-settings>`:
 
 ..  list-table:: Renamed TypoScript constants
     :header-rows: 1
@@ -148,6 +158,13 @@ to take effect:
         -   `glossary2.pidOfDetailPage`
     *   -   `plugin.tx_glossary2.settings.pageBrowser.itemsPerPage`
         -   `glossary2.pageBrowser.itemsPerPage`
+
+..  versionchanged:: 7.1.0
+    The old constants are evaluated again as a migration aid. If an old
+    constant is set, it wins over the new constant and the site setting.
+    An old constant with an empty value counts as set, too. Remove the old
+    constants when migrating, otherwise your site settings seem to be
+    ignored.
 
 ..  _upgrade-6-0-0:
 
