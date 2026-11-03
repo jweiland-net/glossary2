@@ -30,9 +30,9 @@ settings:
   glossary2.storagePid:
     label: 'Default storage PID'
     category: glossary2.pages
-    description: 'Folder that stores all POIs'
-    type: int
-    default: 0
+    description: 'Comma separated list of folders that store the glossary records'
+    type: string
+    default: '0'
   glossary2.pidOfDetailPage:
     label: 'Pid of Detail Page'
     category: glossary2.pages

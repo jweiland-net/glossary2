@@ -1,5 +1,7 @@
-..  include:: /Includes.rst.txt
+:navigation-title: Pagination
 
+..  include:: /Includes.rst.txt
+..  _pagination:
 
 ==========
 Pagination
@@ -14,68 +16,73 @@ of Georg Ringers.
 
 ..  rst-class:: bignums
 
-    1.  Install `numbered_pagination`
+1.  Install `numbered_pagination`
 
-        Install and activate `numbered_pagination` extension from Georg
-        Ringer. Please check in your SitePackage extension that
-        `numbered_pagination` is set as a dependency and will be loaded
-        before `glossary2` and your SitePackage.
+    Install and activate `numbered_pagination` extension from Georg
+    Ringer. Please check in your SitePackage extension that
+    `numbered_pagination` is set as a dependency and will be loaded
+    before `glossary2` and your SitePackage.
 
-    2.  Change pagination class in TypoScript
+2.  Change pagination class in TypoScript
 
-        ..  code-block:: typoscript
+    ..  code-block:: typoscript
+        :caption: TypoScript setup
 
-            plugin.tx_glossary2.pageBrowser.class = GeorgRinger\NumberedPagination\NumberedPagination
+        plugin.tx_glossary2.settings.pageBrowser.class = GeorgRinger\NumberedPagination\NumberedPagination
 
-    3.  Change path to glossary2 partials
+3.  Change path to glossary2 partials
 
-        Set constant `partialRootPath` to a location within your SitePackage:
+    Set the site setting or TypoScript constant `glossary2.partialRootPath`
+    to a location within your SitePackage:
 
-        ..  code-block:: typoscript
+    ..  code-block:: yaml
+        :caption: config/sites/<identifier>/settings.yaml
 
-            plugin.tx_glossary2.view.partialRootPath = EXT:site_package/Resources/Private/Extensions/Glossary2/Partials/
+        glossary2:
+          partialRootPath: 'EXT:site_package/Resources/Private/Extensions/Glossary2/Partials/'
 
-    4.  Create Pagination template
+4.  Create Pagination template
 
-        Create file `Resources/Private/Extensions/Glossary2/Partials/Component/Pagination.html`
-        with example content from numbered_pagination
-        https://github.com/georgringer/numbered_pagination/blob/master/Resources/Private/Partials/Pagination.html
+    Create file `Resources/Private/Extensions/Glossary2/Partials/Component/Pagination.html`
+    with example content from numbered_pagination
+    https://github.com/georgringer/numbered_pagination/blob/master/Resources/Private/Partials/Pagination.html
 
-        ..  code-block:: html
+    ..  code-block:: html
+        :caption: EXT:site_package/Resources/Private/Extensions/Glossary2/Partials/Component/Pagination.html
 
-            <html lang="en"
-                  xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-                  data-namespace-typo3-fluid="true">
+        <html lang="en"
+              xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+              data-namespace-typo3-fluid="true">
 
-            <ul class="f3-widget-paginator">
-                <f:if condition="{pagination.previousPageNumber} && {pagination.previousPageNumber} >= {pagination.firstPageNumber}">
-                    <li class="previous">
-                        <a href="{f:uri.action(action:actionName, arguments:{currentPage: pagination.previousPageNumber})}" title="{f:translate(key:'pagination.previous')}">
-                            {f:translate(key:'widget.pagination.previous', extensionName: 'fluid')}
-                        </a>
-                    </li>
-                </f:if>
-                <f:if condition="{pagination.hasLessPages}">
-                    <li>…</li>
-                </f:if>
-                <f:for each="{pagination.allPageNumbers}" as="page">
-                    <li class="{f:if(condition: '{page} == {paginator.currentPageNumber}', then:'current')}">
-                        <a href="{f:uri.action(action:actionName, arguments:{currentPage: page})}">{page}</a>
-                    </li>
-                </f:for>
-                <f:if condition="{pagination.hasMorePages}">
-                    <li>…</li>
-                </f:if>
-                <f:if condition="{pagination.nextPageNumber} && {pagination.nextPageNumber} <= {pagination.lastPageNumber}">
-                    <li class="next">
-                        <a href="{f:uri.action(action:actionName, arguments:{currentPage: pagination.nextPageNumber})}" title="{f:translate(key:'pagination.next')}">
-                            {f:translate(key:'widget.pagination.next', extensionName: 'fluid')}
-                        </a>
-                    </li>
-                </f:if>
-            </ul>
-            </html>
+        <ul class="f3-widget-paginator">
+            <f:if condition="{pagination.previousPageNumber} && {pagination.previousPageNumber} >= {pagination.firstPageNumber}">
+                <li class="previous">
+                    <a href="{f:uri.action(action:actionName, arguments:{currentPage: pagination.previousPageNumber})}" title="{f:translate(key:'pagination.previous')}">
+                        {f:translate(key:'widget.pagination.previous', extensionName: 'fluid')}
+                    </a>
+                </li>
+            </f:if>
+            <f:if condition="{pagination.hasLessPages}">
+                <li>…</li>
+            </f:if>
+            <f:for each="{pagination.allPageNumbers}" as="page">
+                <li class="{f:if(condition: '{page} == {paginator.currentPageNumber}', then:'current')}">
+                    <a href="{f:uri.action(action:actionName, arguments:{currentPage: page})}">{page}</a>
+                </li>
+            </f:for>
+            <f:if condition="{pagination.hasMorePages}">
+                <li>…</li>
+            </f:if>
+            <f:if condition="{pagination.nextPageNumber} && {pagination.nextPageNumber} <= {pagination.lastPageNumber}">
+                <li class="next">
+                    <a href="{f:uri.action(action:actionName, arguments:{currentPage: pagination.nextPageNumber})}" title="{f:translate(key:'pagination.next')}">
+                        {f:translate(key:'widget.pagination.next', extensionName: 'fluid')}
+                    </a>
+                </li>
+            </f:if>
+        </ul>
+        </html>
 
-    5.  Clear Cache
+5.  Clear Cache
 
-        Needed to reload the fluid templates.
+    Needed to reload the fluid templates.

@@ -34,6 +34,10 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     protected ?SlugHelper $slugHelper = null;
 
+    public function __construct(
+        private readonly ConnectionPool $connectionPool,
+    ) {}
+
     public function getTitle(): string
     {
         return '[glossary2] Update url slugs of glossary2 records';
@@ -46,7 +50,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     public function updateNecessary(): bool
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $amountOfRecordsWithEmptySlug = $queryBuilder
             ->count('*')
             ->from($this->tableName)
@@ -75,7 +79,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
      */
     public function executeUpdate(): bool
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $recordsToUpdate = $queryBuilder
             ->select('uid', 'title', 'path_segment')
             ->from($this->tableName)
@@ -93,7 +97,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
             ->executeQuery()
             ->fetchAllAssociative();
 
-        $connection = $this->getConnectionPool()->getConnectionForTable($this->tableName);
+        $connection = $this->connectionPool->getConnectionForTable($this->tableName);
         foreach ($recordsToUpdate as $recordToUpdate) {
             if ((string)$recordToUpdate['title'] !== '') {
                 $slug = $this->getSlugHelper()->sanitize((string)$recordToUpdate['title']);
@@ -138,7 +142,7 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
 
     protected function getUniqueCountQueryBuilder(int $uid, string $slug): QueryBuilder
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($this->tableName);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->tableName);
         $queryBuilder
             ->getRestrictions()
             ->removeAll()
@@ -181,10 +185,5 @@ class GlossarySlugUpdate implements UpgradeWizardInterface
         return [
             DatabaseUpdatedPrerequisite::class,
         ];
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

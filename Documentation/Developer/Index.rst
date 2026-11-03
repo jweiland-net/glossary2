@@ -1,8 +1,9 @@
+:navigation-title: Developer
+
 ..  include:: /Includes.rst.txt
+..  _developer-manual:
 
-
-.. _developer-manual:
-
+================
 Developer manual
 ================
 
@@ -14,3 +15,4 @@ point of view.
     :titlesonly:
 
     API/Index
+    Events/Index

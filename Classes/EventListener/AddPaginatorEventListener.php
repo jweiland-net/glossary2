@@ -12,15 +12,17 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\EventListener;
 
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Pagination\PaginationInterface;
 use TYPO3\CMS\Core\Pagination\PaginatorInterface;
 use TYPO3\CMS\Core\Pagination\SimplePagination;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 
+#[AsEventListener]
 class AddPaginatorEventListener extends AbstractControllerEventListener
 {
-    protected int $itemsPerPage = 15;
+    protected int $itemsPerPage = 10;
 
     /**
      * Fluid variable name for paginated records
@@ -71,7 +73,11 @@ class AddPaginatorEventListener extends AbstractControllerEventListener
 
     protected function getItemsPerPage(PostProcessFluidVariablesEvent $event): int
     {
-        return (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage);
+        // QueryResultPaginator requires at least one item per page
+        return MathUtility::forceIntegerInRange(
+            (int)($event->getSettings()['pageBrowser']['itemsPerPage'] ?? $this->itemsPerPage),
+            1,
+        );
     }
 
     protected function getPagination(

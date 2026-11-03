@@ -1,7 +1,5 @@
 ..  include:: /Includes.rst.txt
-
-
-.. _start:
+..  _start:
 
 =========
 Glossary2
@@ -58,4 +56,3 @@ entries incl. detail view. Above the list you will see an A-Z navigation.
     :hidden:
 
     Sitemap
-    genindex

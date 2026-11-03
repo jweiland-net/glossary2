@@ -23,7 +23,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
@@ -52,11 +51,6 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
             'foo' => 'bar',  // Example configuration
         ]);
 
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            $GLOBALS['TYPO3_REQUEST'],
-        );
-
         $pageId = 15;
         $persistenceManager = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
         $querySettings = GeneralUtility::makeInstance(QuerySettingsInterface::class);
@@ -77,27 +71,76 @@ class Glossary2PageTitleProviderTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        unset($this->pageTitleProvider);
+        unset($this->subject);
         parent::tearDown();
     }
 
     #[Test]
     public function getGlossaryDetailPageWithAssignedTitleShouldMatch(): void
     {
-        $GLOBALS['TYPO3_REQUEST'] = (new \TYPO3\CMS\Core\Http\ServerRequest('https://www.example.com/'))
-            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
-            ->withQueryParams(
-                [
-                    'tx_glossary2_glossary' => [
-                        'action' => 'show',
-                        'glossary' => 1,
-                    ],
+        $this->subject->setRequest(
+            $this->getRequestWithQueryParams([
+                'tx_glossary2_glossary' => [
+                    'action' => 'show',
+                    'glossary' => 1,
                 ],
-            );
+            ]),
+        );
 
         self::assertSame(
             'Nice title for detail page',
             $this->subject->getTitle(),
         );
+    }
+
+    #[Test]
+    public function getTitleWithoutRequestReturnsEmptyString(): void
+    {
+        self::assertSame(
+            '',
+            $this->subject->getTitle(),
+        );
+    }
+
+    #[Test]
+    public function getTitleWithoutPluginArgumentsReturnsEmptyString(): void
+    {
+        $this->subject->setRequest(
+            $this->getRequestWithQueryParams([
+                'id' => 15,
+            ]),
+        );
+
+        self::assertSame(
+            '',
+            $this->subject->getTitle(),
+        );
+    }
+
+    #[Test]
+    public function getTitleWithoutGlossaryArgumentReturnsEmptyString(): void
+    {
+        $this->subject->setRequest(
+            $this->getRequestWithQueryParams([
+                'tx_glossary2_glossary' => [
+                    'action' => 'show',
+                ],
+            ]),
+        );
+
+        self::assertSame(
+            '',
+            $this->subject->getTitle(),
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $queryParams
+     */
+    private function getRequestWithQueryParams(array $queryParams): ServerRequest
+    {
+        return (new ServerRequest('https://www.example.com/'))
+            ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE)
+            ->withQueryParams($queryParams);
     }
 }

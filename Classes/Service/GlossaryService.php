@@ -12,14 +12,11 @@ declare(strict_types=1);
 namespace JWeiland\Glossary2\Service;
 
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
 use JWeiland\Glossary2\Configuration\ExtConf;
-use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
@@ -52,7 +49,8 @@ class GlossaryService
     ) {}
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
      * @throws Exception
      */
@@ -77,7 +75,8 @@ class GlossaryService
      * $constraints[] = $glossary2Service->getLetterConstraintForExtbaseQuery($query, 'title', $letter);
      * return $query->matching($query->logicalAnd($constraints))->execute();
      *
-     * @param QueryInterface<Glossary> $extbaseQuery
+     * @template T of object
+     * @param QueryInterface<T> $extbaseQuery
      * @throws InvalidQueryException
      */
     public function getLetterConstraintForExtbaseQuery(
@@ -132,7 +131,8 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
      * @return array<int, array<string, bool|string>>
      * @throws Exception
@@ -163,9 +163,10 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
-     * @return array<string, mixed>
+     * @return array<int, string>
      * @throws Exception
      */
     protected function getAvailableLetters(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
@@ -194,8 +195,9 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
-     * @return array<string, mixed>
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
+     * @return array<int, string>
      * @throws Exception
      */
     protected function getFirstLettersOfGlossaryRecords(
@@ -203,44 +205,11 @@ class GlossaryService
         string $column,
         string $columnAlias,
     ): array {
-        $firstLetters = [];
+        $firstLetters = $queryBuilder instanceof QueryResultInterface
+            ? $this->getFirstLettersFromQueryResult($queryBuilder, $column)
+            : $this->getFirstLettersFromQueryBuilder($queryBuilder, $column, $columnAlias);
 
-        if ($queryBuilder instanceof QueryResultInterface) {
-            // As we can not modify SELECT part, we have to loop through all records
-            $propertyGetter = 'get' . GeneralUtility::underscoredToUpperCamelCase($column);
-            foreach ($queryBuilder as $record) {
-                if (method_exists($record, $propertyGetter)) {
-                    $firstLetter = mb_strtolower(mb_substr(call_user_func([$record, $propertyGetter]), 0, 1));
-                    $firstLetters[$firstLetter] = $firstLetter;
-                }
-            }
-        } elseif ($queryBuilder->getConnection()->getDatabasePlatform() instanceof MySQLPlatform) {
-            $queryResult = $queryBuilder
-                ->selectLiteral(sprintf('SUBSTRING(%s, 1, 1) as %s', $column, $columnAlias))
-                ->groupBy($columnAlias)
-                ->orderBy($columnAlias)
-                ->executeQuery();
-
-            while ($record = $queryResult->fetchAssociative()) {
-                $firstLetter = mb_strtolower($record[$columnAlias]);
-                $firstLetters[] = $firstLetter;
-            }
-        } else {
-            // This will collect nearly all records and could be an
-            // performance issue, if you have a lot of records
-            $queryResult = $queryBuilder
-                ->select($column . ' AS ' . $columnAlias)
-                ->groupBy($columnAlias)
-                ->orderBy($columnAlias)
-                ->executeQuery();
-
-            while ($record = $queryResult->fetchAssociative()) {
-                $firstLetter = mb_strtolower($record[$columnAlias][0]);
-                $firstLetters[$firstLetter] = $firstLetter;
-            }
-        }
-
-        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
+        $firstLetters = $this->cleanUpFirstLetters($firstLetters);
 
         /** @var PostProcessFirstLettersEvent $event */
         $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
@@ -249,29 +218,88 @@ class GlossaryService
     }
 
     /**
+     * The SELECT part of an Extbase query can not be modified, so all
+     * records have to be iterated to collect their first letters.
+     *
+     * @template T of object
+     * @param QueryResultInterface<int, T> $queryResult
+     * @return array<string, string>
+     */
+    protected function getFirstLettersFromQueryResult(QueryResultInterface $queryResult, string $column): array
+    {
+        $firstLetters = [];
+        $propertyGetter = 'get' . GeneralUtility::underscoredToUpperCamelCase($column);
+        foreach ($queryResult as $record) {
+            if (method_exists($record, $propertyGetter)) {
+                $firstLetter = mb_strtolower(mb_substr((string)$record->$propertyGetter(), 0, 1));
+                $firstLetters[$firstLetter] = $firstLetter;
+            }
+        }
+
+        return $firstLetters;
+    }
+
+    /**
+     * Selects the distinct first characters of the column. The substring
+     * expression of the database platform is character based, so
+     * multibyte first letters like "Ä" are returned completely.
+     *
+     * @return array<string, string>
+     * @throws Exception
+     */
+    protected function getFirstLettersFromQueryBuilder(
+        QueryBuilder $queryBuilder,
+        string $column,
+        string $columnAlias,
+    ): array {
+        $substringExpression = $queryBuilder->getConnection()->getDatabasePlatform()->getSubstringExpression(
+            $queryBuilder->quoteIdentifier($column),
+            '1',
+            '1',
+        );
+
+        $queryResult = $queryBuilder
+            ->selectLiteral($substringExpression . ' AS ' . $queryBuilder->quoteIdentifier($columnAlias))
+            ->groupBy($columnAlias)
+            ->orderBy($columnAlias)
+            ->executeQuery();
+
+        $firstLetters = [];
+        while ($record = $queryResult->fetchAssociative()) {
+            $firstLetter = mb_strtolower((string)$record[$columnAlias]);
+            $firstLetters[$firstLetter] = $firstLetter;
+        }
+
+        return $firstLetters;
+    }
+
+    /**
      * GROUP BY of DB will group all "a" letters like a, á, â, à to ONE of them. If grouped letter
      * is "a", everything is fine, but in case of "á" we have to convert this letter to ASCII "a" representation.
+     * As a special char may be converted into multiple ASCII chars (ä => ae), only the first char is used.
      *
-     * @param array<string, mixed> $firstLetters
-     * @return array<int, mixed>
+     * @param array<string, string> $firstLetters
+     * @return array<int, string>
      */
     protected function cleanUpFirstLetters(array $firstLetters): array
     {
         // Map special chars like Ä => a
         $charsetHelper = GeneralUtility::makeInstance(CharsetHelper::class);
-        foreach ($firstLetters as $key => $firstLetter) {
-            $firstLetters[$key] = $charsetHelper->sanitize($firstLetter);
+
+        $cleanedFirstLetters = [];
+        foreach ($firstLetters as $firstLetter) {
+            $cleanedFirstLetter = mb_substr($charsetHelper->sanitize($firstLetter), 0, 1);
+
+            // Skip all chars which are not numbers or letters. Maybe spaces, tabs, - or others
+            if (preg_match('~^[[:alnum:]]$~', $cleanedFirstLetter)) {
+                $cleanedFirstLetters[] = $cleanedFirstLetter;
+            }
         }
 
-        // Remove all letters which are not numbers or letters. Maybe spaces, tabs, - or others
-        $firstLetters = str_split(
-            preg_replace('~([[:^alnum:]])~', '', implode('', $firstLetters)),
-        );
-
         // Sort and remove duplicate letters
-        sort($firstLetters);
+        sort($cleanedFirstLetters);
 
-        return array_unique($firstLetters);
+        return array_values(array_unique($cleanedFirstLetters));
     }
 
     /**
@@ -364,10 +392,5 @@ class GlossaryService
         );
 
         return $settings;
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

@@ -1,0 +1,25 @@
+plugin.tx_glossary2 {
+  view {
+    # cat=plugin.tx_glossary2/file; type=string; label=Path to template root (FE)
+    templateRootPath = EXT:glossary2/Resources/Private/Templates/
+    # cat=plugin.tx_glossary2/file; type=string; label=Path to template partials (FE)
+    partialRootPath = EXT:glossary2/Resources/Private/Partials/
+    # cat=plugin.tx_glossary2/file; type=string; label=Path to template layouts (FE)
+    layoutRootPath = EXT:glossary2/Resources/Private/Layouts/
+  }
+
+  persistence {
+    # cat=plugin.tx_glossary2//a; type=string; label=Default storage PID: Comma separated list of folders that store the glossary records
+    storagePid = 0
+  }
+
+  settings {
+    # cat=plugin.tx_glossary2//b; type=int+; label=PID of detail page: Leave empty to show details on current page
+    pidOfDetailPage = 0
+
+    pageBrowser {
+      # cat=plugin.tx_glossary2//c; type=int+; label=Items per page: How many items should be displayed on one page
+      itemsPerPage = 10
+    }
+  }
+}

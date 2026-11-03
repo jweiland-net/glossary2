@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# EXT:examples test runner based on docker/podman.
+# EXT:glossary2 test runner based on docker/podman.
 #
 
 trap 'cleanUp;exit 2' SIGINT
@@ -24,6 +24,23 @@ waitFor() {
     if [[ $? -gt 0 ]]; then
         kill -SIGINT -$$
     fi
+}
+
+getPhpImageVersion() {
+    case ${1} in
+        8.2)
+            echo -n "1.15"
+            ;;
+        8.3)
+            echo -n "1.16"
+            ;;
+        8.4)
+            echo -n "1.8"
+            ;;
+        8.5)
+            echo -n "1.8"
+            ;;
+    esac
 }
 
 cleanUp() {
@@ -125,7 +142,7 @@ handleDbmsOptions() {
 loadHelp() {
     # Load help text into $HELP
     read -r -d '' HELP <<EOF
-EXT:examples test runner. Check code styles, lint PHP files and some other details.
+EXT:glossary2 test runner. Check code styles, lint PHP files and some other details.
 
 Usage: $0 [options] [file]
 
@@ -202,11 +219,12 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -p <8.1|8.2|8.3>
+    -p <8.2|8.3|8.4|8.5>
         Specifies the PHP minor version to be used
-            - 8.1: use PHP 8.1
-            - 8.2: use PHP 8.2
+            - 8.2: use PHP 8.2 (default)
             - 8.3: use PHP 8.3
+            - 8.4: use PHP 8.4
+            - 8.5: use PHP 8.5
 
     -x
         Only with -s functional|unit
@@ -223,7 +241,7 @@ Options:
         Activate dry-run in CGL check and composer normalize that does not actively change files and only prints broken ones.
 
     -u
-        Update existing typo3/core-testing-*:latest container images and remove dangling local volumes.
+        Update existing typo3/core-testing-* container images and remove dangling local volumes.
         New images are published once in a while and only the latest ones are supported by core testing.
         Use this if weird test errors occur. Also removes obsolete image versions of typo3/core-testing-*.
 
@@ -254,7 +272,7 @@ TEST_SUITE="cgl"
 DATABASE_DRIVER=""
 DBMS="sqlite"
 DBMS_VERSION=""
-PHP_VERSION="8.1"
+PHP_VERSION="8.2"
 PHP_XDEBUG_ON=0
 PHP_XDEBUG_PORT=9003
 CGLCHECK_DRY_RUN=0
@@ -291,7 +309,7 @@ while getopts "a:b:d:i:s:p:xy:nhu" OPT; do
             ;;
         p)
             PHP_VERSION=${OPTARG}
-            if ! [[ ${PHP_VERSION} =~ ^(8.1|8.2|8.3)$ ]]; then
+            if ! [[ ${PHP_VERSION} =~ ^(8.2|8.3|8.4|8.5)$ ]]; then
                 INVALID_OPTIONS+=("p ${OPTARG}")
             fi
             ;;
@@ -374,7 +392,7 @@ if [[ -z "${CONTAINER_BIN}" ]]; then
     fi
 fi
 
-IMAGE_PHP="${TYPO3_IMAGE_PREFIX}core-testing-$(echo "php${PHP_VERSION}" | sed -e 's/\.//'):latest"
+IMAGE_PHP="${TYPO3_IMAGE_PREFIX}core-testing-$(echo "php${PHP_VERSION}" | sed -e 's/\.//'):$(getPhpImageVersion ${PHP_VERSION})"
 IMAGE_ALPINE="${IMAGE_PREFIX}alpine:3.8"
 IMAGE_MARIADB="docker.io/mariadb:${DBMS_VERSION}"
 IMAGE_MYSQL="docker.io/mysql:${DBMS_VERSION}"
@@ -411,9 +429,9 @@ fi
 case ${TEST_SUITE} in
     cgl)
         if [ "${CGLCHECK_DRY_RUN}" -eq 1 ]; then
-            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --dry-run --diff --config=Build/cgl/.php-cs-fixer.dist.php --using-cache=no ."
+            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --dry-run --diff --config=Build/cgl/.php-cs-fixer.dist.php --using-cache=no"
         else
-            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --config=Build/cgl/.php-cs-fixer.dist.php --using-cache=no ."
+            COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v --config=Build/cgl/.php-cs-fixer.dist.php --using-cache=no"
         fi
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name cgl-${SUFFIX} -e COMPOSER_CACHE_DIR=.Build/.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} /bin/sh -c "${COMMAND}"
         SUITE_EXIT_CODE=$?

@@ -1,10 +1,10 @@
+:navigation-title: Editor
+
 ..  include:: /Includes.rst.txt
-
-
-.. _user-manual:
+..  _user-manual:
 
 ============
-Users Manual
+Users manual
 ============
 
 Target group: **Editors**
@@ -19,22 +19,24 @@ Target group: **Editors**
 
 #.  Save
 
-Plugin Options
+..  _user-manual-plugin-options:
+
+Plugin options
 ==============
 
-**Show Glossary**
+Show Glossary
+    You can decide to show A-Z links above or not.
 
-You can decide to show A-Z links above or not.
+Show All link
+    You can decide to prepend an All-link to A-Z links or not.
 
-**Show All link**
+Show entries of category
+    Sometimes it makes sense to reduce list of glossary entries to a given
+    category.
 
-You can decide to prepend an All-link to A-Z links or not.
+..  _user-manual-glossary-record:
 
-**Show entries of category**
-
-Sometimes it makes sense to reduce list of glossary entries to a given category.
-
-Glossary Record
+Glossary record
 ===============
 
 #.  Select a Storage Page

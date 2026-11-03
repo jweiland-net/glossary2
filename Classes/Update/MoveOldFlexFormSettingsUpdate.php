@@ -28,6 +28,10 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 #[UpgradeWizard('glossary2UpdateOldFlexFormFields')]
 class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
 {
+    public function __construct(
+        private readonly ConnectionPool $connectionPool,
+    ) {}
+
     /**
      * Return the speaking name of this wizard
      */
@@ -53,23 +57,9 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     public function updateNecessary(): bool
     {
         foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
-            $valueFromDatabase = (string)$record['pi_flexform'] !== '' ? GeneralUtility::xml2array($record['pi_flexform']) : [];
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
-                continue;
-            }
-
-            if (array_key_exists('sDEFAULT', $valueFromDatabase['data'])) {
+            if ($this->isFlexFormOutdated($this->getFlexFormArray($record))) {
                 return true;
             }
-
-            return array_key_exists(
-                'switchableControllerActions',
-                $valueFromDatabase['data']['sDEF']['lDEF'] ?? [],
-            )
-                || array_key_exists(
-                    'switchableControllerActions',
-                    $valueFromDatabase['data']['sDEFAULT']['lDEF'] ?? [],
-                );
         }
 
         return false;
@@ -91,40 +81,15 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     public function executeUpdate(): bool
     {
         foreach ($this->getTtContentRecordsWithOutdatedFlexForm() as $record) {
-            $valueFromDatabase = (string)$record['pi_flexform'] !== ''
-                ? GeneralUtility::xml2array($record['pi_flexform'])
-                : [];
-
-            if (!is_array($valueFromDatabase) || empty($valueFromDatabase)) {
+            $valueFromDatabase = $this->getFlexFormArray($record);
+            if (!$this->isFlexFormOutdated($valueFromDatabase)) {
                 continue;
             }
 
-            $this->moveSheetDefaultToDef($valueFromDatabase);
-
-            // Move SCA to new field showGlossar
-            if (!array_key_exists('settings.showGlossar', $valueFromDatabase['data']['sDEF']['lDEF'])) {
-                if ($valueFromDatabase['data']['sDEF']['lDEF']['switchableControllerActions']['vDEF']) {
-                    // if set, SCA is not default. It was set to showWithoutGlossar. So set to 0
-                    $valueFromDatabase['data']['sDEF']['lDEF']['settings.showGlossar']['vDEF'] = '0';
-                } else {
-                    // if not set, SCA is default. A-Z links should be shown. So set to 1
-                    $valueFromDatabase['data']['sDEF']['lDEF']['settings.showGlossar']['vDEF'] = '1';
-                }
-            }
-            unset($valueFromDatabase['data']['sDEF']['lDEF']['switchableControllerActions']);
-
-            // Add showAllLink field, if not already done
-            if (!array_key_exists('settings.showAllLink', $valueFromDatabase['data']['sDEF']['lDEF'])) {
-                // To be backwards compatible, we have to deactivate that option for all existing records.
-                // But it is ON by default for new records.
-                $valueFromDatabase['data']['sDEF']['lDEF']['settings.showAllLink']['vDEF'] = '0';
-            }
-
-            $connection = $this->getConnectionPool()->getConnectionForTable('tt_content');
-            $connection->update(
+            $this->connectionPool->getConnectionForTable('tt_content')->update(
                 'tt_content',
                 [
-                    'pi_flexform' => $this->checkValue_flexArray2Xml($valueFromDatabase),
+                    'pi_flexform' => $this->checkValue_flexArray2Xml($this->migrateFlexForm($valueFromDatabase)),
                 ],
                 [
                     'uid' => (int)$record['uid'],
@@ -139,14 +104,42 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     }
 
     /**
-     * Get all (incl. deleted/hidden) tt_content records with plugin glossary2_glossary
+     * @param array<string, mixed> $valueFromDatabase
+     * @return array<string, mixed>
+     */
+    protected function migrateFlexForm(array $valueFromDatabase): array
+    {
+        $this->moveSheetDefaultToDef($valueFromDatabase);
+
+        // Move SCA to new field showGlossar
+        if (!array_key_exists('settings.showGlossar', $valueFromDatabase['data']['sDEF']['lDEF'] ?? [])) {
+            // If SCA is set, it is not default. It was set to showWithoutGlossar.
+            // If SCA is not set, it is default and A-Z links should be shown.
+            $valueFromDatabase['data']['sDEF']['lDEF']['settings.showGlossar']['vDEF']
+                = ($valueFromDatabase['data']['sDEF']['lDEF']['switchableControllerActions']['vDEF'] ?? '') ? '0' : '1';
+        }
+        unset($valueFromDatabase['data']['sDEF']['lDEF']['switchableControllerActions']);
+
+        // Add showAllLink field, if not already done
+        if (!array_key_exists('settings.showAllLink', $valueFromDatabase['data']['sDEF']['lDEF'] ?? [])) {
+            // To be backwards compatible, we have to deactivate that option for all existing records.
+            // But it is ON by default for new records.
+            $valueFromDatabase['data']['sDEF']['lDEF']['settings.showAllLink']['vDEF'] = '0';
+        }
+
+        return $valueFromDatabase;
+    }
+
+    /**
+     * Get all (incl. hidden) tt_content records with plugin glossary2_glossary.
+     * Records with the former list_type are respected, too.
      *
-     * @return array<int, mixed>
+     * @return array<int, array<string, mixed>>
      * @throws Exception
      */
     protected function getTtContentRecordsWithOutdatedFlexForm(): array
     {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tt_content');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tt_content');
         $queryBuilder
             ->getRestrictions()
             ->removeAll()
@@ -155,18 +148,46 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
         return $queryBuilder
             ->select('uid', 'pi_flexform')
             ->from('tt_content')
-            ->andWhere(
-                $queryBuilder->expr()->eq(
-                    'CType',
-                    $queryBuilder->createNamedParameter('list'),
-                ),
-                $queryBuilder->expr()->eq(
-                    'list_type',
-                    $queryBuilder->createNamedParameter('glossary2_glossary'),
+            ->where(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('glossary2_glossary')),
+                    $queryBuilder->expr()->and(
+                        $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('list')),
+                        $queryBuilder->expr()->eq('list_type', $queryBuilder->createNamedParameter('glossary2_glossary')),
+                    ),
                 ),
             )
             ->executeQuery()
             ->fetchAllAssociative();
+    }
+
+    /**
+     * @param array<string, mixed> $record
+     * @return array<string, mixed>
+     */
+    protected function getFlexFormArray(array $record): array
+    {
+        $flexForm = (string)($record['pi_flexform'] ?? '') !== ''
+            ? GeneralUtility::xml2array((string)$record['pi_flexform'])
+            : [];
+
+        return is_array($flexForm) ? $flexForm : [];
+    }
+
+    /**
+     * FlexForm is outdated, if it still uses the sheet "sDEFAULT" or the
+     * field "switchableControllerActions"
+     *
+     * @param array<string, mixed> $flexForm
+     */
+    protected function isFlexFormOutdated(array $flexForm): bool
+    {
+        if (!is_array($flexForm['data'] ?? null)) {
+            return false;
+        }
+
+        return array_key_exists('sDEFAULT', $flexForm['data'])
+            || array_key_exists('switchableControllerActions', $flexForm['data']['sDEF']['lDEF'] ?? []);
     }
 
     /**
@@ -225,10 +246,5 @@ class MoveOldFlexFormSettingsUpdate implements UpgradeWizardInterface
     {
         return GeneralUtility::makeInstance(FlexFormTools::class)
             ->flexArray2Xml($array);
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

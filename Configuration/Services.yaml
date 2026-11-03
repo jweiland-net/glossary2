@@ -6,18 +6,9 @@ services:
 
   JWeiland\Glossary2\:
     resource: '../Classes/*'
-    exclude: '../Classes/Domain/Model/*'
-
-  JWeiland\Glossary2\EventListener\AddPaginatorEventListener:
-    tags:
-      - name: event.listener
-        event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
-
-  JWeiland\Glossary2\EventListener\AddGlossaryEventListener:
-    tags:
-      - name: event.listener
-        event: JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent
-        after: JWeiland\Glossary2\EventListener\AddPaginatorEventListener
+    exclude:
+      - '../Classes/Domain/Model/*'
+      - '../Classes/Event/*'
 
   JWeiland\Glossary2\Helper\CharsetHelper:
     public: true

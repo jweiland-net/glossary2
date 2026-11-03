@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the package jweiland/glossary2.
  *
@@ -10,16 +12,21 @@
 namespace JWeiland\Glossary2\Tests\Functional\Service;
 
 use JWeiland\Glossary2\Configuration\ExtConf;
+use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
+use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
+use JWeiland\Glossary2\Event\SanitizeValueForCharsetHelperEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use JWeiland\Glossary2\Service\GlossaryService;
+use JWeiland\Glossary2\Tests\Functional\Fixtures\ProcessFirstLettersEventListener;
+use JWeiland\Glossary2\Tests\Functional\Fixtures\SanitizeValueEventListener;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\MockObject\MockObject;
+use Psr\EventDispatcher\ListenerProviderInterface;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
@@ -29,34 +36,24 @@ use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Test case
  */
 class GlossaryServiceTest extends FunctionalTestCase
 {
-    protected GlossaryService $subject;
+    private const JSON_TEMPLATE = 'EXT:glossary2/Tests/Functional/Fixtures/Templates/GlossaryAsJson.html';
 
-    protected ExtConf $extConf;
-
-    protected ListenerProvider $listenerProvider;
-
-    protected EventDispatcher $eventDispatcher;
-
-    protected TypoScriptService $typoScriptService;
-
-    protected Request|MockObject $requestMock;
-
-    protected ViewFactoryInterface|MockObject $viewFactory;
-
-    protected TemplateView $view;
+    private EventDispatcher $eventDispatcher;
 
     /**
-     * @var string[]
+     * @var array<string, array<int, object>>
      */
+    private array $listeners = [];
+
     protected array $testExtensionsToLoad = [
         'jweiland/glossary2',
     ];
@@ -75,9 +72,11 @@ class GlossaryServiceTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/sys_category_record_mm.csv');
 
-        $this->extConf = GeneralUtility::makeInstance(ExtConf::class);
-        $this->listenerProvider = $this->createMock(ListenerProvider::class);
-        $this->eventDispatcher = new EventDispatcher($this->listenerProvider);
+        $listenerProvider = $this->createMock(ListenerProviderInterface::class);
+        $listenerProvider
+            ->method('getListenersForEvent')
+            ->willReturnCallback(fn(object $event): array => $this->listeners[$event::class] ?? []);
+        $this->eventDispatcher = new EventDispatcher($listenerProvider);
 
         GeneralUtility::addInstance(
             CharsetHelper::class,
@@ -86,167 +85,187 @@ class GlossaryServiceTest extends FunctionalTestCase
                 $this->eventDispatcher,
             ),
         );
-
-        $this->typoScriptService = new TypoScriptService();
-
-        $this->requestMock = $this->createMock(Request::class);
-
-        $this->viewFactory = $this->get(ViewFactoryInterface::class);
-
-        $renderingContext = $this->get(RenderingContextFactory::class)->create();
-        $this->view = new TemplateView($renderingContext);
     }
 
     protected function tearDown(): void
     {
         unset(
-            $this->subject,
-            $this->extConf,
             $this->eventDispatcher,
-            $this->typoScriptService,
-            $this->requestMock,
-            $this->viewFactory,
+            $this->listeners,
         );
         parent::tearDown();
     }
 
     #[Test]
-    public function buildGlossaryWillConvertGermanUmlauts(): void
+    public function buildGlossaryWithQueryBuilderLinksFirstLettersOfRecords(): void
     {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
+        self::assertSame(
+            $this->getGlossary(),
+            $this->buildGlossaryAsArray($this->getQueryBuilder())['glossary'],
         );
+    }
 
-        $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
+    #[Test]
+    public function buildGlossaryWithQueryResultLinksFirstLettersOfRecords(): void
+    {
+        self::assertSame(
+            $this->getGlossary(),
+            $this->buildGlossaryAsArray($this->getQueryResult())['glossary'],
+        );
+    }
+
+    #[Test]
+    public function buildGlossaryWithQueryBuilderWillConvertGermanUmlauts(): void
+    {
+        // Only record "Ärger"
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->where($queryBuilder->expr()->eq('uid', 5));
+
+        $expectedGlossary = $this->getGlossary(false);
+        $expectedGlossary[1]['hasLink'] = true;
+
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray($queryBuilder)['glossary'],
+        );
+    }
+
+    #[Test]
+    public function buildGlossaryWithQueryBuilderWillConvertSpecialCharsOfDifferentLetters(): void
+    {
+        // Only records "Ärger" and "èmily"
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->where($queryBuilder->expr()->in('uid', [5, 7]));
+
+        $expectedGlossary = $this->getGlossary(false);
+        $expectedGlossary[1]['hasLink'] = true;
+        $expectedGlossary[5]['hasLink'] = true;
+
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray($queryBuilder)['glossary'],
+        );
     }
 
     #[Test]
     public function buildGlossaryWillConvertSpecialCharToAsciiByEvent(): void
     {
-        // Set link of letter "o" to true
+        $this->listeners[SanitizeValueForCharsetHelperEvent::class] = [new SanitizeValueEventListener()];
+
+        // Set link of letter "o" instead of "e" to true
         $expectedGlossary = $this->getGlossary();
         $expectedGlossary[5]['hasLink'] = false;
         $expectedGlossary[15]['hasLink'] = true;
 
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray($this->getQueryBuilder())['glossary'],
         );
-
-        $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
     }
 
     #[Test]
     public function buildGlossaryWithModifiedLettersByEvent(): void
     {
+        $this->listeners[PostProcessFirstLettersEvent::class] = [new ProcessFirstLettersEventListener()];
+
         $expectedGlossary = $this->getGlossary();
         // Remove link for letter "a"
         $expectedGlossary[1]['hasLink'] = false;
         // Add link for letter "k"
         $expectedGlossary[11]['hasLink'] = true;
 
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray($this->getQueryBuilder())['glossary'],
         );
-
-        $this->subject->buildGlossary($queryBuilder, $expectedGlossary, $this->getExtbaseRequest());
     }
 
     #[Test]
-    public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossar(): void
+    public function buildGlossaryWithIndividualColumnAndAliasWillBuildGlossary(): void
     {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
-            [
-                'column' => 'title',
-                'columnAlias' => 'Buchstaben',
-            ],
-            $this->getExtbaseRequest(),
+        self::assertSame(
+            $this->getGlossary(),
+            $this->buildGlossaryAsArray(
+                $this->getQueryBuilder(),
+                [
+                    'column' => 'title',
+                    'columnAlias' => 'Buchstaben',
+                ],
+            )['glossary'],
         );
     }
 
     #[Test]
     public function buildGlossaryWillAddSettingsToView(): void
     {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
+        self::assertSame(
             [
-                'settings' => [
-                    'foo' => 'bar',
-                ],
+                'foo' => 'bar',
             ],
-            $this->getExtbaseRequest(),
+            $this->buildGlossaryAsArray(
+                $this->getQueryBuilder(),
+                [
+                    'settings' => [
+                        'foo' => 'bar',
+                    ],
+                ],
+            )['settings'],
+        );
+    }
+
+    #[Test]
+    public function buildGlossaryWillAddOptionsToView(): void
+    {
+        $options = $this->buildGlossaryAsArray(
+            $this->getQueryBuilder(),
+            [
+                'extensionName' => 'sync_crop_areas',
+                'pluginName' => 'crop',
+                'controllerName' => 'Cropping',
+                'actionName' => 'view',
+            ],
+        )['options'];
+
+        self::assertSame('sync_crop_areas', $options['extensionName']);
+        self::assertSame('crop', $options['pluginName']);
+        self::assertSame('Cropping', $options['controllerName']);
+        self::assertSame('view', $options['actionName']);
+    }
+
+    #[Test]
+    public function buildGlossaryWillMarkRequestedLetter(): void
+    {
+        $expectedGlossary = $this->getGlossary();
+        $expectedGlossary[16]['isRequestedLetter'] = true;
+
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray(
+                $this->getQueryBuilder(),
+                [
+                    'variables' => [
+                        'letter' => 'p',
+                    ],
+                ],
+            )['glossary'],
         );
     }
 
     #[Test]
     public function buildGlossaryWithDefaultLettersWillNotMergeNumbers(): void
     {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+        // Letter "1" of "110 Police" is not part of the default letters
+        $expectedGlossary = $this->getGlossary();
+        $expectedGlossary[0]['hasLink'] = false;
 
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
-            [
-                'mergeNumbers' => false,
-            ],
-            $this->getExtbaseRequest(),
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray(
+                $this->getQueryBuilder(),
+                [
+                    'mergeNumbers' => false,
+                ],
+            )['glossary'],
         );
     }
 
@@ -280,71 +299,25 @@ class GlossaryServiceTest extends FunctionalTestCase
             ],
         );
 
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
-            [
-                'mergeNumbers' => false,
-                'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
-            ],
-            $this->getExtbaseRequest(),
+        self::assertSame(
+            $expectedGlossary,
+            $this->buildGlossaryAsArray(
+                $this->getQueryBuilder(),
+                [
+                    'mergeNumbers' => false,
+                    'possibleLetters' => '0,1,3,a,b,c,d,e,g,h,i,j,k,l,m,n,p,q,r,s,t,u,v,w,x,y,z',
+                ],
+            )['glossary'],
         );
     }
 
     #[Test]
-    public function buildGlossaryWillUseGlossaryRequestForLinkGeneration(): void
+    public function buildGlossaryRendersDefaultTemplateWithAllPossibleLetters(): void
     {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+        $content = $this->getSubject()->buildGlossary($this->getQueryBuilder(), [], $this->getExtbaseRequest());
 
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary($queryBuilder, [], $this->getExtbaseRequest());
-    }
-
-    #[Test]
-    public function buildGlossaryWillUseForeignRequestForLinkGeneration(): void
-    {
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
-        $this->subject->buildGlossary(
-            $queryBuilder,
-            [
-                'extensionName' => 'sync_crop_areas',
-                'pluginName' => 'crop',
-                'controllerName' => 'Cropping',
-                'actionName' => 'view',
-            ],
-            $this->getExtbaseRequest(),
-        );
+        self::assertStringContainsString('<nav class="nav">', $content);
+        self::assertSame(27, substr_count($content, '<li'));
     }
 
     #[Test]
@@ -396,31 +369,22 @@ class GlossaryServiceTest extends FunctionalTestCase
             ],
         ]);
 
-        $queryBuilder = $this
-            ->getConnectionPool()
-            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
-        $queryBuilder->from('tx_glossary2_domain_model_glossary');
-
-        $this->subject = new GlossaryService(
-            $this->extConf,
-            $this->eventDispatcher,
-            $this->viewFactory,
-            $this->typoScriptService,
-        );
-
         self::assertStringContainsString(
             $expectedContent,
-            $this->subject->buildGlossary(
-                $queryBuilder,
+            $this->getSubject()->buildGlossary(
+                $this->getQueryBuilder(),
                 ['extensionName' => $extensionName],
                 $this->getExtbaseRequest()->withAttribute('frontend.typoscript', $frontendTypoScript),
             ),
         );
     }
 
-    protected function getGlossary(): array
+    /**
+     * @return array<int, array<string, bool|string>>
+     */
+    private function getGlossary(bool $withLinks = true): array
     {
-        return [
+        $glossary = [
             0 => [
                 'letter' => '0-9',
                 'hasLink' => true,
@@ -557,19 +521,72 @@ class GlossaryServiceTest extends FunctionalTestCase
                 'isRequestedLetter' => false,
             ],
         ];
+
+        if (!$withLinks) {
+            foreach ($glossary as $key => $_) {
+                $glossary[$key]['hasLink'] = false;
+            }
+        }
+
+        return $glossary;
     }
 
-    protected function getExtbaseRequest(): RequestInterface
+    /**
+     * Renders the glossary with a JSON template and returns the decoded
+     * variables glossary, settings, options and variables
+     *
+     * @param QueryBuilder|QueryResultInterface<int, object> $queryBuilder
+     * @param array<string, mixed> $options
+     * @return array<string, mixed>
+     */
+    private function buildGlossaryAsArray(QueryBuilder|QueryResultInterface $queryBuilder, array $options = []): array
+    {
+        $options['templatePath'] = self::JSON_TEMPLATE;
+
+        $json = $this->getSubject()->buildGlossary($queryBuilder, $options, $this->getExtbaseRequest());
+
+        return json_decode(trim($json), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function getSubject(): GlossaryService
+    {
+        return new GlossaryService(
+            GeneralUtility::makeInstance(ExtConf::class),
+            $this->eventDispatcher,
+            $this->get(ViewFactoryInterface::class),
+            new TypoScriptService(),
+        );
+    }
+
+    private function getQueryBuilder(): QueryBuilder
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_glossary2_domain_model_glossary');
+        $queryBuilder->from('tx_glossary2_domain_model_glossary');
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @return QueryResultInterface<int, object>
+     */
+    private function getQueryResult(): QueryResultInterface
+    {
+        $querySettings = GeneralUtility::makeInstance(QuerySettingsInterface::class);
+        $querySettings->setStoragePageIds([12]);
+
+        $glossaryRepository = GeneralUtility::makeInstance(GlossaryRepository::class);
+        $glossaryRepository->setDefaultQuerySettings($querySettings);
+
+        return $glossaryRepository->getExtbaseQueryForGlossary();
+    }
+
+    private function getExtbaseRequest(): RequestInterface
     {
         $extbaseRequestParameters = new ExtbaseRequestParameters();
         $serverRequest = new ServerRequest();
         $serverRequest = $serverRequest->withAttribute('extbase', $extbaseRequestParameters)
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_FE);
         return new Request($serverRequest);
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

@@ -82,10 +82,10 @@ class GlossaryRepository extends Repository
     /**
      * Prepare an Extbase QueryResult for GlossaryService (A-Z navigation)
      *
-     * @param array $categories
+     * @param int[] $categories
+     * @return QueryResultInterface<int, Glossary>
      * @throws InvalidQueryException
      */
-    /** @phpstan-ignore-next-line */
     public function getExtbaseQueryForGlossary(array $categories = []): QueryResultInterface
     {
         $query = $this->createQuery();

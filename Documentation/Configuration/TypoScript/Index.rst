@@ -1,110 +1,144 @@
+:navigation-title: TypoScript
+
 ..  include:: /Includes.rst.txt
-
-
-.. _typoscript:
+..  _typoscript:
 
 ==========
 TypoScript
 ==========
 
+The TypoScript setup of `glossary2` is located below `plugin.tx_glossary2`.
+Most values are filled from the
+:ref:`site settings or TypoScript constants <site-settings>`. Prefer to
+change these settings instead of overriding the TypoScript setup.
+
+..  confval-menu::
+    :display: table
+    :type:
+    :default:
+
+..  _typoscript-view:
+
 View
 ====
 
-view.templateRootPaths
-----------------------
+..  confval:: view.templateRootPaths
+    :name: typoscript-view-templateRootPaths
+    :type: array
+    :default: Value of setting `glossary2.templateRootPath`
 
-Default: Value from Constants *EXT:glossary2/Resources/Private/Templates/*
+    You can override our Templates with your own SitePackage extension. We
+    prefer to change the setting :confval:`site-settings-templateRootPath`.
 
-You can override our Templates with your own SitePackage extension. We prefer
-to change this value in TS Constants.
+..  confval:: view.partialRootPaths
+    :name: typoscript-view-partialRootPaths
+    :type: array
+    :default: Value of setting `glossary2.partialRootPath`
 
-view.partialRootPaths
----------------------
+    You can override our Partials with your own SitePackage extension. We
+    prefer to change the setting :confval:`site-settings-partialRootPath`.
 
-Default: Value from Constants *EXT:glossary2/Resources/Private/Partials/*
+..  confval:: view.layoutRootPaths
+    :name: typoscript-view-layoutRootPaths
+    :type: array
+    :default: Value of setting `glossary2.layoutRootPath`
 
-You can override our Partials with your own SitePackage extension. We prefer
-to change this value in TS Constants.
+    You can override our Layouts with your own SitePackage extension. We
+    prefer to change the setting :confval:`site-settings-layoutRootPath`.
 
-view.layoutsRootPaths
----------------------
-
-Default: Value from Constants *EXT:glossary2/Resources/Layouts/Templates/*
-
-You can override our Layouts with your own SitePackage extension. We prefer to
-change this value in TS Constants.
-
+..  _typoscript-persistence:
 
 Persistence
 ===========
 
-persistence.storagePid
-----------------------
+..  confval:: persistence.storagePid
+    :name: typoscript-persistence-storagePid
+    :type: string
+    :default: Value of setting `glossary2.storagePid`
 
-Set this value to a Storage Folder (PID) where you have stored the records.
+    Set this value to a Storage Folder (PID) where you have stored the
+    records. A comma-separated list of folders is possible. We prefer to
+    change the setting :confval:`site-settings-storagePid`.
 
-Example: `plugin.tx_glossary2.persistence.storagePid = 21,45,3234`
+    Example: `plugin.tx_glossary2.persistence.storagePid = 21,45,3234`
 
+..  _typoscript-settings:
 
 Settings
 ========
 
-setting.pidOfDetailPage
------------------------
+..  confval:: settings.pidOfDetailPage
+    :name: typoscript-settings-pidOfDetailPage
+    :type: int
+    :default: Value of setting `glossary2.pidOfDetailPage`
 
-Default: 0
+    Example: `plugin.tx_glossary2.settings.pidOfDetailPage = 84`
 
-Example: `plugin.tx_glossary2.settings.pidOfDetailPage = 84`
+    Often it is useful to move the detail view onto a separate page
+    for design/layout reasons.
 
-Often it is useful to move the detail view onto a separate page
-for design/layout reasons.
+..  confval:: settings.templatePath
+    :name: typoscript-settings-templatePath
+    :type: string or array
+    :default: empty (Use value of Extension Settings as fallback)
 
-setting.templatePath
---------------------
+    Example:
 
-Default: empty (Use value of Extension Settings as fallback)
+    ..  code-block:: typoscript
+        :caption: TypoScript setup
 
-Example: `plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html`
+        plugin.tx_glossary2.settings.templatePath = EXT:events2/Resources/Private/Templates/Glossary2.html
 
-With this setting you can override the default templatePath of glossary2 and
-defined templatePaths coming from foreign extensions. So TypoScript settings
-have highest priority.
+    With this setting you can override the default templatePath of glossary2
+    and defined templatePaths coming from foreign extensions. So TypoScript
+    settings have highest priority.
 
-We also have implemented a more complex setting for `templatePath`:
+    We also have implemented a more complex setting for `templatePath`:
 
-..  code-block:: typoscript
+    ..  code-block:: typoscript
+        :caption: TypoScript setup
 
-    plugin.tx_glossary2.settings.templatePath {
-      default = EXT:glossary2/Resources/Private/Templates/Glossary2.html
-      events2 = EXT:events2/Resources/Private/Templates/Glossary2.html
-      yellowpages2 = EXT:yellowpages2/Resources/Private/Templates/Glossary2.html
-    }
+        plugin.tx_glossary2.settings.templatePath {
+          default = EXT:glossary2/Resources/Private/Templates/Glossary2.html
+          events2 = EXT:events2/Resources/Private/Templates/Glossary2.html
+          yellowpages2 = EXT:yellowpages2/Resources/Private/Templates/Glossary2.html
+        }
 
-`default` will be used, if no templatePath for a given ExtensionKey was found.
+    `default` will be used, if no templatePath for a given ExtensionKey was
+    found.
 
-settings.glossary.mergeNumbers
-------------------------------
+..  confval:: settings.glossary.mergeNumbers
+    :name: typoscript-settings-glossary-mergeNumbers
+    :type: bool
+    :default: 1
 
-Default: 1
+    Example: `plugin.tx_glossary2.settings.glossary.mergeNumbers = 0`
 
-Example: `plugin.tx_glossary2.settings.glossary.mergeNumbers = 0`
+    Merge record titles starting with numbers to `0-9` in glossary.
 
-Merge record titles starting with numbers to `0-9` in glossary.
+..  confval:: settings.glossary.showAllLink
+    :name: typoscript-settings-glossary-showAllLink
+    :type: bool
+    :default: 1
 
-settings.glossary.showAllLink
------------------------------
+    Example: `plugin.tx_glossary2.settings.glossary.showAllLink = 0`
 
-Default: 1
+    Prepend an additional button in front of the glossary to show all
+    records again.
 
-Example: `plugin.tx_glossary2.settings.glossary.showAllLink = 0`
+..  confval:: settings.pageBrowser.itemsPerPage
+    :name: typoscript-settings-pageBrowser-itemsPerPage
+    :type: int
+    :default: Value of setting `glossary2.pageBrowser.itemsPerPage` (`10`)
 
-Prepend an additional button in front of the glossary to show all records again.
+    Example: `plugin.tx_glossary2.settings.pageBrowser.itemsPerPage = 20`
 
-settings.pageBrowser.itemsPerPage
----------------------------------
+    Reduce result of records to this value for a page
 
-Default: 15
+..  confval:: settings.pageBrowser.class
+    :name: typoscript-settings-pageBrowser-class
+    :type: string
+    :default: `TYPO3\CMS\Core\Pagination\SimplePagination`
 
-Example: `plugin.tx_glossary2.settings.pageBrowser.itemsPerPage = 20`
-
-Reduce result of records to this value for a page
+    Class name of the pagination used in the list view. See
+    :ref:`pagination` for an example how to use another pagination.
