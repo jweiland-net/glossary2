@@ -13,7 +13,6 @@ namespace JWeiland\Glossary2\Service;
 
 use Doctrine\DBAL\Exception;
 use JWeiland\Glossary2\Configuration\ExtConf;
-use JWeiland\Glossary2\Domain\Model\Glossary;
 use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -50,7 +49,8 @@ class GlossaryService
     ) {}
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
      * @throws Exception
      */
@@ -75,7 +75,8 @@ class GlossaryService
      * $constraints[] = $glossary2Service->getLetterConstraintForExtbaseQuery($query, 'title', $letter);
      * return $query->matching($query->logicalAnd($constraints))->execute();
      *
-     * @param QueryInterface<Glossary> $extbaseQuery
+     * @template T of object
+     * @param QueryInterface<T> $extbaseQuery
      * @throws InvalidQueryException
      */
     public function getLetterConstraintForExtbaseQuery(
@@ -130,7 +131,8 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
      * @return array<int, array<string, bool|string>>
      * @throws Exception
@@ -161,7 +163,8 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
      * @return array<string, mixed>
      * @throws Exception
@@ -192,7 +195,8 @@ class GlossaryService
     }
 
     /**
-     * @param QueryBuilder|QueryResultInterface<int, Glossary> $queryBuilder
+     * @template T of object
+     * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @return array<string, mixed>
      * @throws Exception
      */
@@ -217,7 +221,8 @@ class GlossaryService
      * The SELECT part of an Extbase query can not be modified, so all
      * records have to be iterated to collect their first letters.
      *
-     * @param QueryResultInterface<int, Glossary> $queryResult
+     * @template T of object
+     * @param QueryResultInterface<int, T> $queryResult
      * @return array<string, string>
      */
     protected function getFirstLettersFromQueryResult(QueryResultInterface $queryResult, string $column): array
