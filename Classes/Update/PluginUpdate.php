@@ -15,7 +15,7 @@ use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\AbstractListTypeToCTypeUpdate;
 
 /**
- * Updater to fill empty slug columns of glossary records
+ * Migrates plugins of glossary2 from list_type to CType
  */
 #[UpgradeWizard('glossaryPluginUpdate')]
 class PluginUpdate extends AbstractListTypeToCTypeUpdate
