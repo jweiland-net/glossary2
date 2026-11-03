@@ -1,5 +1,7 @@
-..  include:: /Includes.rst.txt
+:navigation-title: Upgrade
 
+..  include:: /Includes.rst.txt
+..  _upgrade:
 
 =======
 Upgrade
@@ -8,7 +10,9 @@ Upgrade
 If you update `glossary2` to a newer version, please read this section
 carefully!
 
-Upgrade to Version 6.0.0
+..  _upgrade-6-0-0:
+
+Upgrade to version 6.0.0
 ========================
 
 We enhanced the extension's compatibility to TYPO3 version 12 while
@@ -22,7 +26,9 @@ in line with the latest TYPO3 standards. These upgrades collectively contribute
 to an improved and up-to-date extension experience for users within
 the TYPO3 ecosystem.
 
-Update to Version 5.1.0
+..  _upgrade-5-1-0:
+
+Update to version 5.1.0
 =======================
 
 If you make use of `ModifyQueryOfSearchGlossariesEvent` event:
@@ -35,7 +41,9 @@ We have reduced the list of categories in Plugin FlexForm to categories in
 default language only. Please check, if your selected categories are
 still valid.
 
-Update to Version 5.0.2
+..  _upgrade-5-0-2:
+
+Update to version 5.0.2
 =======================
 
 Sorry, we have implemented the wrong Pagination. With this version we use
@@ -43,7 +51,9 @@ TYPO3's default SimplePagination. Please adopt changes
 of Partials/Components/Pagination.html to your own templates, if you have
 overwritten them.
 
-Upgrade to Version 5.0.0
+..  _upgrade-5-0-0:
+
+Upgrade to version 5.0.0
 ========================
 
 We have changed some CSS classes in Fluid Templates. Please update them to
@@ -60,18 +70,24 @@ Because of the Pagination change you should also check your RouteEnhancers. If
 you need help, have a look into AdministratorManual/Routes for an example
 here in this documentation.
 
-Update to Version 4.3.1
+..  _upgrade-4-3-1:
+
+Update to version 4.3.1
 =======================
 
 We have changed some method arguments, please flush cache in InstallTool
 
-Upgrade to Version 4.0.0
+..  _upgrade-4-0-0:
+
+Upgrade to version 4.0.0
 ========================
 
 As we have only removed TYPO3 8 and added TYPO3 10 compatibility there should
 be no problem to upgrade to this version.
 
-Upgrade to Version 3.0.0
+..  _upgrade-3-0-0:
+
+Upgrade to version 3.0.0
 ========================
 
 We have changed Fluid-Templates a lot. We have removed a lot of CSS classes

@@ -1,7 +1,7 @@
+:navigation-title: Configuration
+
 ..  include:: /Includes.rst.txt
-
-
-.. _configuration:
+..  _configuration:
 
 =============
 Configuration

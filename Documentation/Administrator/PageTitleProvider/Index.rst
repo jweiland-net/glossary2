@@ -1,16 +1,20 @@
+:navigation-title: Page title provider
+
 ..  include:: /Includes.rst.txt
-
+..  _page-title-provider:
 
 ===================
-Page Title Provider
+Page title provider
 ===================
 
-In normal case you only will see something like "detail view" in title of detail page.
-If you want to change that title to current glossary title you can make use
-of the new TYPO3 page-title providers (since TYPO3 9.4). Luckily glossary2 comes with its own provider to
-realize a pretty nice detail page-title for you with following TypoScript:
+In normal case you only will see something like "detail view" in title of
+detail page. If you want to change that title to current glossary title you
+can make use of the new TYPO3 page-title providers (since TYPO3 9.4). Luckily
+glossary2 comes with its own provider to realize a pretty nice detail
+page-title for you with following TypoScript:
 
 ..  code-block:: typoscript
+    :caption: TypoScript setup
 
     config.pageTitleProviders {
       glossary2 {

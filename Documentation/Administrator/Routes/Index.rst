@@ -1,5 +1,7 @@
-..  include:: /Includes.rst.txt
+:navigation-title: Routes
 
+..  include:: /Includes.rst.txt
+..  _routes:
 
 ======
 Routes
@@ -7,10 +9,13 @@ Routes
 
 With TYPO3 9 you have the possibility to configure RouteEnhancers
 
-Example Configuration
-=====================
+..  _routes-example:
 
-..  code-block:: none
+Example route enhancer configuration
+====================================
+
+..  code-block:: yaml
+    :caption: config/sites/<identifier>/config.yaml
 
     routeEnhancers:
       Glossary2Plugin:

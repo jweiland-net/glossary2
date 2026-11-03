@@ -1,14 +1,16 @@
+:navigation-title: Installation
+
 ..  include:: /Includes.rst.txt
-
-
 ..  _installation:
 
 ============
 Installation
 ============
 
-Composer
-========
+..  _installation-composer:
+
+Installation with Composer
+==========================
 
 If your TYPO3 installation works in composer mode, please execute following
 command:
@@ -25,8 +27,10 @@ If you work with DDEV please execute this command:
     ddev composer req jweiland/glossary2
     ddev exec vendor/bin/typo3 extension:setup --extension=glossary2
 
-ExtensionManager
-================
+..  _installation-extension-manager:
+
+Installation with the Extension Manager
+=======================================
 
 On non composer based TYPO3 installations you can install `glossary2` still
 over the ExtensionManager:
@@ -51,6 +55,8 @@ over the ExtensionManager:
 
     Use the search field to find `glossary2`. Choose the `glossary2` line from
     the search result and click on the cloud icon to install `glossary2`.
+
+..  _installation-next-step:
 
 Next step
 =========

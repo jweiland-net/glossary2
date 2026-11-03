@@ -1,11 +1,13 @@
+:navigation-title: Changelog
+
 ..  include:: /Includes.rst.txt
-
-
 ..  _changelog:
 
 =========
-ChangeLog
+Changelog
 =========
+
+..  _changelog-7-0-7:
 
 Version 7.0.7
 =============
@@ -16,30 +18,42 @@ Version 7.0.7
     of GlossaryService. TypoScript settings of glossary2 are now read
     from the request given to `buildGlossary()`.
 
+..  _changelog-7-0-6:
+
 Version 7.0.6
 =============
 
 *   [BUGFIX] Filter glossary items by categories in AddGlossaryEventListener
+
+..  _changelog-7-0-5:
 
 Version 7.0.5
 =============
 
 *   [TASK] Tailor TER release configuration updates
 
+..  _changelog-7-0-4:
+
 Version 7.0.4
 =============
 
 *   [BUGFIX] Pass glossary 'letter' argument to pagination links
+
+..  _changelog-7-0-3:
 
 Version 7.0.3
 =============
 
 *   [BUGFIX] SiteSet identifier renamed by removing default
 
+..  _changelog-7-0-2:
+
 Version 7.0.2
 =============
 
 *   [BUGFIX] Backend plugin CType preview
+
+..  _changelog-7-0-1:
 
 Version 7.0.1
 =============
@@ -48,11 +62,15 @@ Version 7.0.1
 *   [TASK] Modified Update wizard for extending list plugins to CType
 *   [BUGFIX] Removed duplicate plugin wizard registered with page.tsconfig.
 
+..  _changelog-7-0-0:
+
 Version 7.0.0
 =============
 
 *   [TASK] Compatibility fixes for TYPO3 13 LTS
 *   [TASK] Removed CSH-related method calls from extension
+
+..  _changelog-6-0-1:
 
 Version 6.0.1
 =============
@@ -60,12 +78,16 @@ Version 6.0.1
 *   [BUGFIX] Due to missing upgrade wizard implementation extension throws
     error in CLI and backend upgrade wizard.
 
+..  _changelog-6-0-0:
+
 Version 6.0.0
 =============
 
 *   [TASK] Compatibility fix for TYPO3 Version 12
 *   [TASK] Category in TCA fixed with type `category´
 *   [TASK] Migrated testing framework to TYPO3 Testing Framework
+
+..  _changelog-5-1-0:
 
 Version 5.1.0
 =============
@@ -78,6 +100,8 @@ Version 5.1.0
 *   [TASK] Remove OverlayHelper class
 *   [TASK] Remove unused getGlossaries() method from repo
 
+..  _changelog-5-0-10:
+
 Version 5.0.10
 ==============
 
@@ -89,21 +113,29 @@ Version 5.0.10
 *   Update .editorconfig
 *   Implement new php-cs-fixer configuration
 
+..  _changelog-5-0-9:
+
 Version 5.0.9
 =============
 
 *   [DOCU] Mistake in storagePid configuration
 *   Add .gitattributes
 
+..  _changelog-5-0-8:
+
 Version 5.0.8
 =============
 
 *   Add TS settings for GlossaryService
 
+..  _changelog-5-0-7:
+
 Version 5.0.7
 =============
 
 *   Register GlossaryService as public in Services.yaml
+
+..  _changelog-5-0-6:
 
 Version 5.0.6
 =============
@@ -111,10 +143,14 @@ Version 5.0.6
 *   Use array type for $availableLetters instead of string
 *   Merge 2 conditions
 
+..  _changelog-5-0-5:
+
 Version 5.0.5
 =============
 
 *   Add sortby title for all queries
+
+..  _changelog-5-0-4:
 
 Version 5.0.4
 =============
@@ -123,20 +159,28 @@ Version 5.0.4
 *   Use ProphecyTrait in functional tests.
 *   Reactivate a functional test
 
+..  _changelog-5-0-3:
+
 Version 5.0.3
 =============
 
 *   Use SQL IN to select one or more categories
+
+..  _changelog-5-0-2:
 
 Version 5.0.2
 =============
 
 *   Use SimplePaginator instead of our own one
 
+..  _changelog-5-0-1:
+
 Version 5.0.1
 =============
 
 *   Add documentation about how to integrate Georg Ringers numbered_pagination
+
+..  _changelog-5-0-0:
 
 Version 5.0.0
 =============
@@ -145,25 +189,35 @@ Version 5.0.0
 *   Add TYPO3 11 compatibility
 *   This version is still TYPO3 10 compatible
 
+..  _changelog-4-3-1:
+
 Version 4.3.1
 =============
 
 *   Move SlugHelper from constructor argument into getSlugHelper()
+
+..  _changelog-4-3-0:
 
 Version 4.3.0
 =============
 
 *   Allow overriding templatePath of glossary2 on page basis via TypoScript
 
+..  _changelog-4-2-0:
+
 Version 4.2.0
 =============
 
 *   Add setting for PID to list/detail view in FlexForm
 
+..  _changelog-4-1-1:
+
 Version 4.1.1
 =============
 
 *   Use unique instead of uniqueInSite for slug
+
+..  _changelog-4-1-0:
 
 Version 4.1.0
 =============
@@ -172,15 +226,21 @@ Version 4.1.0
 *   All all API options to Fluid Template
 *   Replace hard-coded action name in links with action name from API options
 
+..  _changelog-4-0-2:
+
 Version 4.0.2
 =============
 
 *   Use translation for path_segment from glosssary2 lang files
 
+..  _changelog-4-0-1:
+
 Version 4.0.1
 =============
 
 *   Make templatePath configurable with Extension Settings
+
+..  _changelog-4-0-0:
 
 Version 4.0.0
 =============
@@ -195,15 +255,21 @@ Version 4.0.0
 *   Add documentation for Glossary API
 *   Update DocHeader. Add LICENSE file
 
+..  _changelog-3-0-2:
+
 Version 3.0.2
 =============
 
 *   Add link to our new Routes documentation in our documentation
 
+..  _changelog-3-0-1:
+
 Version 3.0.1
 =============
 
 *   Add documentation for Route configuration
+
+..  _changelog-3-0-0:
 
 Version 3.0.0
 =============
@@ -219,11 +285,15 @@ Version 3.0.0
 *   Little code refactorings like removing @return void
 *   Update documentation
 
+..  _changelog-2-2-0:
+
 Version 2.2.0
 =============
 
 *   Add documentation
 *   Add new ext_icon as SVG
+
+..  _changelog-2-1-1:
 
 Version 2.1.1
 =============

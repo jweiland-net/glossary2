@@ -1,11 +1,13 @@
+:navigation-title: Known problems
+
 ..  include:: /Includes.rst.txt
-
-
-.. _known-problems:
+..  _known-problems:
 
 ==============
-Known Problems
+Known problems
 ==============
+
+..  _known-problems-numbers:
 
 Special entry for 0-9
 =====================

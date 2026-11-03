@@ -1,8 +1,9 @@
+:navigation-title: Developer
+
 ..  include:: /Includes.rst.txt
+..  _developer-manual:
 
-
-.. _developer-manual:
-
+================
 Developer manual
 ================
 
