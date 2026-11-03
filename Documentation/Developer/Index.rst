@@ -15,3 +15,4 @@ point of view.
     :titlesonly:
 
     API/Index
+    Events/Index
