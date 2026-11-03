@@ -28,9 +28,12 @@
 		"source": "https://github.com/jweiland-net/glossary2"
 	},
 	"require": {
-		"ext-pdo": "*",
-		"typo3/cms-core": "^13.4.0",
-		"typo3/cms-install": "^13.4.0"
+		"php": "^8.2",
+		"typo3/cms-core": "^13.4",
+		"typo3/cms-extbase": "^13.4",
+		"typo3/cms-fluid": "^13.4",
+		"typo3/cms-frontend": "^13.4",
+		"typo3/cms-install": "^13.4"
 	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.44",
