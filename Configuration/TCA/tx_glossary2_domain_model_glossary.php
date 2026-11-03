@@ -18,6 +18,7 @@ return [
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
+        'translationSource' => 'l10n_source',
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
@@ -43,78 +44,12 @@ return [
         ],
     ],
     'columns' => [
-        'sys_language_uid' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-            'config' => ['type' => 'language'],
-        ],
-        'l10n_parent' => [
-            'displayCond' => 'FIELD:sys_language_uid:>:0',
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
-            'config' => [
-                'type' => 'group',
-                'allowed' => 'tx_glossary2_domain_model_glossary',
-                'size' => 1,
-                'maxitems' => 1,
-                'minitems' => 0,
-                'default' => 0,
-            ],
-        ],
-        'l10n_source' => [
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'hidden' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
-            'config' => [
-                'type' => 'check',
-                'renderType' => 'checkboxToggle',
-                'items' => [
-                    [
-                        'label' => '',
-                        'value' => '0',
-                    ],
-                    [
-                        'label' => '',
-                        'value' => '1',
-                    ],
-                ],
-            ],
-        ],
-        'cruser_id' => [
-            'label' => 'cruser_id',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'pid' => [
-            'label' => 'pid',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'crdate' => [
-            'label' => 'crdate',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
-        'tstamp' => [
-            'label' => 'tstamp',
-            'config' => [
-                'type' => 'passthrough',
-            ],
-        ],
         'starttime' => [
             'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'datetime',
-                'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'datetime,int',
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
@@ -125,9 +60,10 @@ return [
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'datetime',
-                'format' => 'datetime',
                 'default' => 0,
-                'eval' => 'datetime,int',
+                'range' => [
+                    'upper' => mktime(0, 0, 0, 1, 1, 2106),
+                ],
                 'behaviour' => [
                     'allowLanguageSynchronization' => true,
                 ],
@@ -185,10 +121,16 @@ return [
                     'showPossibleLocalizationRecords' => true,
                     'showAllLocalizationLink' => true,
                     'showSynchronizationLink' => true,
-                    'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                    ],
                 ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true,
+                ],
+            ],
+        ],
+        'categories' => [
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.categories',
+            'config' => [
+                'type' => 'category',
             ],
         ],
     ],
