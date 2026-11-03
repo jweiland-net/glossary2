@@ -25,11 +25,18 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  */
 class Glossary2PageTitleProvider implements PageTitleProviderInterface
 {
-    protected GlossaryRepository $glossaryRepository;
+    private ?ServerRequestInterface $request = null;
 
-    public function __construct(GlossaryRepository $glossaryRepository)
+    public function __construct(
+        protected readonly GlossaryRepository $glossaryRepository,
+    ) {}
+
+    /**
+     * Called by PageTitleProviderManager with the current frontend request
+     */
+    public function setRequest(ServerRequestInterface $request): void
     {
-        $this->glossaryRepository = $glossaryRepository;
+        $this->request = $request;
     }
 
     public function getTitle(): string
@@ -52,8 +59,11 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
      */
     private function getValidPluginArguments(): ?array
     {
-        $gp = $this->getPluginArgumentsFromRequest($this->getRequest());
+        if ($this->request === null) {
+            return null;
+        }
 
+        $gp = $this->getPluginArgumentsFromRequest($this->request);
         if (is_array($gp) && $this->isValidRequest($gp)) {
             return $gp;
         }
@@ -86,11 +96,6 @@ class Glossary2PageTitleProvider implements PageTitleProviderInterface
 
         return ArrayUtility::isValidPath($queryParams, 'tx_glossary2_glossary')
             ? ArrayUtility::getValueByPath($queryParams, 'tx_glossary2_glossary')
-            : false;
-    }
-
-    protected function getRequest(): ServerRequestInterface
-    {
-        return $GLOBALS['TYPO3_REQUEST'];
+            : null;
     }
 }
