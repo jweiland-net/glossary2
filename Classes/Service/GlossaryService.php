@@ -166,7 +166,7 @@ class GlossaryService
      * @template T of object
      * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
      * @param array<string, mixed> $options
-     * @return array<string, mixed>
+     * @return array<int, string>
      * @throws Exception
      */
     protected function getAvailableLetters(QueryResultInterface|QueryBuilder $queryBuilder, array $options): array
@@ -197,7 +197,7 @@ class GlossaryService
     /**
      * @template T of object
      * @param QueryBuilder|QueryResultInterface<int, T> $queryBuilder
-     * @return array<string, mixed>
+     * @return array<int, string>
      * @throws Exception
      */
     protected function getFirstLettersOfGlossaryRecords(
@@ -209,7 +209,7 @@ class GlossaryService
             ? $this->getFirstLettersFromQueryResult($queryBuilder, $column)
             : $this->getFirstLettersFromQueryBuilder($queryBuilder, $column, $columnAlias);
 
-        $firstLetters = array_unique($this->cleanUpFirstLetters($firstLetters));
+        $firstLetters = $this->cleanUpFirstLetters($firstLetters);
 
         /** @var PostProcessFirstLettersEvent $event */
         $event = $this->eventDispatcher->dispatch(new PostProcessFirstLettersEvent($firstLetters));
