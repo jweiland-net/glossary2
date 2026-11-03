@@ -14,15 +14,13 @@ namespace JWeiland\Glossary2\EventListener;
 use JWeiland\Glossary2\Domain\Repository\GlossaryRepository;
 use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsEventListener(after: AddPaginatorEventListener::class)]
 class AddGlossaryEventListener extends AbstractControllerEventListener
 {
-    protected GlossaryService $glossaryService;
-
-    protected GlossaryRepository $glossaryRepository;
-
     /**
      * @var array<string, mixed>
      */
@@ -32,11 +30,10 @@ class AddGlossaryEventListener extends AbstractControllerEventListener
         ],
     ];
 
-    public function __construct(GlossaryService $glossaryService, GlossaryRepository $glossaryRepository)
-    {
-        $this->glossaryService = $glossaryService;
-        $this->glossaryRepository = $glossaryRepository;
-    }
+    public function __construct(
+        protected readonly GlossaryService $glossaryService,
+        protected readonly GlossaryRepository $glossaryRepository,
+    ) {}
 
     public function __invoke(PostProcessFluidVariablesEvent $event): void
     {

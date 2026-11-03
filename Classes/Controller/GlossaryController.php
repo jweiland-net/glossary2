@@ -17,7 +17,6 @@ use JWeiland\Glossary2\Event\PostProcessFluidVariablesEvent;
 use JWeiland\Glossary2\Service\GlossaryService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -27,19 +26,10 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  */
 class GlossaryController extends ActionController
 {
-    protected GlossaryRepository $glossaryRepository;
-
-    protected GlossaryService $glossaryService;
-
-    public function injectGlossaryRepository(GlossaryRepository $glossaryRepository): void
-    {
-        $this->glossaryRepository = $glossaryRepository;
-    }
-
-    public function injectGlossaryService(GlossaryService $glossaryService): void
-    {
-        $this->glossaryService = $glossaryService;
-    }
+    public function __construct(
+        protected readonly GlossaryRepository $glossaryRepository,
+        protected readonly GlossaryService $glossaryService,
+    ) {}
 
     public function initializeAction(): void
     {
@@ -50,21 +40,16 @@ class GlossaryController extends ActionController
         }
     }
 
-    protected function initializeView(ViewInterface $view): void
-    {
-        $view->assign('data', $this->getContentObjectData());
-    }
-
     /**
      * @param string $letter Show only records starting with this letter
-     * @Extbase\Validate("StringLength", options={"minimum": 1, "maximum": 3}, param="letter")
      */
+    #[Extbase\Validate(['validator' => 'StringLength', 'options' => ['minimum' => 1, 'maximum' => 3], 'param' => 'letter'])]
     public function listAction(string $letter = ''): ResponseInterface
     {
         $this->postProcessAndAssignFluidVariables([
             'letter' => $letter,
             'glossaries' => $this->glossaryRepository->searchGlossaries(
-                GeneralUtility::intExplode(',', $this->settings['categories'], true),
+                GeneralUtility::intExplode(',', (string)($this->settings['categories'] ?? ''), true),
                 $letter,
             ),
         ]);
@@ -95,6 +80,7 @@ class GlossaryController extends ActionController
             ),
         );
 
+        $this->view->assign('data', $this->getContentObjectData());
         $this->view->assignMultiple($event->getFluidVariables());
     }
 

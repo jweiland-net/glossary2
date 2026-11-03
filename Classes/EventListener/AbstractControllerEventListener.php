@@ -16,7 +16,7 @@ use JWeiland\Glossary2\Event\ControllerActionEventInterface;
 /**
  * Abstract EventListener just for action controllers.
  */
-class AbstractControllerEventListener
+abstract class AbstractControllerEventListener
 {
     /**
      * Only execute this EventListener if controller and action matches

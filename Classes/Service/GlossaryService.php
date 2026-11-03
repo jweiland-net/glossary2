@@ -18,7 +18,6 @@ use JWeiland\Glossary2\Event\PostProcessFirstLettersEvent;
 use JWeiland\Glossary2\Helper\CharsetHelper;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
@@ -388,10 +387,5 @@ class GlossaryService
         );
 
         return $settings;
-    }
-
-    protected function getConnectionPool(): ConnectionPool
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }
