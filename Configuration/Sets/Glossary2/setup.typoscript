@@ -2,20 +2,20 @@ plugin.tx_glossary2 {
   view {
     templateRootPaths {
       0 = EXT:glossary2/Resources/Private/Templates/
-      1 = {$plugin.tx_glossary2.view.templateRootPath ?? $glossary2.templateRootPath}
+      1 = {$glossary2.templateRootPath ?? $plugin.tx_glossary2.view.templateRootPath}
     }
     partialRootPaths {
       0 = EXT:glossary2/Resources/Private/Partials/
-      1 = {$plugin.tx_glossary2.view.partialRootPath ?? $glossary2.partialRootPath}
+      1 = {$glossary2.partialRootPath ?? $plugin.tx_glossary2.view.partialRootPath}
     }
     layoutRootPaths {
       0 = EXT:glossary2/Resources/Private/Layouts/
-      1 = {$plugin.tx_glossary2.view.layoutRootPath ?? $glossary2.layoutRootPath}
+      1 = {$glossary2.layoutRootPath ?? $plugin.tx_glossary2.view.layoutRootPath}
     }
   }
 
   persistence {
-    storagePid = {$plugin.tx_glossary2.persistence.storagePid ?? $glossary2.storagePid}
+    storagePid = {$glossary2.storagePid ?? $plugin.tx_glossary2.persistence.storagePid}
   }
 
   features {
@@ -23,7 +23,7 @@ plugin.tx_glossary2 {
   }
 
   settings {
-    pidOfDetailPage = {$plugin.tx_glossary2.settings.pidOfDetailPage ?? $glossary2.pidOfDetailPage}
+    pidOfDetailPage = {$glossary2.pidOfDetailPage ?? $plugin.tx_glossary2.settings.pidOfDetailPage}
 
     list {
       image {
@@ -46,7 +46,7 @@ plugin.tx_glossary2 {
 
     pageBrowser {
       class = TYPO3\CMS\Core\Pagination\SimplePagination
-      itemsPerPage = {$plugin.tx_glossary2.settings.pageBrowser.itemsPerPage ?? $glossary2.pageBrowser.itemsPerPage}
+      itemsPerPage = {$glossary2.pageBrowser.itemsPerPage ?? $plugin.tx_glossary2.settings.pageBrowser.itemsPerPage}
     }
   }
 }
